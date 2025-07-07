@@ -1,10 +1,14 @@
-import React from 'react'
-import Header from './components/Header'
+import React from 'react';
+import Header from './components/header';
 
 const Home = () => {
   return (
-	<Header />
-  )
-}
+    <main className=''>
+		 {/* bg-[#EAFDF9]  */}
+      <Header />
 
-export default Home
+    </main>
+  );
+};
+
+export default Home;
