@@ -1,24 +1,16 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
+import { twMerge } from "tailwind-merge";
 
-const plusJakartaSans = Plus_Jakarta_Sans({
-	  subsets: ["latin"],
-	  variable: "--font-plus-jakarta-sans",
-	  weight: ["200", "300", "400", "500", "600", "700", "800"],
-});
-
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-dm-sans",
 });
 
 export const metadata: Metadata = {
   title: "Finlens",
-  description: "A modern finance app for managing your personal finances",
-  icons: {
-	icon: "/icons/logo.svg",
-  }
+  description: "A modern finance app for managing your personal finances"
 };
 
 export default function RootLayout({
@@ -28,9 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${plusJakartaSans.variable} ${inter.variable} antialiased`}
-      >
+      <body className={twMerge(dmSans.variable, "bg-[#EAFDF9] antialiased")}>
         {children}
       </body>
     </html>

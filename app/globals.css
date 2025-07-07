@@ -1,11 +1,5 @@
 @import "tailwindcss";
  
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 @theme {
 	/* Custom Colors */
 	/* Primary Colors */
@@ -76,10 +70,19 @@
 	--color-other-grey: #F4F4F7
 
 	/* Font Variables */
-	--font-plus-jakarta-sans: var(--font-plus-jakarta-sans);
-	--font-inter: var(--font-inter);
+	--font-dm-sans: "DM Sans", sans-serif;
 
-	/* Breakpoint */
-	--breakpoint-2xl: 1400px; /* 87.5rem */
+	/* Utility Variables */
+	--breakpoint-lg: 1400px;
 
+}
+
+@utility container {
+	padding-inline: 20px;
+	margin-inline: auto;
+	
+	@variant lg {
+		padding-inline: 80px;
+	}
+	
 }
