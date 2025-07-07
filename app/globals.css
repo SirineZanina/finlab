@@ -1,0 +1,85 @@
+@import "tailwindcss";
+ 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@theme {
+	/* Custom Colors */
+	/* Primary Colors */
+	--color-primary-0: #FFFFFF; 
+	--color-primary-100: #D6FBE6;
+	--color-primary-200: #AFF7D5;
+	--color-primary-300: #7EDEBC;
+	--color-primary-400: #4AC49F;
+	--color-primary-500: #31B099;
+	--color-primary-600: #23978D;
+	--color-primary-700: #187D7E;
+	--color-primary-800: #0F5D66;
+	--color-primary-900: #094554;
+
+	/* Secondary Colors */
+	--color-secondary-100: #EDF1F3;
+	--color-secondary-200: #DCE4E8;
+	--color-secondary-300: #ACB5BB;
+	--color-secondary-400: #6C7278;
+	--color-secondary-500: #1A1C1E;
+
+	/* Error Colors */
+	--color-error-100: #FCE4DF;
+	--color-error-200: #F9C6BF;
+	--color-error-300: #ED9C9B;
+	--color-error-400: #DC7D85;
+	--color-error-500: #C65468;
+	--color-error-600: #AA3D5A;
+	--color-error-700: #8E2A4E;
+	--color-error-800: #721A43;
+	--color-error-900: #5F103B;
+
+	/* Warning Colors */
+	--color-warning-100: #FAE7DB;
+	--color-warning-200: #F5CEB8;
+	--color-warning-300: #F1B694;
+	--color-warning-400: #EC9D71;
+	--color-warning-500: #E7854D;
+	--color-warning-600: #B96A3E;
+	--color-warning-700: #8B502E;
+	--color-warning-800: #5C351F;
+	--color-warning-900: #2E1B0F;
+
+	/* Accent Green */
+	--color-accent-green-100: #E6EFCE;
+	--color-accent-green-200: #CDDE9E;
+	--color-accent-green-300: #B4CE6D;
+	--color-accent-green-400: #9BBD3D;
+	--color-accent-green-500: #82AD0C;
+	--color-accent-green-600: #688A0A;
+	--color-accent-green-700: #4E6807;
+	--color-accent-green-800: #344505;
+	--color-accent-green-900: #1A2302;
+
+	/* Information Colors */
+	--color-info-100: #DBE6FA;
+	--color-info-200: #B8CDF5;
+	--color-info-300: #94B3F1;
+	--color-info-400: #719AEC;
+	--color-info-500: #4D81E7;
+	--color-info-600: #3E67B9;
+	--color-info-700: #2E4D8B;
+	--color-info-800: #1F345C;
+	--color-info-900: #0F1A2E;
+
+	/* Other Colors */
+	--color-dark-bg: #1E2836;
+	--color-other-grey: #F4F4F7
+
+	/* Font Variables */
+	--font-plus-jakarta-sans: var(--font-plus-jakarta-sans);
+	--font-inter: var(--font-inter);
+
+	/* Breakpoint */
+	--breakpoint-2xl: 1400px; /* 87.5rem */
+
+}
