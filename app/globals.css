@@ -75,9 +75,6 @@
 	/* Font Variables */
 	--font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
 
-	/* Utility Variables */
-	--breakpoint-lg: 1400px;
-
 }
 
 @utility container {
