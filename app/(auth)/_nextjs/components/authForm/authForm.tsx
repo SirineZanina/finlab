@@ -7,10 +7,10 @@ import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
 import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import CustomInput from '../customInput/customInput';
+import CustomInput from '@/app/(auth)/_nextjs/components/customInput/customInput';
 // hooks
 import { useRouter } from 'next/navigation';
-import { useAuthForm } from '../../../hooks/useAuthForm';
+import { useAuthForm } from './authForm.hooks';
 // utils
 import { authFormSchema } from './authForm.utils';
 import { Loader2Icon } from 'lucide-react';

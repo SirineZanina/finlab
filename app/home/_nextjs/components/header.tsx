@@ -1,15 +1,16 @@
+import Link from 'next/link';
 import { ArrowRight } from '@/components/assets/icons/arrowRight';
 import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
 import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
 import { MenuIcon } from '@/components/assets/icons/menuIcon';
-import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 const Header = () => {
   return (
-    <header className="sticky top-0">
-      <div className='flex justify-center items-center py-3 bg-black text-white text-sm gap-3'>
+    <header className="sticky top-0 backdrop-blur-sm">
+      <div className='flex justify-center items-center py-3 bg-black text-white text-xs gap-3'>
         <p className="text-white/60 hidden md:block ">
-					Manage your cashflow and boost your finances.
+			Manage your cashflow and boost your finances.
         </p>
         <div className="inline-flex items-center gap-1">
           <p>Get started for free</p>
@@ -24,18 +25,16 @@ const Header = () => {
               <FinlabLogo className="w-12" />
             </Link>
             <MenuIcon className="h-5 w-5 md:hidden" />
-            <nav className="hidden md:flex gap-6 text-black/60 items-center font-medium">
+            <nav className="text-sm hidden md:flex gap-6 text-secondary-400 items-center font-medium">
               <Link href="/">Home</Link>
               <Link href="#features">Features</Link>
               <Link href="#testimonials">Testimonials</Link>
               <Link href="#updates">Updates</Link>
               <Link href="/help">Help</Link>
-
               <Link href="/sign-up">
-                <button className="bg-primary-500 text-white px-4 py-2 rounded-lg font-medium inline-flex
-					items-center justify-center tracking-tight cursor-pointer">
-					Get for free
-                </button>
+                <Button variant={'default'}>
+					Get Started
+                </Button>
               </Link>
             </nav>
           </div>

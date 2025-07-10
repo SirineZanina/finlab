@@ -18,8 +18,10 @@
         "name": "next"
       }
     ],
+	"baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+	  "@nextjs/*": ["app/(auth)/_nextjs/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
