@@ -14,6 +14,7 @@ import { useAuthForm } from './authForm.hooks';
 // utils
 import { authFormSchema } from './authForm.utils';
 import { Loader2Icon } from 'lucide-react';
+import { signIn, signUp } from '../../actions';
 
 const AuthForm = ({ type } : { type: string}) => {
   const router = useRouter();
@@ -27,15 +28,15 @@ const AuthForm = ({ type } : { type: string}) => {
     setIsLoading(true);
     try {
       if (type === 'sign-up') {
-        // const newUser = await signUp(data);
+        const newUser = await signUp(data);
         // setUser(newUser);
       }
       if (type === 'sign-in') {
-        // const response = await signIn({
-        // 	email: data.email,
-        // 	password: data.password
-        // });
-        // if (response) router.push('/dashboard');
+        const response = await signIn({
+        	email: data.email,
+        	password: data.password
+        });
+        if (response) router.push('/dashboard');
       }
     }
     catch (error) {

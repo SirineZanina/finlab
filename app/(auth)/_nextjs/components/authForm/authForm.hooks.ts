@@ -6,11 +6,26 @@ import { authFormSchema } from './authForm.utils';
 export function useAuthForm(type: string) {
   const schema = authFormSchema(type);
 
+  const baseDefaults = {
+    email: '',
+    password: '',
+  };
+
+  const signUpDefaults = {
+    firstName: '',
+    lastName: '',
+    address1: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    dateOfBirth: '',
+    ssn: '',
+  };
+
   return useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      email: '',
-      password: '',
-    },
+    defaultValues: type === 'sign-up'
+      ? { ...baseDefaults, ...signUpDefaults }
+      : baseDefaults,
   });
 }
