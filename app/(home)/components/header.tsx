@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight } from '@/components/assets/icons/arrowRight';
+import { ArrowRight } from '@/components/assets/icons/arrowRightIcon';
 import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
 import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
 import { MenuIcon } from '@/components/assets/icons/menuIcon';

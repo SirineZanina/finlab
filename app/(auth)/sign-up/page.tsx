@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthForm from '@/app/(auth)/_nextjs/components/authForm/authForm';
+import AuthForm from '../_components/authForm/authForm';
 
 const SignUp = () => {
   return (

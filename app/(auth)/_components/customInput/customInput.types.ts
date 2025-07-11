@@ -1,10 +1,6 @@
 import { Control, FieldPath } from 'react-hook-form';
 import z from 'zod';
-import { authFormSchema } from '@/app/(auth)/_nextjs/components/authForm/authForm.utils';
-
-export const signUpSchema = authFormSchema('sign-up');
-
-export const signInSchema = authFormSchema('sign-in');
+import { signUpSchema } from '../authForm/authForm.schema';
 
 export type CustomInputProps = {
 	control: Control<z.infer<typeof signUpSchema>>;

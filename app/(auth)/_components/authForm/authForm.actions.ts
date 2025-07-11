@@ -1,10 +1,9 @@
 'use server';
-
 import z from 'zod';
 import { redirect } from 'next/navigation';
-import { signInSchema, signUpSchema } from './components/customInput/customInput.types';
 import { prisma } from '@/lib/prisma';
-import { generateSalt, hashPassword } from '../(core)/auth.utils';
+import { signInSchema, signUpSchema } from './authForm.schema';
+import { generateSalt, hashPassword } from './authForm.utils';
 
 export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 

@@ -7,14 +7,13 @@ import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
 import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import CustomInput from '@/app/(auth)/_nextjs/components/customInput/customInput';
 // hooks
 import { useRouter } from 'next/navigation';
 import { useAuthForm } from './authForm.hooks';
-// utils
-import { authFormSchema } from './authForm.utils';
-import { Loader2Icon } from 'lucide-react';
-import { signIn, signUp } from '../../actions';
+import { authFormSchema } from './authForm.schema';
+import { signIn, signUp } from './authForm.actions';
+import CustomInput from '../customInput/customInput';
+import { LoaderIcon } from '@/components/assets/icons/loaderIcon';
 
 const AuthForm = ({ type } : { type: string}) => {
   const router = useRouter();
@@ -86,15 +85,11 @@ const AuthForm = ({ type } : { type: string}) => {
                       <CustomInput control={form.control} name='firstName' label="First Name" placeholder="Enter your first name"  />
                       <CustomInput control={form.control} name='lastName' label="First Name" placeholder="Enter your last name"  />
                     </div>
-                    <CustomInput control={form.control} name='address1' label="Address" placeholder="Enter your specific address"  />
-                    <CustomInput control={form.control} name='city' label="City" placeholder="Enter your specific city"  />
+                    <CustomInput control={form.control} name='businessName' label="Business Name" placeholder="Enter your business name"  />
+                    <CustomInput control={form.control} name='businessIndustry' label="Business Industry" placeholder="Enter your business industry"  />
                     <div className='flex gap-4'>
-                      <CustomInput control={form.control} name='state' label="State" placeholder="Example: NY"  />
-                      <CustomInput control={form.control} name='postalCode' label="Postal Code" placeholder="11101" />
-                    </div>
-                    <div className='flex gap-4'>
-                      <CustomInput control={form.control} name='dateOfBirth' label="Date of Birth" placeholder="YYYY-MM-DD" />
-                      <CustomInput control={form.control} name='ssn' label="SSN" placeholder="Example: 1234" />
+                      <CustomInput control={form.control} name='country' label="State" placeholder="Example: USA"  />
+                      <CustomInput control={form.control} name='phoneNumber' label="Phone Number" placeholder="+11101" />
                     </div>
                   </>
                 )}
@@ -105,7 +100,7 @@ const AuthForm = ({ type } : { type: string}) => {
                   <Button className='form-btn' type="submit" disabled={isLoading}>
                     {isLoading ? (
                       <>
-                        <Loader2Icon className="animate-spin" />
+                        <LoaderIcon className="w-8 h-8 mr-2 animate-spin" />
 											Loading...
                       </>
 

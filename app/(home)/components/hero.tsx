@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from '@/components/assets/icons/arrowRight';
+import { ArrowRight } from '@/components/assets/icons/arrowRightIcon';
 
 const Hero = () => {
   return (
