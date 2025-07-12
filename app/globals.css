@@ -86,50 +86,6 @@
 	}
 }
 
-@utility text-10 {
-	text: 10px;
-	leading: 14px;
-}
-@utility text-12 {
-	text: 12px;
-	leading: 16px;
-}
-@utility text-14 {
-	text: 14px;
-	leading: 20px;	
-}	
-@utility text-16 {
-	text: 16px;
-	leading: 24px;
-}
-@utility text-18 {
-	text: 18px;
-	leading: 22px;
-}
-@utility text-20 {
-	text: 20px;
-	leading: 24px;
-}
-@utility text-22 {
-	text: 22px;
-	leading: 28px;
-}
-@utility text-24 {
-	text: 24px;
-	leading: 30px;
-}
-@utility text-26 {
-	text: 26px;
-	leading: 32px;
-}
-@utility text-30 {
-	text: 30px;
-	leading: 38px;
-}
-@utility text-36 {
-	text: 36px;
-	leading: 44px;		
-}
 @utility flex-center {
 	display: flex;
 	align-items: center;
@@ -139,10 +95,6 @@
 @layer components {
 	.auth-form {
 		@apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
-	}
-
-	.form-item {
-		@apply flex flex-col gap-1.5 w-full;
 	}
 
 	.form-message {
@@ -161,7 +113,7 @@
 		@apply h-8 w-auto;
 	}
 	.tag {
-		@apply text-sm inline-flex border border-secondary-200 font-medium text-secondary-400 px-3 py-1 rounded-lg
+		@apply text-xs md:text-sm inline-flex border border-secondary-200 font-medium text-secondary-400 px-3 py-1 rounded-lg
 	}
 }
 

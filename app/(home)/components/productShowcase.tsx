@@ -13,7 +13,7 @@ const ProductShowcase = () => {
 		 	text-transparent bg-clip-text mt-5 pb-2'>
 				A more effective way to track growth
           </h2>
-          <p className='text-center text-22 font-medium text-dark-blue mt-5'>
+          <p className='text-center text-sm sm:text-base xl:text-lg font-medium text-dark-blue mt-5'>
 			With intuitive interfaces, real-time data insights, and robust security features, you can trust our app to keep your financial information safe while providing the tools you need to make informed decisions.
           </p>
 	  	</div>

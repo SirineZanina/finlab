@@ -23,7 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const currentUser = await getCurrentUser();
+  const currentUser = await getCurrentUser({ withFullUser: true});
   return (
     <html lang="en">
       <body className={twMerge(plusJakartaSans.variable, 'antialiased')}>

@@ -10,9 +10,11 @@ export const AuthCardCta = () => (
         <Image
           src="/images/credit-card-img.png"
           alt="Card illustration"
-          fill
+
           className="object-contain translate-x-1/4"
           priority
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
     </div>

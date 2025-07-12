@@ -24,8 +24,6 @@ import { RoleTypes } from '@/types/roleType';
 import CustomSelect from '../customSelect/customSelect';
 
 const AuthForm = ({ type }: { type: string }) => {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useAuthForm(type);
@@ -34,17 +32,8 @@ const AuthForm = ({ type }: { type: string }) => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      if (type === 'sign-up') {
-        const newUser = await signUp(data);
-        // setUser(newUser);
-      }
-      if (type === 'sign-in') {
-        const response = await signIn({
-          email: data.email,
-          password: data.password,
-        });
-        if (response) router.push('/dashboard');
-      }
+      if (type === 'sign-up') await signUp(data);
+      if (type === 'sign-in') await signIn(data);
     } catch (error) {
       console.error('Error during form submission:', error);
     } finally {
@@ -65,7 +54,7 @@ const AuthForm = ({ type }: { type: string }) => {
   return (
     <section>
       <div className="grid grid-cols-2 h-screen">
-        <div className="col-span-2 md:col-span-1 py-8 mx-30">
+        <div className="col-span-2 lg:col-span-1 py-8 mx-30">
           <Link href="/" className="cursor-pointer flex items-center gap-2">
             <FinlabIcon className="w-7 h-7" />
             <FinlabLogo className="w-12" />
@@ -78,7 +67,7 @@ const AuthForm = ({ type }: { type: string }) => {
               </h1>
 
               <div className="flex items-center gap-1">
-                <p className="text-14 font-normal text-gray-600">
+                <p className="text-[14px] font-normal text-gray-600">
                   {type === 'sign-in' ? "Don't have an account?" : 'Already have an account?'}
                 </p>
                 <Link className="form-link" href={type === 'sign-in' ? '/sign-up' : '/sign-in'}>
@@ -151,7 +140,7 @@ const AuthForm = ({ type }: { type: string }) => {
             </div>
 	   </div>
         </div>
-        <div className="hidden md:flex md:col-span-1 relative overflow-hidden bg-primary-800 text-white p-10">
+        <div className="hidden lg:flex lg:col-span-1 relative overflow-hidden bg-primary-800 text-white p-10">
           <div className="absolute top-[-120px] right-[-120px] size-[500px] bg-white/20 rounded-full z-0" />
           <div className='flex justify-center flex-col max-w-[550px] mx-auto'>
 			 <AuthCardCta />

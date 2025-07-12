@@ -1,5 +1,4 @@
 'use client';
-
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -11,9 +10,11 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ProfileDropdownProps } from './profileDropdown.types';
 import Link from 'next/link';
+import { logOut } from '@/app/(auth)/_nextjs/actions';
 
 export default function ProfileDropdown({
-  name,
+  firstName,
+  lastName,
   email,
   role,
   profilePhotoUrl,
@@ -23,23 +24,31 @@ export default function ProfileDropdown({
       <DropdownMenuTrigger asChild>
         <Avatar className="cursor-pointer">
           <AvatarImage src={profilePhotoUrl || ''} alt="User avatar" />
-          <AvatarFallback>{name?.[0] ?? 'U'}</AvatarFallback>
+          <AvatarFallback>{firstName?.[0] ?? 'U'}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-44">
         <DropdownMenuLabel>
           <div className="flex flex-col">
-            <span>{name}</span>
+            <div className='flex items-end gap-2'>
+              <span className="text-sm font-semibold">
+                {firstName} {lastName?.[0]}.
+			  </span>
+			 <span>|</span>
+              <span className="text-xs text-primary-500 font-bold">
+				 {role.roleType}
+              </span>
+
+            </div>
             <span className="text-xs text-muted-foreground">{email}</span>
-            <span className="text-xs text-muted-foreground capitalize">{role}</span>
           </div>
         </DropdownMenuLabel>
 
         <DropdownMenuSeparator />
 
         <DropdownMenuItem>
-          <Link href='/private'>
+          <Link href='/dashboard'>
 			Dashboard
           </Link>
 
@@ -49,7 +58,7 @@ export default function ProfileDropdown({
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>Sign out</DropdownMenuItem>
+        <DropdownMenuItem onClick={async () => await logOut()}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

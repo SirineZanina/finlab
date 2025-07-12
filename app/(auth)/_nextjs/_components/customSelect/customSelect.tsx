@@ -9,11 +9,11 @@ const CustomSelect = ({ control, name, label, placeholder, options }: CustomSele
       control={control}
       name={name}
       render={({ field }) => (
-        <div className='form-item'>
+        <div className='flex flex-col gap-1.5 w-full'>
           <FormLabel>{label}</FormLabel>
           <Select onValueChange={field.onChange} defaultValue={field.value}>
             <FormControl>
-              <SelectTrigger className='w-full'>
+              <SelectTrigger className='w-full' id={field.name}>
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
             </FormControl>

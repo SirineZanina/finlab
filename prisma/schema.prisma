@@ -82,6 +82,7 @@ model PermissionOnRole {
 }
 
 enum RoleType {
+    ADMIN
     OWNER
     ACCOUNTANT
     MEMBER

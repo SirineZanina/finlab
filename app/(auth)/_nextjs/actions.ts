@@ -3,20 +3,40 @@ import z from 'zod';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { signInSchema, signUpSchema } from './schema';
-import { generateSalt, hashPassword } from '../_core/passwordHasher';
-import { createUserSession } from '../_core/session';
+import { comparePasswords, generateSalt, hashPassword } from '../_core/passwordHasher';
+import { createUserSession, removeUserFromSession } from '../_core/session';
 import { cookies } from 'next/headers';
 import { BusinessIndustry, RoleType } from '@prisma/client';
 
 export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 
   const { success, data } = signInSchema.safeParse(unsafeData);
-  if (!success) {
-    return 'Unable to log you in';
-  }
+  if (!success) return 'Unable to log you in';
 
-  // TODO: Implement sign-in logic here
-  redirect('/');
+  const user =  await prisma.user.findFirst({
+    where: { email: data.email },
+    select: {
+	  id: true,
+	  password: true,
+	  salt: true,
+	  email: true,
+	  role: true
+    }
+  });
+
+  if (user == null) return 'Unable to log you in';
+
+  const isCorrectPassword = await comparePasswords({
+    hashedPassword: user.password,
+    password: data.password,
+    salt: user.salt
+  });
+
+  if (!isCorrectPassword) return 'Unable to log you in';
+
+  await createUserSession({ id: user.id, role: user.role.roleType }, await cookies());
+
+  redirect('/dashboard');
 }
 
 export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
@@ -88,15 +108,15 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
 
   } catch (error) {
     console.error('Error creating user:', error);
-    // Handle error appropriately, e.g., log it or return a user-friendly message
     return 'Unable to create account';
   }
 
-  redirect('/');
+  redirect('/sign-in');
 
 }
 
 export async function logOut() {
-  //TODO: Implement log-out logic here
+
+  await removeUserFromSession(await cookies());
   redirect('/');
 }

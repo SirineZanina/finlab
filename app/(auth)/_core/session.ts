@@ -1,3 +1,4 @@
+'use server';
 import z from 'zod';
 import crypto from 'crypto';
 import { redisClient } from '@/redis/redis';
@@ -6,6 +7,7 @@ import { sessionSchema } from '../_nextjs/schema';
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7; // 7 days
 const COOKIE_SESSION_KEY = 'session-id';
 
+// This type represents the minimal data stored in Redis
 export type UserSession = z.infer<typeof sessionSchema>;
 
 export type Cookies = {
@@ -33,10 +35,29 @@ export async function getUserFromSession(cookies: Pick<Cookies, 'get'>) {
 
 export async function createUserSession(user: UserSession, cookies: Cookies){
   const sessionId = crypto.randomBytes(512).toString('hex').normalize();
-  await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
+  await redisClient.set(`session:${sessionId}`, JSON.stringify(user), {
     ex: SESSION_EXPIRATION_SECONDS,
 	  });
 	  setCookie(sessionId, cookies);
+}
+
+export async function updateUserSession(user: UserSession, cookies: Pick<Cookies, 'get'>) {
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+
+  if (sessionId == null) return null;
+  await redisClient.set(`session:${sessionId}`, JSON.stringify(user), {
+    ex: SESSION_EXPIRATION_SECONDS,
+	  });
+
+}
+export async function removeUserFromSession(cookies: Pick<Cookies, 'get' | 'delete'>) {
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+
+  if (sessionId == null) return null;
+
+  await redisClient.del(`session:${sessionId}`);
+  cookies.delete(COOKIE_SESSION_KEY);
+
 }
 
 function setCookie(sessionId: string, cookies: Pick<Cookies, 'set'>) {
@@ -55,5 +76,19 @@ async function getUserSessionById(sessionId: string) {
   const { success, data: user } = sessionSchema.safeParse(rawUser);
 
   return success ? user : null;
+}
 
+export async function updateUserSessionExpiration(cookies: Pick<Cookies, 'set' | 'get'>) {
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+
+  if (sessionId == null) return;
+
+  const user = await getUserSessionById(sessionId);
+  if (user == null) return;
+
+  await redisClient.set(`session:${sessionId}`, user, {
+    ex: SESSION_EXPIRATION_SECONDS
+  });
+
+  setCookie(sessionId, cookies);
 }

@@ -11,7 +11,7 @@ const CustomInput = ({ control, name, label, placeholder } : CustomInputProps ) 
       control={control}
       name={name}
       render={({ field }) => (
-        <div className='form-item'>
+        <div className='flex flex-col gap-1.5 w-full'>
           <FormLabel>
             {label}
           </FormLabel>
@@ -20,6 +20,7 @@ const CustomInput = ({ control, name, label, placeholder } : CustomInputProps ) 
               <Input
                 placeholder={placeholder}
                 type={name === 'password' ? 'password' : 'text'}
+                id={field.name}
                 {...field}
               />
             </FormControl>

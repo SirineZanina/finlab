@@ -44,7 +44,11 @@ const Header = () => {
                 </Link>
 			 ) :
 			 	(
-                  <ProfileDropdown role={session?.role} />
+                  <ProfileDropdown
+				 	firstName={session?.firstName}
+                    lastName={session?.lastName}
+                    email={session?.email}
+                    role={session?.role} />
                 )
 			 }
             </nav>

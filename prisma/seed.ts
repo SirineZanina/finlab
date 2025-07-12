@@ -29,6 +29,7 @@ async function seedRoles() {
 
 async function seedPermissions() {
   const rolePermissions: Record<RoleType, Permission[]> = {
+    ADMIN: Object.values(Permission),
     OWNER: [
       Permission.VIEW_TRANSACTIONS,
       Permission.CREATE_TRANSACTIONS,

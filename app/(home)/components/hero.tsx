@@ -56,6 +56,7 @@ const Hero = () => {
               height={1333}
               alt='Hero Image'
               className='w-full h-auto object-cover rounded-lg shadow-lg'
+			  priority
             />
 		 </div>
         </div>

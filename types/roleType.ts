@@ -1,1 +1,1 @@
-export const RoleTypes = ['OWNER', 'ACCOUNTANT', 'MEMBER'];
+export const RoleTypes = [ 'ADMIN', 'OWNER', 'ACCOUNTANT', 'MEMBER'];
