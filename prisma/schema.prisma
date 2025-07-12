@@ -38,18 +38,19 @@ enum BusinessIndustry {
 }
 
 model User {
-    id          String   @id @default(cuid())
-    firstName   String
-    lastName    String
-    email       String   @unique
-    password    String
-    salt        String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    country     String
-    phoneNumber String
-    roleId      String
-    businessId  String
+    id              String   @id @default(cuid())
+    firstName       String
+    lastName        String
+    email           String   @unique
+    password        String
+    salt            String
+    profilePhotoUrl String?
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+    country         String
+    phoneNumber     String
+    roleId          String
+    businessId      String
 
     business Business @relation(fields: [businessId], references: [id])
 

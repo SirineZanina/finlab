@@ -1,7 +1,7 @@
 import z from 'zod';
 import crypto from 'crypto';
 import { redisClient } from '@/redis/redis';
-import { sessionSchema } from '../schema';
+import { sessionSchema } from '../_nextjs/schema';
 
 const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7; // 7 days
 const COOKIE_SESSION_KEY = 'session-id';
@@ -23,6 +23,14 @@ export type Cookies = {
 	delete: (key: string) => void;
 }
 
+export async function getUserFromSession(cookies: Pick<Cookies, 'get'>) {
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+  if (!sessionId) return null;
+
+  return getUserSessionById(sessionId);
+
+}
+
 export async function createUserSession(user: UserSession, cookies: Cookies){
   const sessionId = crypto.randomBytes(512).toString('hex').normalize();
   await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
@@ -38,5 +46,14 @@ function setCookie(sessionId: string, cookies: Pick<Cookies, 'set'>) {
     sameSite: 'lax',
     expires: Date.now() + SESSION_EXPIRATION_SECONDS * 1000, // Convert seconds to milliseconds
   });
+
+}
+
+async function getUserSessionById(sessionId: string) {
+  const rawUser = await redisClient.get(`session:${sessionId}`);
+
+  const { success, data: user } = sessionSchema.safeParse(rawUser);
+
+  return success ? user : null;
 
 }

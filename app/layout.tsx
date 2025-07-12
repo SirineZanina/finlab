@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { twMerge } from 'tailwind-merge';
 import {Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { getCurrentUser } from './(auth)/_nextjs/currentUser';
+import { SessionProvider } from './components/sessionProvider';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -15,15 +17,19 @@ export const metadata: Metadata = {
   description: 'A modern finance app for managing your personal finances'
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  const currentUser = await getCurrentUser();
   return (
     <html lang="en">
       <body className={twMerge(plusJakartaSans.variable, 'antialiased')}>
-        {children}
+        <SessionProvider value={currentUser}>
+          {children}
+        </SessionProvider>
       </body>
     </html>
   );

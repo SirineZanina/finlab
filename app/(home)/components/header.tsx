@@ -1,12 +1,15 @@
+'use client';
 import Link from 'next/link';
 import { ArrowRight } from '@/components/assets/icons/arrowRightIcon';
 import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
 import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
 import { MenuIcon } from '@/components/assets/icons/menuIcon';
 import { Button } from '@/components/ui/button';
+import { useSession } from '@/hooks/useSession';
+import ProfileDropdown from '@/app/components/profileDropdown/profileDropdown';
 
 const Header = () => {
-	 const fullUser = { id: '', name: 'Kyle', role: 'user'};
+  const session = useSession();
 
   return (
     <header className="sticky top-0 backdrop-blur-md">
@@ -33,7 +36,7 @@ const Header = () => {
               <Link href="#testimonials">Testimonials</Link>
               <Link href="#updates">Updates</Link>
               <Link href="/help">Help</Link>
-              { fullUser === null ? (
+              { session === null ? (
 				 <Link href="/sign-up">
                   <Button variant={'default'}>
 					Get Started
@@ -41,13 +44,7 @@ const Header = () => {
                 </Link>
 			 ) :
 			 	(
-                  <div>
-                    <Link href="/private">
-					  <Button variant={'text'} className="ml-2">
-                        {fullUser.name}
-					  </Button>
-                    </Link>
-                  </div>
+                  <ProfileDropdown role={session?.role} />
                 )
 			 }
             </nav>

@@ -3,8 +3,8 @@ import z from 'zod';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { signInSchema, signUpSchema } from './schema';
-import { generateSalt, hashPassword } from './_core/passwordHasher';
-import { createUserSession } from './_core/session';
+import { generateSalt, hashPassword } from '../_core/passwordHasher';
+import { createUserSession } from '../_core/session';
 import { cookies } from 'next/headers';
 import { BusinessIndustry, RoleType } from '@prisma/client';
 
