@@ -1,4 +1,4 @@
-import { RoleType } from '@prisma/client';
+import { RoleType, BusinessIndustry } from '@prisma/client';
 import z from 'zod';
 
 export const authFormSchema = (type: string) => z.object({
@@ -6,7 +6,7 @@ export const authFormSchema = (type: string) => z.object({
   firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3),
   lastName:type === 'sign-in' ? z.string().optional() : z.string().min(3),
   businessName:type === 'sign-in' ? z.string().optional() : z.string().max(50),
-  businessIndustry:type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  businessIndustry:type === 'sign-in' ? z.string().optional() : z.enum(Object.values(BusinessIndustry) as [BusinessIndustry, ...BusinessIndustry[]]),
   country:type === 'sign-in' ? z.string().optional() : z.string().max(50),
   phoneNumber: type === 'sign-in'
     ? z.string().optional()

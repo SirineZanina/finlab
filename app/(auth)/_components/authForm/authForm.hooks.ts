@@ -14,12 +14,11 @@ export function useAuthForm(type: string) {
   const signUpDefaults = {
     firstName: '',
     lastName: '',
-    address1: '',
-    city: '',
-    state: '',
-    postalCode: '',
-    dateOfBirth: '',
-    ssn: '',
+    businessName: '',
+    businessIndustry: '',
+    country: '',
+    phoneNumber: '',
+    roleType: '',
   };
 
   return useForm<z.infer<typeof schema>>({

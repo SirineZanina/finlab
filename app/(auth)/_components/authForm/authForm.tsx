@@ -18,13 +18,10 @@ import { GoogleIcon } from '@/components/assets/icons/googleIcon';
 import { FacebookIcon } from '@/components/assets/icons/facebookIcon';
 import { authFormSchema } from '../../schema';
 import { signIn, signUp } from '../../actions';
-import { Controller } from 'react-hook-form';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+// types
 import { BusinessIndustries } from '@/types/businessIndustry';
 import { RoleTypes } from '@/types/roleType';
-
 import CustomSelect from '../customSelect/customSelect';
-import { RoleType } from '@prisma/client';
 
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
@@ -55,7 +52,7 @@ const AuthForm = ({ type }: { type: string }) => {
     }
   };
 
-  const roleOptions = Object.values(RoleType).map((role) => ({
+  const roleOptions = RoleTypes.map((role) => ({
     value: role,
     label: role.charAt(0).toUpperCase() + role.slice(1).toLowerCase(),
   }));

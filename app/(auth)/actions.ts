@@ -6,6 +6,7 @@ import { signInSchema, signUpSchema } from './schema';
 import { generateSalt, hashPassword } from './_core/passwordHasher';
 import { createUserSession } from './_core/session';
 import { cookies } from 'next/headers';
+import { BusinessIndustry, RoleType } from '@prisma/client';
 
 export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 
@@ -28,7 +29,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     firstName: string;
     lastName: string;
     businessName: string;
-    businessIndustry: string;
+    businessIndustry: BusinessIndustry;
     country: string;
     phoneNumber: string;
     roleType: RoleType;
@@ -42,7 +43,7 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
 
   try {
 	 const userRole = await prisma.userRole.findUnique({
-      where: { roleType: validatedData.roleType },
+      where: { roleType: validatedData.roleType},
     });
 
     if (!userRole) {

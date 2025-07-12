@@ -1,4 +1,5 @@
-import { PrismaClient, Permission, RoleType } from '@prisma/client';
+import { PrismaClient, Permission, RoleType, BusinessIndustry } from '@prisma/client';
+import { BusinessIndustries } from '../types/businessIndustry';
 
 const prisma = new PrismaClient();
 
@@ -11,6 +12,9 @@ async function main() {
   // Seed permissions
   await seedPermissions();
 
+  // Seed businesses
+  await seedBusinesses();
+
   console.log('Seeding finished.');
 }
 
@@ -20,7 +24,7 @@ async function seedRoles() {
     data: roles,
     skipDuplicates: true,
   });
-  console.log('✅ Roles seeded.');
+  console.log('Roles seeded.');
 }
 
 async function seedPermissions() {
@@ -59,7 +63,26 @@ async function seedPermissions() {
     }
   }
 
-  console.log('✅ Permissions seeded using createMany.');
+  console.log('Permissions seeded using createMany.');
+}
+
+async function seedBusinesses() {
+  console.log('Seeding businesses...');
+  const businesses = BusinessIndustries.map((industry) => {
+    const formattedIndustry =
+      industry.charAt(0).toUpperCase() +
+      industry.slice(1).toLowerCase().replace(/_/g, ' ');
+    return {
+      name: `${formattedIndustry} Business`,
+      industry: industry as BusinessIndustry,
+    };
+  });
+
+  await prisma.business.createMany({
+    data: businesses,
+    skipDuplicates: true,
+  });
+  console.log('Businesses seeded.');
 }
 
 main()
