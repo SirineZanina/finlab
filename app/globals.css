@@ -145,12 +145,8 @@
 		@apply flex flex-col gap-1.5 w-full;
 	}
 
-	.form-label {
-		@apply text-[14px] w-full max-w-[280px] font-medium text-gray-700;
-	}
-
 	.form-message {
-		@apply text-[12px] text-red-500;
+		@apply text-[10px] text-red-500;
 	}
 
 	.form-btn {
@@ -160,10 +156,6 @@
 	.form-link {
 		@apply text-[14px] cursor-pointer font-medium text-primary-500;
 	}
-
-	.input-class {
-    	@apply text-[16px] placeholder:text-[16px] rounded-lg border border-gray-300 text-gray-900 placeholder:text-gray-500;
-  	}
 
 	.logo-ticker-image {
 		@apply h-8 w-auto;

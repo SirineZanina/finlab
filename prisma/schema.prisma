@@ -15,10 +15,26 @@ datasource db {
 }
 
 model Business {
-    id       String @id @default(cuid())
+    id       String           @id @default(cuid())
     name     String
-    industry String
+    industry BusinessIndustry
     User     User[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+enum BusinessIndustry {
+    FINANCE
+    TECHNOLOGY
+    HEALTHCARE
+    EDUCATION
+    RETAIL
+    MANUFACTURING
+    REAL_ESTATE
+    HOSPITALITY
+    TRANSPORTATION
+    OTHER
 }
 
 model User {
@@ -47,6 +63,8 @@ model UserRole {
     roleType    RoleType           @unique
     permissions PermissionOnRole[]
     users       User[]             @relation("UserToRole")
+    createdAt   DateTime           @default(now())
+    updatedAt   DateTime           @updatedAt
 
     @@map("user_role")
 }
@@ -54,10 +72,12 @@ model UserRole {
 model PermissionOnRole {
     id         String     @id @default(cuid())
     permission Permission
-    roleId     String
-    role       UserRole   @relation(fields: [roleId], references: [id])
+    roleId     String?
+    role       UserRole?  @relation(fields: [roleId], references: [id])
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
 
-    @@unique([permission, roleId])
+    @@unique([permission, roleId], name: "permission_role_unique")
 }
 
 enum RoleType {

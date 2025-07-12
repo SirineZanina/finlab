@@ -1,6 +1,6 @@
 import { Control, FieldPath } from 'react-hook-form';
 import z from 'zod';
-import { signUpSchema } from '../authForm/authForm.schema';
+import { signUpSchema } from '../../schema';
 
 export type CustomInputProps = {
 	control: Control<z.infer<typeof signUpSchema>>;

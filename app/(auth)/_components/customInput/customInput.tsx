@@ -12,14 +12,13 @@ const CustomInput = ({ control, name, label, placeholder } : CustomInputProps ) 
       name={name}
       render={({ field }) => (
         <div className='form-item'>
-          <FormLabel className='form-label'>
+          <FormLabel>
             {label}
           </FormLabel>
           <div className="flex w-full flex-col">
             <FormControl>
               <Input
                 placeholder={placeholder}
-                className="input-class"
                 type={name === 'password' ? 'password' : 'text'}
                 {...field}
               />
