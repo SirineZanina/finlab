@@ -8,7 +8,6 @@ import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 // hooks
-import { useRouter } from 'next/navigation';
 import { useAuthForm } from './authForm.hooks';
 
 import CustomInput from '../customInput/customInput';

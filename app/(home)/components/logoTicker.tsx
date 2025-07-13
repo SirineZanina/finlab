@@ -13,10 +13,8 @@ const LogoTicker = () => {
             <Image src={'/logo/logo-celestial.png'} alt='Celestial Logo' className='logo-ticker-image' width={188} height={48} />
             <Image src={'/logo/logo-pulse.png'} alt='Pulse Logo' className='logo-ticker-image' width={164} height={38} />
             <Image src={'/logo/logo-apex.png'} alt='Apex Logo' className='logo-ticker-image' width={151} height={49} />
-			            <Image src={'/logo/logo-acme.png'} alt='Acme Logo' className='logo-ticker-image' width={238} height={52} />
-
+			 <Image src={'/logo/logo-acme.png'} alt='Acme Logo' className='logo-ticker-image' width={238} height={52} />
           </div>
-
 	 </div>
       </div>
     </div>

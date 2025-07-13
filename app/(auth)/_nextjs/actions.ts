@@ -4,9 +4,10 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { signInSchema, signUpSchema } from './schema';
 import { comparePasswords, generateSalt, hashPassword } from '../_core/passwordHasher';
-import { createUserSession, removeUserFromSession } from '../_core/session';
+import { removeUserFromSession } from '../_core/session';
 import { cookies } from 'next/headers';
 import { BusinessIndustry, RoleType } from '@prisma/client';
+import { createUserSession } from '../_core/createUserSession';
 
 export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 

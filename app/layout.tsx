@@ -13,7 +13,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: 'Finlens',
+  title: 'Finlab',
   description: 'A modern finance app for managing your personal finances'
 };
 

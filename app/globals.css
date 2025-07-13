@@ -115,6 +115,18 @@
 	.tag {
 		@apply text-xs md:text-sm inline-flex border border-secondary-200 font-medium text-secondary-400 px-3 py-1 rounded-lg
 	}
+
+	.section-title {
+		@apply text-3xl md:text-5xl md:leading-[60px] font-bold tracking-tighter bg-gradient-to-b from-black to-primary-600
+		 	text-transparent bg-clip-text pb-2;
+	}
+
+	.section-description {
+		@apply text-sm sm:text-base xl:text-lg font-medium text-dark-blue;
+	}
+	.section-heading {
+		@apply max-w-[540px] mx-auto
+	}
 }
 
 

@@ -12,9 +12,8 @@ const Hero = () => {
             <div className='tag'>
               	New features for active users
             </div>
-		  <h1 className='text-3xl sm:text-4xl xl:text-5xl/14 font-bold tracking-tight bg-gradient-to-b from-black to-primary-600
-		 	text-transparent bg-clip-text mt-5 pb-2'>Manage Your Finances With Complete Precision</h1>
-		  <p className='text-sm sm:text-base xl:text-lg font-medium text-dark-blue mt-4'>
+		  <h1 className='section-title mt-5'>Manage your finances with complete precision</h1>
+		  <p className='section-description mt-4'>
 			A comprehensive financial management tool designed to help you track your income, expenses, and investments with ease.
             </p>
 		  <div className='flex gap-1 items-center mt-[30px]'>

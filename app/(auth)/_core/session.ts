@@ -1,11 +1,8 @@
 'use server';
 import z from 'zod';
-import crypto from 'crypto';
 import { redisClient } from '@/redis/redis';
 import { sessionSchema } from '../_nextjs/schema';
-
-const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7; // 7 days
-const COOKIE_SESSION_KEY = 'session-id';
+import { COOKIE_SESSION_KEY, SESSION_EXPIRATION_SECONDS } from '@/constants/sessionConstants';
 
 // This type represents the minimal data stored in Redis
 export type UserSession = z.infer<typeof sessionSchema>;
@@ -33,14 +30,6 @@ export async function getUserFromSession(cookies: Pick<Cookies, 'get'>) {
 
 }
 
-export async function createUserSession(user: UserSession, cookies: Cookies){
-  const sessionId = crypto.randomBytes(512).toString('hex').normalize();
-  await redisClient.set(`session:${sessionId}`, JSON.stringify(user), {
-    ex: SESSION_EXPIRATION_SECONDS,
-	  });
-	  setCookie(sessionId, cookies);
-}
-
 export async function updateUserSession(user: UserSession, cookies: Pick<Cookies, 'get'>) {
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
 
@@ -60,8 +49,8 @@ export async function removeUserFromSession(cookies: Pick<Cookies, 'get' | 'dele
 
 }
 
-function setCookie(sessionId: string, cookies: Pick<Cookies, 'set'>) {
-  cookies.set(COOKIE_SESSION_KEY, sessionId, {
+export async function setCookie(sessionId: string, cookies: Pick<Cookies, 'set'>) {
+  await cookies.set(COOKIE_SESSION_KEY, sessionId, {
     secure: true,
     httpOnly: true,
     sameSite: 'lax',

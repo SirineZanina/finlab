@@ -10,7 +10,6 @@ export const AuthCardCta = () => (
         <Image
           src="/images/credit-card-img.png"
           alt="Card illustration"
-
           className="object-contain translate-x-1/4"
           priority
           fill
