@@ -1,5 +1,4 @@
 import { getUserFromSession, Cookies, updateUserSessionExpiration } from '@/app/(auth)/_core/session';
-import { RoleType } from '@prisma/client';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const privateRoutesPrefix = ['/dashboard'];

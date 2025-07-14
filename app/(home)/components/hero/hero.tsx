@@ -17,10 +17,10 @@ const Hero = () => {
 			A comprehensive financial management tool designed to help you track your income, expenses, and investments with ease.
             </p>
 		  <div className='flex gap-1 items-center mt-[30px]'>
-              <Button variant={'default'}>
+              <Button variant='default'>
 				Get for free
               </Button>
-              <Button variant={'text'} className='gap-1'>
+              <Button variant='text' className='gap-1'>
             	<span>Learn more</span>
 		    	<ArrowRight className='size-5'/>
               </Button>
