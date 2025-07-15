@@ -92,23 +92,15 @@
 	justify-content: center;
 }
 
+@utility no-scrollbar {
+	&::-webkit-scrollbar {
+		display: none;
+	}
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+}
+
 @layer components {
-	.auth-form {
-		@apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
-	}
-
-	.form-message {
-		@apply text-[10px] text-red-500;
-	}
-
-	.form-btn {
-		@apply text-[16px] rounded-lg border bg-primary-500 font-semibold text-white;
-	}
-
-	.form-link {
-		@apply text-[14px] cursor-pointer font-medium text-primary-500;
-	}
-
 	.logo-ticker-image {
 		@apply h-8 w-auto;
 	}
@@ -130,7 +122,79 @@
 	.card {
 		@apply p-10 border border-[#F1F1F1] rounded-3xl shadow-[0_7px_14px_#EAEAEA] max-w-xs w-full
 	}
+	.auth-form {
+		@apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
+	}
+
+	.form-message {
+		@apply text-[10px] text-red-500;
+	}
+
+	.form-btn {
+		@apply text-[16px] rounded-lg border bg-primary-500 font-semibold text-white;
+	}
+
+	.form-link {
+		@apply text-[14px] cursor-pointer font-medium text-primary-500;
+	}
+
+	.home {
+    	@apply flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll;
+  	}
+
+  	.home-content {
+    	@apply flex w-full flex-1 flex-col gap-8 px-5 sm:px-8 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll;
+  	}
+
+   .home-header {
+    	@apply flex flex-col justify-between gap-8;
+  	}
+
+	.header-box {
+		@apply flex flex-col gap-1;
+	}
+
+	.header-box-title {
+		@apply text-2xl lg:text-3xl font-bold text-secondary-500
+	}
+
+	/* .header-box-subtext {
+		@apply text-sm lg:text-base font-medium text-secondary-400;
+	} */
+
+	.header-2 {
+		@apply text-lg font-bold text-secondary-500;
+	}
+	.total-balance {
+    	@apply flex w-full items-center gap-4 rounded-xl border border-secondary-200 p-4 sm:gap-6 sm:p-6;
+	}
+
+	.total-balance-label {
+		@apply text-sm font-medium text-secondary-400;
+	}
+
+	.total-balance-amount {
+		@apply text-2xl lg:text-3xl flex-1 font-semibold text-secondary-500;
+	}
+
+	.recent-transactions {
+		@apply flex w-full flex-col gap-6;
+	}
+	
+	  /* Sidebar */
+	.sidebar {
+		@apply sticky left-0 top-0 flex h-screen w-fit flex-col justify-between border-r border-gray-200 bg-white pt-8 max-md:hidden sm:p-4 xl:p-6 2xl:w-[250px];
+	}
+	
+	.sidebar-link {
+		@apply flex gap-3 items-center p-2 font-medium rounded-md justify-center xl:justify-start;
+	}
+
+	/* .sidebar-label {
+		@apply text-base font-medium hidden lg:flex;
+	} */
 }
+
 
 
 

@@ -16,12 +16,14 @@ datasource db {
 
 model Business {
     id       String           @id @default(cuid())
-    name     String
+    name     String           @unique
     industry BusinessIndustry
     User     User[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    accounts     Account[]
+    transactions Transaction[]
 }
 
 enum BusinessIndustry {
@@ -96,4 +98,46 @@ enum Permission {
     EXPORT_REPORTS
     MANAGE_USERS
     MANAGE_BUDGETS
+}
+
+model Account {
+    id           String        @id @default(cuid())
+    name         String
+    type         AccountType
+    balance      Decimal       @default(0)
+    businessId   String
+    business     Business      @relation(fields: [businessId], references: [id])
+    createdAt    DateTime      @default(now())
+    updatedAt    DateTime      @updatedAt
+    transactions Transaction[]
+
+    @@unique([name, businessId], name: "name_businessId")
+}
+
+enum AccountType {
+    CASH
+    BANK
+    CREDIT
+    OTHER
+}
+
+model Transaction {
+    id          String          @id @default(cuid())
+    description String
+    amount      Decimal
+    date        DateTime
+    type        TransactionType
+    businessId  String
+    business    Business        @relation(fields: [businessId], references: [id])
+    accountId   String
+    account     Account         @relation(fields: [accountId], references: [id])
+    createdAt   DateTime        @default(now())
+    updatedAt   DateTime        @updatedAt
+
+    @@unique([description, date, accountId, businessId], name: "transaction_unique")
+}
+
+enum TransactionType {
+    INCOME
+    EXPENSE
 }

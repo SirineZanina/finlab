@@ -2,7 +2,7 @@
 import z from 'zod';
 import { redisClient } from '@/redis/redis';
 import { sessionSchema } from '../_nextjs/schema';
-import { COOKIE_SESSION_KEY, SESSION_EXPIRATION_SECONDS } from '@/constants/sessionConstants';
+import { COOKIE_SESSION_KEY, SESSION_EXPIRATION_SECONDS } from '@/constants';
 
 // This type represents the minimal data stored in Redis
 export type UserSession = z.infer<typeof sessionSchema>;

@@ -1,12 +1,11 @@
 'use client';
 import Link from 'next/link';
 import { ArrowRight } from '@/components/assets/icons/arrowRightIcon';
-import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
-import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
 import { MenuIcon } from '@/components/assets/icons/menuIcon';
 import { Button } from '@/components/ui/button';
-import { useSession } from '@/hooks/useSession';
+import { useSession } from '@/hooks';
 import ProfileDropdown from '@/app/components/profileDropdown/profileDropdown';
+import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
 
 const Header = () => {
   const session = useSession();
@@ -25,10 +24,7 @@ const Header = () => {
       <div className="py-5">
         <div className="container">
           <div className="flex items-center justify-between">
-            <Link href="/" className="cursor-pointer flex items-center gap-2">
-              <FinlabIcon className="w-7 h-7" />
-              <FinlabLogo className="w-12" />
-            </Link>
+            <CompanyLogo />
             <MenuIcon className="h-5 w-5 md:hidden" />
             <nav className="text-sm hidden md:flex gap-6 text-secondary-400 items-center font-medium">
               <Link href="/">Home</Link>

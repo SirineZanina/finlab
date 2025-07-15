@@ -18,12 +18,15 @@ import { FacebookIcon } from '@/components/assets/icons/facebookIcon';
 import { authFormSchema } from '../../schema';
 import { signIn, signUp } from '../../actions';
 // types
-import { BusinessIndustries } from '@/types/businessIndustry';
-import { RoleTypes } from '@/types/roleType';
+import { BusinessIndustries } from '@/types/business/businessIndustry';
+import { RoleType } from '@/types/user/roleType';
 import CustomSelect from '../customSelect/customSelect';
+import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
 
 const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);
+
+  const RoleTypes = Object.values(RoleType);
 
   const form = useAuthForm(type);
   const formSchema = authFormSchema(type);
@@ -54,10 +57,7 @@ const AuthForm = ({ type }: { type: string }) => {
     <section>
       <div className="grid grid-cols-2 h-screen">
         <div className="col-span-2 lg:col-span-1 py-8 mx-30">
-          <Link href="/" className="cursor-pointer flex items-center gap-2">
-            <FinlabIcon className="w-7 h-7" />
-            <FinlabLogo className="w-12" />
-          </Link>
+          <CompanyLogo />
 
           <div className='flex justify-center flex-col h-full'>
 		   <div className="flex flex-col gap-4">
