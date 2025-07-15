@@ -9,7 +9,7 @@ export const COOKIE_SESSION_KEY = 'session-id';
 export const sidebarLinks = [
   {
     icon: HomeIcon,
-    route: '/dashboard/home',
+    route: '/dashboard',
     label: 'Home',
     position: 'top',
   },

@@ -143,7 +143,7 @@
   	}
 
   	.home-content {
-    	@apply flex w-full flex-1 flex-col gap-8 px-5 sm:px-8 py-7 lg:py-12 xl:max-h-screen xl:overflow-y-scroll;
+    	@apply flex w-full flex-1 flex-col gap-8 px-5 sm:px-6 py-4 lg:py-5 xl:max-h-screen xl:overflow-y-scroll;
   	}
 
    .home-header {
@@ -190,9 +190,6 @@
 		@apply flex gap-3 items-center p-2 font-medium rounded-md justify-center xl:justify-start;
 	}
 
-	/* .sidebar-label {
-		@apply text-base font-medium hidden lg:flex;
-	} */
 }
 
 

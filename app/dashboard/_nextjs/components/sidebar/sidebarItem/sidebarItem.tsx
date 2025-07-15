@@ -21,7 +21,7 @@ const SidebarItem = ({ item, isActive } : SidebarItemProps) => {
                 {item.icon && (
                   <item.icon className={`w-6 h-6 ${isActive ? 'fill-white' : 'fill-slate-500'}`} />
                 )}
-                <span className={cn('sidebar-label text-sm', isActive ? 'text-white' : 'text-slate-500')}>
+                <span className={cn('hidden xl:flex text-sm', isActive ? 'text-white' : 'text-slate-500')}>
                   {item.label}
                 </span>
               </div>

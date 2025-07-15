@@ -22,13 +22,13 @@ export default function ProfileDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Avatar className="cursor-pointer">
+        <Avatar className="cursor-pointer w-10 h-10">
           <AvatarImage src={profilePhotoUrl || ''} alt="User avatar" />
           <AvatarFallback>{firstName?.[0] ?? 'U'}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-44">
+      <DropdownMenuContent className="w-44 mr-10">
         <DropdownMenuLabel>
           <div className="flex flex-col">
             <div className='flex items-end gap-2'>
@@ -44,9 +44,7 @@ export default function ProfileDropdown({
             <span className="text-xs text-muted-foreground">{email}</span>
           </div>
         </DropdownMenuLabel>
-
         <DropdownMenuSeparator />
-
         <DropdownMenuItem>
           <Link href='/dashboard'>
 			Dashboard
