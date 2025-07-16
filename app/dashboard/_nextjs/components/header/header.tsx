@@ -28,7 +28,6 @@ const Header = () => {
               firstName={session.user.firstName}
               lastName={session.user.lastName}
               email={session.user.email}
-              role={session.user.role}
               profilePhotoUrl={session.user.profilePhotoUrl ?? ''}
             />
           )}

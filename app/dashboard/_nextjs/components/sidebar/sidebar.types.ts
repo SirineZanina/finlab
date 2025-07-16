@@ -1,5 +1,5 @@
-import { User } from '@/types/user/user';
+import { SafeUser } from '@/types/session/sessionData';
 
 export type SidebarProps = {
-	user: User
+	user: SafeUser
 }
