@@ -38,15 +38,17 @@ const Header = () => {
 					Get Started
                   </Button>
                 </Link>
-			 ) :
-			 	(
-                  <ProfileDropdown
-				 	firstName={session?.firstName}
-                    lastName={session?.lastName}
-                    email={session?.email}
-                    role={session?.role} />
+              ) :
+                (
+                  session.user && (
+                    <ProfileDropdown
+                      firstName={session.user.firstName}
+                      lastName={session.user.lastName}
+                      email={session.user.email}
+                    />
+                  )
                 )
-			 }
+              }
             </nav>
           </div>
         </div>

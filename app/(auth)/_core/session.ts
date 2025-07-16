@@ -50,7 +50,7 @@ export async function removeUserFromSession(cookies: Pick<Cookies, 'get' | 'dele
 }
 
 export async function setCookie(sessionId: string, cookies: Pick<Cookies, 'set'>) {
-  await cookies.set(COOKIE_SESSION_KEY, sessionId, {
+  cookies.set(COOKIE_SESSION_KEY, sessionId, {
     secure: true,
     httpOnly: true,
     sameSite: 'lax',

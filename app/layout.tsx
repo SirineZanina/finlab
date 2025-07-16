@@ -5,6 +5,7 @@ import {Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { getCurrentUser } from './(auth)/_nextjs/currentUser';
 import { SessionProvider } from './components/sessionProvider';
+import { SessionData } from '@/types/session/sessionData';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -23,11 +24,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const currentUser = await getCurrentUser({ withFullUser: true});
+  const fullUser = await getCurrentUser({ withFullUser: true, redirectIfNotFound: true });
+
+  const sessionData: SessionData = {
+    user: fullUser,
+    loading: false,
+  };
   return (
     <html lang="en">
       <body className={twMerge(plusJakartaSans.variable, 'antialiased')}>
-        <SessionProvider value={currentUser}>
+        <SessionProvider value={sessionData}>
           {children}
         </SessionProvider>
       </body>

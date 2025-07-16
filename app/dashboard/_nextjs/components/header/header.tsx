@@ -23,13 +23,13 @@ const Header = () => {
           pathLocation={pathLocation}
         />
         <div>
-          {session && (
+          {session && session.user && (
             <ProfileDropdown
-              firstName={session.firstName}
-              lastName={session.lastName}
-              email={session.email}
-              role={session.role}
-              profilePhotoUrl={session?.profilePhotoUrl ?? ''}
+              firstName={session.user.firstName}
+              lastName={session.user.lastName}
+              email={session.user.email}
+              role={session.user.role}
+              profilePhotoUrl={session.user.profilePhotoUrl ?? ''}
             />
           )}
         </div>

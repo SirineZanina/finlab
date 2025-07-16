@@ -16,7 +16,6 @@ export default function ProfileDropdown({
   firstName,
   lastName,
   email,
-  role,
   profilePhotoUrl,
 }: ProfileDropdownProps ) {
   return (
@@ -27,7 +26,6 @@ export default function ProfileDropdown({
           <AvatarFallback>{firstName?.[0] ?? 'U'}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
-
       <DropdownMenuContent className="w-44 mr-10">
         <DropdownMenuLabel>
           <div className="flex flex-col">
@@ -35,11 +33,6 @@ export default function ProfileDropdown({
               <span className="text-sm font-semibold">
                 {firstName} {lastName?.[0]}.
 			  </span>
-			 <span>|</span>
-              <span className="text-xs text-primary-500 font-bold">
-				 {role.roleType}
-              </span>
-
             </div>
             <span className="text-xs text-muted-foreground">{email}</span>
           </div>
@@ -49,13 +42,10 @@ export default function ProfileDropdown({
           <Link href='/dashboard'>
 			Dashboard
           </Link>
-
         </DropdownMenuItem>
         <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem>Earnings</DropdownMenuItem>
-
         <DropdownMenuSeparator />
-
         <DropdownMenuItem onClick={async () => await logOut()}>Sign out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

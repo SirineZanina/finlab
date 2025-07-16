@@ -8,9 +8,9 @@ export type User = {
 	email: string;
 	password: string;
 	salt: string;
-	profilePhotoUrl?: string;
+	profilePhotoUrl: string | null;
 	country: string;
 	phoneNumber: string;
 	role: UserRole;
-	businesses: Business[];
+	business: Business;
 };
