@@ -3,4 +3,5 @@ export type ProfileDropdownProps = {
 	lastName: string;
 	email: string;
 	profilePhotoUrl?: string;
+	className?: string;
 }

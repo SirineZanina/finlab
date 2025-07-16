@@ -116,12 +116,15 @@
 	.section-description {
 		@apply text-sm sm:text-base xl:text-lg font-medium text-dark-blue;
 	}
+
 	.section-heading {
 		@apply max-w-[540px] mx-auto
 	}
+
 	.card {
 		@apply p-10 border border-[#F1F1F1] rounded-3xl shadow-[0_7px_14px_#EAEAEA] max-w-xs w-full
 	}
+
 	.auth-form {
 		@apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
 	}
@@ -143,7 +146,7 @@
   	}
 
   	.home-content {
-    	@apply flex w-full flex-1 flex-col gap-8 px-5 sm:px-6 py-4 lg:py-5 xl:max-h-screen xl:overflow-y-scroll;
+    	@apply flex w-full flex-1 flex-col gap-8 px-6 sm:px-8 xl:max-h-screen xl:overflow-y-scroll;
   	}
 
    .home-header {
@@ -165,6 +168,7 @@
 	.header-2 {
 		@apply text-lg font-bold text-secondary-500;
 	}
+	
 	.total-balance {
     	@apply flex w-full items-center gap-4 rounded-xl border border-secondary-200 p-4 sm:gap-6 sm:p-6;
 	}
@@ -183,12 +187,17 @@
 	
 	  /* Sidebar */
 	.sidebar {
-		@apply sticky left-0 top-0 flex h-screen w-fit flex-col justify-between border-r border-gray-200 bg-white pt-8 max-md:hidden sm:p-4 xl:p-6 2xl:w-[250px];
+		@apply sticky left-0 top-0 flex h-screen w-fit flex-col justify-between border-r border-gray-200 bg-white pt-8 max-md:hidden p-6 sm:p-8 2xl:w-[250px];
 	}
 	
 	.sidebar-link {
 		@apply flex gap-3 items-center p-2 font-medium rounded-md justify-center xl:justify-start;
 	}
+
+	/* Root layout */
+	.root-layout {
+    	@apply flex h-16 items-center justify-between shadow-secondary-200 p-6 sm:p-8 md:hidden;
+  	}
 
 }
 

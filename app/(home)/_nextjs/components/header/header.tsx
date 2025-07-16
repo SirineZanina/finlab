@@ -45,6 +45,7 @@ const Header = () => {
                       firstName={session.user.firstName}
                       lastName={session.user.lastName}
                       email={session.user.email}
+					  className='hidden md:block'
                     />
                   )
                 )

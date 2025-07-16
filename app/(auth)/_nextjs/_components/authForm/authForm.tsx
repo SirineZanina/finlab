@@ -117,22 +117,13 @@ const AuthForm = ({ type }: { type: string }) => {
                     <span className="text-sm text-gray-500">OR</span>
                     <hr className="flex-grow border-t border-gray-300" />
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Button
-                      variant="outline"
-                      className="flex-1 flex items-center gap-2 justify-center"
-                    >
-                      <GoogleIcon className="size-5" />
+                  <Button
+                    variant="outline"
+                    className="w-full flex items-center justify-center gap-2"
+                  >
+                    <GoogleIcon className="size-5" />
 					Continue with Google
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="flex-1 flex items-center gap-2 justify-center"
-                    >
-                      <FacebookIcon className="size-5" />
-    				Continue with Facebook
-                    </Button>
-                  </div>
+                  </Button>
 
                 </form>
               </Form>
