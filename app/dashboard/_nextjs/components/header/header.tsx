@@ -9,18 +9,23 @@ const Header = () => {
   const session = useSession();
   const pathname = usePathname();
 
-  const pathLocation = (() => {
-    const subPath = pathname.replace('/dashboard', '').split('/').filter(Boolean)[0];
-    if (!subPath) return 'Home';
+  const subPath = pathname.replace('/dashboard', '').split('/').filter(Boolean)[0];
+  const pathLocation = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Home';
 
-    return subPath.charAt(0).toUpperCase() + subPath.slice(1);
-  })();
+  const subtitlesMap: Record<string, string> = {
+    home: 'Welcome to your dashboard',
+    banks: 'Manage your bank accounts',
+    transactions: 'Track your spending and income',
+  };
+
+  const subtitle = subtitlesMap[subPath?.toLowerCase() || 'home'] ?? '';
 
   return (
     <header className='sticky top-0 '>
       <div className='flex justify-between items-start bg-white'>
         <HeaderBox
           pathLocation={pathLocation}
+		  subtitle={subtitle}
         />
         <div>
           {session && session.user && (

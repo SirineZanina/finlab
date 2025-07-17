@@ -7,25 +7,29 @@ import MobileNavbar from './_nextjs/components/mobileNavbar/mobileNavbar';
 
 export default async function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-	  const loggedInUser = await getCurrentUser({ withFullUser: true, redirectIfNotFound: true });
+}) {
+  const loggedInUser = await getCurrentUser({ withFullUser: true, redirectIfNotFound: true });
+
   return (
-    <main className='flex h-screen w-full'>
-      <Sidebar
-	  user={loggedInUser}
-	  />
-	  <div className='flex size-full flex-col p-6'>
-        <div className='root-layout'>
-          <CompanyLogo hideTextLogo={true} />
+    <main className="flex h-screen w-full overflow-hidden">
+      {/* Sidebar */}
+      <Sidebar user={loggedInUser} />
+      {/* Main Content */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Top Bar (Mobile Nav + Logo) */}
+        <div className="flex md:hidden items-center justify-between p-6 sticky top-0
+		border-b border-gray-200">
+          <CompanyLogo />
           <MobileNavbar user={loggedInUser} />
         </div>
-        <div>
+        {/* Page Content */}
+        <div className="flex-1 overflow-y-auto p-6">
           <Header />
-		  {children}
+          {children}
         </div>
-	  </div>
+      </div>
     </main>
   );
 }
