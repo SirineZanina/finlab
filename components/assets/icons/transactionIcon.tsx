@@ -2,8 +2,13 @@ import React from 'react';
 
 const TransactionIcon = (props:  React.SVGProps<SVGSVGElement>) => {
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-      className={`w-full h-full ${props.className ?? ''}`}
+    <svg
+      width={props.width ?? '24px'}
+      height={props.height ?? '24px'}
+      viewBox="0 0 24 24"
+      fill={props.fill ?? 'none'}
+      xmlns="http://www.w3.org/2000/svg"
+      className={props.className}
       {...props}
     >
       <path d="M19.42 11.75H16C15.59 11.75 15.25 11.41 15.25 11V4.01C15.25 3.27 15.54 2.58 16.06 2.06C16.58 1.54 17.27 1.25 18.01 1.25H18.02C19.27 1.26 20.45 1.75 21.35 2.64C22.25 3.55 22.74 4.75 22.74 6V8.42C22.75 10.41 21.41 11.75 19.42 11.75ZM16.75 10.25H19.42C20.58 10.25 21.25 9.58 21.25 8.42V6C21.25 5.14 20.91 4.32 20.3 3.7C19.69 3.1 18.87 2.76 18.02 2.75C18.02 2.75 18.02 2.75 18.01 2.75C17.68 2.75 17.36 2.88 17.12 3.12C16.88 3.36 16.75 3.67 16.75 4.01V10.25Z" fill={props?.fill}/>

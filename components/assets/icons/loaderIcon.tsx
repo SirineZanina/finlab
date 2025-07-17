@@ -3,6 +3,8 @@ import * as React from 'react';
 function LoaderIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
+	  width={props.width ?? '24px'}
+	  height={props.height ?? '24px'}
       aria-hidden="true"
       className={`w-full h-full ${props.className ?? ''}`}
       viewBox="0 0 100 101"

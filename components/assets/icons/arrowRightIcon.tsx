@@ -3,6 +3,8 @@ import * as React from 'react';
 function ArrowRight(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
+	  width={props.width ?? '20px'}
+	  height={props.height ?? '20px'}
       viewBox="0 0 20 20"
       fill={props.fill ?? 'none'}
       xmlns="http://www.w3.org/2000/svg"

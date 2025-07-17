@@ -4,39 +4,73 @@ import { SidebarItemProps } from './sidebarItem.types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-const SidebarItem = ({ item, isActive } : SidebarItemProps) => {
+const SidebarItem = ({ item, isActive, isSidebarExpanded } : SidebarItemProps) => {
   return (
-    <TooltipProvider delayDuration={70}>
-      <Tooltip>
-        <Link href={item.route} passHref>
-          <TooltipTrigger asChild>
-            <div
-              className={`h-full flex items-center whitespace-nowrap rounded-md ${
-                isActive
-                  ? 'font-base text-sm bg-primary-700/50	'
-                  : 'hover:bg-slate-200 hover:text-slate-700 text-slate-500'
-              }`}
-            >
-              <div className="relative font-base text-sm p-2 flex flex-row items-center space-x-2 rounded-md">
-                {item.icon && (
-                  <item.icon className={`w-6 h-6 ${isActive ? 'fill-white' : 'fill-slate-500'}`} />
-                )}
-                <span className={cn('hidden xl:flex text-sm', isActive ? 'text-white' : 'text-slate-500')}>
-                  {item.label}
-                </span>
-              </div>
-            </div>
-          </TooltipTrigger>
-        </Link>
-        <TooltipContent
-          side="left"
-          className="px-3 py-1.5 text-xs"
-          sideOffset={10}
+    <>
+      {isSidebarExpanded ? (
+        <Link
+          href={item.route}
+          className={`group text-sm h-full relative flex font-base items-center whitespace-nowrap rounded-md ${
+            isActive
+              ? ' bg-primary-500 shadow-sm text-primary-0'
+              : 'hover:bg-primary-500/50 hover:text-primary-0 text-secondary-400'
+          }`}
         >
-          {item.label}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+          <div className="relative font-base text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
+            {item.icon && (
+              <item.icon
+                width={20}
+                height={20}
+                className={cn(
+                  'transition-colors',
+                  isActive
+                    ? 'fill-primary-0'
+                    : 'fill-secondary-400 group-hover:fill-primary-0'
+                )}
+              />
+            )}
+            <span>{item.label}</span>
+          </div>
+        </Link>
+      ) : (
+        <TooltipProvider delayDuration={70}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Link
+                href={item.route}
+                className={`group h-full text-sm relative flex items-center whitespace-nowrap rounded-md ${
+                  isActive
+                    ? 'bg-primary-500 shadow-sm text-primary-0'
+                    : 'hover:bg-primary-500/50 hover:text-primary-0 text-secondary-400'
+                }`}
+              >
+                <div className="relative font-base text-sm py-1.5 px-2 flex flex-row items-center rounded-md duration-100">
+                  {item.icon && (
+                    <item.icon
+                      width={20}
+                      height={20}
+                      className={cn(
+                        'transition-colors',
+                        isActive
+                          ? 'fill-primary-0'
+                          : 'fill-secondary-400 group-hover:fill-primary-0'
+                      )}
+                    />
+                  )}
+                </div>
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent
+              side="left"
+              className="px-3 py-1.5 text-xs"
+              sideOffset={10}
+            >
+              <span>{item.label}</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+    </>
   );
 };
 

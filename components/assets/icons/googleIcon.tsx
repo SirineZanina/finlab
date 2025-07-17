@@ -3,8 +3,8 @@ import * as React from 'react';
 function GoogleIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-	  width="32"
-	  height="32"
+	  width={props.width ?? '32px'}
+	  height={props.height ?? '32px'}
       viewBox="0 0 32 32"
 	  fill="none"
 	  xmlns="http://www.w3.org/2000/svg"

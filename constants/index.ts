@@ -2,6 +2,8 @@ import HomeIcon from '@/components/assets/icons/homeIcon';
 import DollarCircle from '@/components/assets/icons/dollarCircleIcon';
 import Transaction from '@/components/assets/icons/transactionIcon';
 import MoneySend from '@/components/assets/icons/moneySendIcon';
+import EnterpriseIcon  from '@/components/assets/icons/enterpriseIcon';
+import SettingsIcon from '@/components/assets/icons/settingsIcon';
 
 export const SESSION_EXPIRATION_SECONDS = 60 * 60 * 24 * 7; // 7 days
 export const COOKIE_SESSION_KEY = 'session-id';
@@ -31,4 +33,29 @@ export const sidebarLinks = [
     label: 'Transfer Funds',
     position: 'top',
   },
+  {
+    icon: EnterpriseIcon,
+    route: '/dashboard/sales',
+    label: 'Sales',
+    position: 'top',
+    hasSubmenu: true,
+    submenu: {
+      items : [
+        {
+		  label: 'Sales Overview',
+		  route: '/dashboard/sales/overview'
+        },
+        {
+		  label: 'Sales Reports',
+		  route: '/dashboard/sales/reports'
+        }
+      ]
+    }
+  },
+  {
+    icon: SettingsIcon,
+    route: '/dashboard/settings',
+    label: 'Settings',
+    position: 'bottom',
+  }
 ];

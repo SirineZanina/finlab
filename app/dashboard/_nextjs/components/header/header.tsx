@@ -18,7 +18,7 @@ const Header = () => {
 
   return (
     <header className='sticky top-0 '>
-      <div className='flex justify-between items-center p-6 sm:p-8 bg-white'>
+      <div className='flex justify-between items-start bg-white'>
         <HeaderBox
           pathLocation={pathLocation}
         />

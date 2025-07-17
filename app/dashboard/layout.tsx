@@ -16,7 +16,7 @@ export default async function RootLayout({
       <Sidebar
 	  user={loggedInUser}
 	  />
-	  <div className='flex size-full flex-col'>
+	  <div className='flex size-full flex-col p-6'>
         <div className='root-layout'>
           <CompanyLogo hideTextLogo={true} />
           <MobileNavbar user={loggedInUser} />
