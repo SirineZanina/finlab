@@ -9,12 +9,13 @@ import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_core
 import { createUserSession } from '@/app/(auth)/_core/createUserSession';
 import { getUserFromSession, removeUserFromSession } from '@/app/(auth)/_core/session';
 import { AppError } from '../errors/appError';
-import { createDwollaCustomer } from './dwolla.actions';
+import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
 import { extractCustomerIdFromUrl, parseStringify } from '../utils';
+import { LoginParams, SignUpParams } from '@/types/user';
 
 // ================ SIGN IN ================
 
-export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
+export async function signIn(unsafeData: LoginParams) {
 
   const { success, data } = signInSchema.safeParse(unsafeData);
   if (!success) throw new AppError('INVALID_CREDENTIALS', 'Invalid email or password', 400);
@@ -47,8 +48,10 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 
 // ================ SIGN UP ================
 
-export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
+export async function signUp(unsafeData: SignUpParams) {
   const { success, data } = signUpSchema.safeParse(unsafeData);
+
+  let dwollaCustomerUrl;
   try {
     if (!success) throw new Error('Unable to create your account');
 
@@ -141,6 +144,9 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
     return user;
 
   } catch (error) {
+    if (dwollaCustomerUrl) {
+      await deactivateDwollaCustomer(dwollaCustomerUrl);
+    }
     console.error('Error creating user:', error);
     throw error;
   }

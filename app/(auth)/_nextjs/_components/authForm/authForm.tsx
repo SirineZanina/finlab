@@ -43,7 +43,19 @@ const AuthForm = ({ type }: { type: string }) => {
 
     try {
       if (type === 'sign-up') {
-        const user = await signUp(data);
+        const userData = {
+          firstName: data.firstName!,
+          lastName: data.lastName!,
+          email: data.email!,
+          password: data.password!,
+          businessName: data.businessName!,
+          businessIndustry: data.businessIndustry!,
+          country: data.country!,
+          phoneNumber: data.phoneNumber!,
+          roleType: data.roleType!,
+        };
+
+        const user = await signUp(userData);
         setUser(user);
       }
 

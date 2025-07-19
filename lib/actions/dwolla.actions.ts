@@ -92,6 +92,14 @@ export const createTransfer = async ({
   }
 };
 
+export const deactivateDwollaCustomer = async (customerUrl: string) => {
+  try {
+    return await dwollaClient.post(customerUrl, { status: 'deactivated' });
+  } catch (err) {
+    console.error('Deactivating a Dwolla Customer Failed: ', err);
+  }
+};
+
 export const addFundingSource = async ({
   dwollaCustomerId,
   processorToken,
