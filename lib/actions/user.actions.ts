@@ -1,0 +1,190 @@
+'use server';
+import z from 'zod';
+import { redirect } from 'next/navigation';
+import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { BusinessIndustry, RoleType } from '@prisma/client';
+import { signInSchema, signUpSchema } from '@/app/(auth)/_nextjs/schema';
+import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_core/passwordHasher';
+import { createUserSession } from '@/app/(auth)/_core/createUserSession';
+import { getUserFromSession, removeUserFromSession } from '@/app/(auth)/_core/session';
+import { AppError } from '../errors/appError';
+import { createDwollaCustomer } from './dwolla.actions';
+import { extractCustomerIdFromUrl, parseStringify } from '../utils';
+
+// ================ SIGN IN ================
+
+export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
+
+  const { success, data } = signInSchema.safeParse(unsafeData);
+  if (!success) throw new AppError('INVALID_CREDENTIALS', 'Invalid email or password', 400);
+
+  const user =  await prisma.user.findFirst({
+    where: { email: data.email },
+    select: {
+	  id: true,
+	  password: true,
+	  salt: true,
+	  email: true,
+	  role: true
+    }
+  });
+
+  if (user == null) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
+
+  const isCorrectPassword = await comparePasswords({
+    hashedPassword: user.password,
+    password: data.password,
+    salt: user.salt
+  });
+
+  if (!isCorrectPassword) throw new AppError('INVALID_CREDENTIALS', 'Invalid password', 400);
+
+  await createUserSession({ id: user.id, role: user.role.roleType }, await cookies());
+
+  redirect('/dashboard');
+}
+
+// ================ SIGN UP ================
+
+export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
+  const { success, data } = signUpSchema.safeParse(unsafeData);
+  try {
+    if (!success) throw new Error('Unable to create your account');
+
+    // Validate the data
+    const validatedData = data as ValidatedSignUpData;
+
+    // Check if user with this email already exists
+    const existingUser = await prisma.user.findFirst({
+      where: { email: validatedData.email },
+    });
+
+    if (existingUser) throw new AppError('USER_EXISTS', 'User with this email already exists', 400);
+
+    // Get the user role from the database
+    const userRole = await prisma.userRole.findUnique({
+      where: { roleType: data.roleType as RoleType },
+    });
+
+    // If the role does not exist, throw an error
+    if (!Object.values(RoleType).includes(userRole?.roleType as RoleType) || userRole == null) {
+      throw new AppError('INVALID_ROLE', 'Invalid user role', 400);
+    }
+
+    // Hash password
+    const salt = generateSalt();
+    const hashedPassword = await hashPassword(data.password, salt);
+
+    // Create business
+    // Check if business already exists
+    const existingBusiness = await prisma.business.findFirst({
+		 where: { name: validatedData.businessName },
+    });
+
+    if (existingBusiness) {
+	  throw new AppError('BUSINESS_EXISTS', 'Business with this name already exists', 400);
+    }
+    // Create business if it doesn't exist
+    const business = await prisma.business.create({
+      data: {
+        name: validatedData.businessName,
+        industry: validatedData.businessIndustry,
+      },
+    });
+
+    // Create dwolla customer
+    const dwollaCustomerUrl = await createDwollaCustomer({
+      firstName: validatedData.firstName,
+      lastName: validatedData.lastName,
+      businessName: validatedData.businessName,
+      businessIndustry: validatedData.businessIndustry,
+      country: validatedData.country,
+      phoneNumber: validatedData.phoneNumber,
+      roleType: validatedData.roleType,
+      email: validatedData.email,
+    });
+
+    if (!dwollaCustomerUrl) {
+	  throw new AppError('DWOLLA_ERROR', 'Unable to create Dwolla customer', 500);
+    }
+
+    const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
+
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        firstName: validatedData.firstName,
+        lastName: validatedData.lastName,
+        email: validatedData.email,
+        password: hashedPassword,
+        salt,
+        country: validatedData.country,
+        phoneNumber: validatedData.phoneNumber,
+        businessId: business.id,
+        roleId: userRole.id,
+        dwollaCustomerId,
+        dwollaCustomerUrl,
+      },
+	  include: {
+        role: true,
+        business: true,
+      },
+    });
+
+    // Create session + set cookie
+    await createUserSession(
+      { id: user.id, role: user.role.roleType },
+      await cookies()
+    );
+
+    return user;
+
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+}
+
+// Define this type to avoid repeating inline assertions
+type ValidatedSignUpData = z.infer<typeof signUpSchema> & {
+  firstName: string;
+  lastName: string;
+  businessName: string;
+  businessIndustry: BusinessIndustry;
+  country: string;
+  phoneNumber: string;
+  roleType: RoleType;
+};
+
+// ================ LOG OUT ================
+
+export async function logOut() {
+
+  await removeUserFromSession(await cookies());
+  redirect('/');
+}
+
+// ================ GET LOGGED IN USER ================
+
+export async function getLoggedInUser() {
+  try {
+    const sessionUser = await getUserFromSession(await cookies());
+    if (!sessionUser || !sessionUser.id || !sessionUser.role)
+      throw new AppError('UNAUTHORIZED', 'User not authenticated', 401);
+
+    const user = await prisma.user.findUnique({
+      where: { id: sessionUser.id },
+      include: {
+        role: true,
+        business: true,
+      },
+    });
+    if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
+    return parseStringify(user);
+
+  } catch (error) {
+    console.error('Error fetching logged in user:', error);
+    throw new AppError('UNAUTHORIZED', 'User not authenticated', 401);
+  }
+}

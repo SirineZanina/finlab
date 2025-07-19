@@ -1,6 +1,6 @@
 import React from 'react';
 
-const IconChevronRight = (props:  React.SVGProps<SVGSVGElement>) => {
+const ChevronRightIcon = (props:  React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
 	  width={props.width ?? '24px'}
@@ -22,4 +22,4 @@ const IconChevronRight = (props:  React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-export default IconChevronRight;
+export default ChevronRightIcon;

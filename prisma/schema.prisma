@@ -24,6 +24,8 @@ model Business {
     updatedAt    DateTime      @updatedAt
     accounts     Account[]
     transactions Transaction[]
+
+    @@map("businesses")
 }
 
 enum BusinessIndustry {
@@ -40,19 +42,21 @@ enum BusinessIndustry {
 }
 
 model User {
-    id              String   @id @default(cuid())
-    firstName       String
-    lastName        String
-    email           String   @unique
-    password        String
-    salt            String
-    profilePhotoUrl String?
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-    country         String
-    phoneNumber     String
-    roleId          String
-    businessId      String
+    id                String   @id @default(cuid())
+    firstName         String
+    lastName          String
+    email             String   @unique
+    password          String
+    salt              String
+    profilePhotoUrl   String?
+    createdAt         DateTime @default(now())
+    updatedAt         DateTime @updatedAt
+    country           String
+    phoneNumber       String
+    roleId            String
+    businessId        String
+    dwollaCustomerUrl String
+    dwollaCustomerId  String
 
     business Business @relation(fields: [businessId], references: [id])
 
@@ -69,7 +73,7 @@ model UserRole {
     createdAt   DateTime           @default(now())
     updatedAt   DateTime           @updatedAt
 
-    @@map("user_role")
+    @@map("user_roles")
 }
 
 model PermissionOnRole {
@@ -81,6 +85,7 @@ model PermissionOnRole {
     updatedAt  DateTime   @updatedAt
 
     @@unique([permission, roleId], name: "permission_role_unique")
+    @@map("permission_on_role")
 }
 
 enum RoleType {
@@ -101,43 +106,81 @@ enum Permission {
 }
 
 model Account {
-    id           String        @id @default(cuid())
-    name         String
-    type         AccountType
-    balance      Decimal       @default(0)
-    businessId   String
-    business     Business      @relation(fields: [businessId], references: [id])
-    createdAt    DateTime      @default(now())
-    updatedAt    DateTime      @updatedAt
-    transactions Transaction[]
+    id               String        @id @default(cuid())
+    name             String
+    availableBalance Decimal
+    currentBalance   Decimal
+    officialName     String
+    mask             String
+    institutionId    String
+    type             AccountType
+    subtype          String
+    shareableId      String
+    businessId       String
+    business         Business      @relation(fields: [businessId], references: [id])
+    createdAt        DateTime      @default(now())
+    updatedAt        DateTime      @updatedAt
+    transactions     Transaction[]
+    bank             Bank          @relation(fields: [bankId], references: [id])
+    bankId           String
 
     @@unique([name, businessId], name: "name_businessId")
+    @@map("accounts")
 }
 
 enum AccountType {
-    CASH
-    BANK
+    DEPOSITORY
     CREDIT
+    LOAN
+    INVESTMENT
     OTHER
 }
 
 model Transaction {
-    id          String          @id @default(cuid())
-    description String
-    amount      Decimal
-    date        DateTime
-    type        TransactionType
-    businessId  String
-    business    Business        @relation(fields: [businessId], references: [id])
-    accountId   String
-    account     Account         @relation(fields: [accountId], references: [id])
-    createdAt   DateTime        @default(now())
-    updatedAt   DateTime        @updatedAt
+    id             String   @id @default(cuid())
+    name           String
+    amount         Decimal
+    paymentChannel String
+    type           String
+    pending        Boolean
+    category       String
+    date           DateTime
+    image          String
+    channel        String
+    senderBankId   String
+    receiverBankId String
+    businessId     String
+    business       Business @relation(fields: [businessId], references: [id])
+    accountId      String
+    account        Account  @relation(fields: [accountId], references: [id])
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
 
-    @@unique([description, date, accountId, businessId], name: "transaction_unique")
+    @@unique([name, date, accountId, businessId], name: "transaction_unique")
+    @@map("transactions")
 }
 
-enum TransactionType {
-    INCOME
-    EXPENSE
+model Bank {
+    id               String    @id @default(cuid())
+    plaidAccountId   String
+    plaidBankId      String
+    accessToken      String
+    fundingSourceUrl String
+    userId           String
+    shareableId      String
+    createdAt        DateTime  @default(now())
+    updatedAt        DateTime  @updatedAt
+    accounts         Account[]
+
+    @@map("banks")
+}
+
+model Category {
+    id   String @id @default(cuid())
+    name String @unique
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("categories")
 }

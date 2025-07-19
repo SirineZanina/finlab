@@ -1,7 +1,7 @@
 import React from 'react';
 import { TotalBalanceBoxProps } from './totalBalanceBox.types';
 import AnimatedCounter from '../animatedCounter/animatedCounter';
-import DoughnutChart from '../doghnutChart/doghnutChart';
+import ChartPieDonutText from '../chartPieDonutText/chartPieDonutText';
 
 const TotalBalanceBox = ({
   accounts = [],
@@ -11,7 +11,7 @@ const TotalBalanceBox = ({
   return (
     <section className='total-balance'>
       <div className='flex size-full max-w-[180px] items-center sm:max-w-[120px]'>
-        <DoughnutChart accounts={accounts} />
+        {/* <ChartPieDonutText /> */}
       </div>
       <div className='flex flex-col gap-6'>
         <h2 className='header-2'>

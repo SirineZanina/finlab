@@ -10,19 +10,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const loggedInUser = await getCurrentUser({ withFullUser: true, redirectIfNotFound: true });
+  const loggedInUser = await getCurrentUser({ withFullUser: true });
 
   return (
     <main className="flex h-screen w-full overflow-hidden">
       {/* Sidebar */}
-      <Sidebar user={loggedInUser} />
+      {loggedInUser && <Sidebar user={loggedInUser} />}
       {/* Main Content */}
       <div className="flex flex-col flex-1 overflow-hidden">
         {/* Top Bar (Mobile Nav + Logo) */}
         <div className="flex md:hidden items-center justify-between p-6 sticky top-0
 		border-b border-gray-200">
           <CompanyLogo />
-          <MobileNavbar user={loggedInUser} />
+          {loggedInUser && <MobileNavbar user={loggedInUser} />}
         </div>
         {/* Page Content */}
         <div className="flex-1 overflow-y-auto p-6">

@@ -6,8 +6,8 @@ import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
 import SidebarItem from './sidebarItem/sidebarItem';
 import { cn } from '@/lib/utils';
 import ChevronLeftIcon from '@/components/assets/icons/chevronLeftIcon';
-import { ChevronRightIcon } from 'lucide-react';
 import useIsSidebarExpanded from './sidebar.hooks';
+import ChevronRightIcon from '@/components/assets/icons/chevronRightIcon';
 
 const Sidebar = ({ user }: SidebarProps) => {
   const pathname = usePathname();

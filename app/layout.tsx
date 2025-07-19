@@ -24,7 +24,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const fullUser = await getCurrentUser({ withFullUser: true, redirectIfNotFound: true });
+  const fullUser = await getCurrentUser({ withFullUser: true });
 
   const sessionData: SessionData = {
     user: fullUser,

@@ -32,7 +32,7 @@ const Header = () => {
               <Link href="#testimonials">Testimonials</Link>
               <Link href="#updates">Updates</Link>
               <Link href="/help">Help</Link>
-              { session === null ? (
+              { session.user === null ? (
 				 <Link href="/sign-up">
                   <Button variant={'default'}>
 					Get Started

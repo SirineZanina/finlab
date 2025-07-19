@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { ProfileDropdownProps } from './profileDropdown.types';
 import Link from 'next/link';
-import { logOut } from '@/app/(auth)/_nextjs/actions';
+import { logOut } from '@/lib/actions/user.actions';
 
 export default function ProfileDropdown({
   firstName,

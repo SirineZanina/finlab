@@ -1,41 +1,55 @@
 'use client';
+
+import z from 'zod';
 import React, { useState } from 'react';
 import Link from 'next/link';
-import z from 'zod';
-// components
-import { FinlabIcon } from '@/components/assets/logos/finlabIcon';
-import { FinlabLogo } from '@/components/assets/logos/finlabLogo';
+
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-// hooks
-import { useAuthForm } from './authForm.hooks';
-
 import CustomInput from '../customInput/customInput';
-import { LoaderIcon } from '@/components/assets/icons/loaderIcon';
-import AuthCardCta from './authCardCta';
-import { GoogleIcon } from '@/components/assets/icons/googleIcon';
-import { FacebookIcon } from '@/components/assets/icons/facebookIcon';
-import { authFormSchema } from '../../schema';
-import { signIn, signUp } from '../../actions';
-// types
-import { BusinessIndustries } from '@/types/business/businessIndustry';
-import { RoleType } from '@/types/user/roleType';
 import CustomSelect from '../customSelect/customSelect';
+import { LoaderIcon } from '@/components/assets/icons/loaderIcon';
+import { GoogleIcon } from '@/components/assets/icons/googleIcon';
+import AuthCardCta from './authCardCta';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
+import PlaidLink from '../plaidLink/plaidLink';
+
+import { useAuthForm } from './authForm.hooks';
+import { authFormSchema } from '../../schema';
+
+import { signIn, signUp } from '@/lib/actions/user.actions';
+import { BusinessIndustries } from '@/types/business';
+import { RoleType, User } from '@/types/user';
 
 const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);
-
-  const RoleTypes = Object.values(RoleType);
+  const [user, setUser] = useState<User>();
 
   const form = useAuthForm(type);
   const formSchema = authFormSchema(type);
 
+  const roleOptions = Object.values(RoleType).map(role => ({
+    value: role,
+    label: role.charAt(0).toUpperCase() + role.slice(1).toLowerCase(),
+  }));
+
+  const businessIndustryOptions = BusinessIndustries.map(industry => ({
+    value: industry,
+    label: industry.charAt(0).toUpperCase() + industry.slice(1).toLowerCase(),
+  }));
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
+
     try {
-      if (type === 'sign-up') await signUp(data);
-      if (type === 'sign-in') await signIn(data);
+      if (type === 'sign-up') {
+        const user = await signUp(data);
+        setUser(user);
+      }
+
+      if (type === 'sign-in') {
+        await signIn(data);
+      }
     } catch (error) {
       console.error('Error during form submission:', error);
     } finally {
@@ -43,107 +57,113 @@ const AuthForm = ({ type }: { type: string }) => {
     }
   };
 
-  const roleOptions = RoleTypes.map((role) => ({
-    value: role,
-    label: role.charAt(0).toUpperCase() + role.slice(1).toLowerCase(),
-  }));
-
-  const businessIndustryOptions = BusinessIndustries.map((industry) => ({
-    value: industry,
-    label: industry.charAt(0).toUpperCase() + industry.slice(1).toLowerCase(),
-  }));
+  const renderFormFields = () => (
+    <>
+      {type === 'sign-up' && (
+        <>
+          <div className="flex gap-4">
+            <CustomInput control={form.control} name="firstName" label="First Name" placeholder="Enter your first name" />
+            <CustomInput control={form.control} name="lastName" label="Last Name" placeholder="Enter your last name" />
+          </div>
+          <div className="flex gap-4">
+            <CustomInput control={form.control} name="businessName" label="Business Name" placeholder="Enter your business name" />
+            <CustomSelect control={form.control} name="businessIndustry" label="Business Industry" placeholder="Select your business industry" options={businessIndustryOptions} />
+          </div>
+          <div className="flex gap-4">
+            <CustomInput control={form.control} name="country" label="Country" placeholder="Example: USA" />
+            <CustomInput control={form.control} name="phoneNumber" label="Phone Number" placeholder="+11101" />
+          </div>
+          <CustomSelect control={form.control} name="roleType" label="Role" placeholder="Select your role" options={roleOptions} />
+        </>
+      )}
+      <CustomInput control={form.control} name="email" label="Email" placeholder="Enter your email" />
+      <CustomInput control={form.control} name="password" label="Password" placeholder="Enter your password" />
+    </>
+  );
 
   return (
     <section>
       <div className="grid grid-cols-2 h-screen">
+        {/* Left Panel */}
         <div className="col-span-2 lg:col-span-1 py-8 mx-30">
           <CompanyLogo />
-
-          <div className='flex justify-center flex-col h-full'>
-		   <div className="flex flex-col gap-4">
+          <div className="flex justify-center flex-col h-full">
+            <div className="flex flex-col gap-4">
               <h1 className="text-3xl font-bold tracking-tight">
-                {type === 'sign-up' ? 'Create an account' : 'Sign in to your account'}
+                {user ? 'Link Account' : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
               </h1>
-
               <div className="flex items-center gap-1">
                 <p className="text-[14px] font-normal text-gray-600">
-                  {type === 'sign-in' ? "Don't have an account?" : 'Already have an account?'}
+                  {user
+                    ? 'Link your account to continue'
+                    : type === 'sign-in'
+                      ? 'Welcome back! Please sign in to continue'
+                      : 'Create a new account to get started'}
                 </p>
-                <Link className="form-link" href={type === 'sign-in' ? '/sign-up' : '/sign-in'}>
-                  {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
-                </Link>
+                {!user && (
+                  <Link className="form-link" href={type === 'sign-in' ? '/sign-up' : '/sign-in'}>
+                    {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
+                  </Link>
+                )}
               </div>
             </div>
 
-            <div className="justify-center mt-8">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="">
-                  <div className='flex flex-col gap-6'>
-                    {type === 'sign-up' && (
-                      <>
-                        <div className="flex gap-4">
-                          <CustomInput control={form.control} name="firstName" label="First Name" placeholder="Enter your first name" />
-                          <CustomInput control={form.control} name="lastName" label="Last Name" placeholder="Enter your last name" />
-                        </div>
-                        <div className="flex gap-4">
-                          <CustomInput control={form.control} name="businessName" label="Business Name" placeholder="Enter your business name" />
-                          <CustomSelect control={form.control} name="businessIndustry" label="Business Industry" placeholder="Select your business industry" options={businessIndustryOptions} />
-                        </div>
+            {user ? (
+              <div className="flex flex-col gap-4 mt-6">
+                <PlaidLink
+                  user={user}
+                  variant="primary"
+                />
+              </div>
+            ) : (
+              <div className="justify-center mt-8">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                    {renderFormFields()}
 
-                        <div className="flex gap-4">
-                          <CustomInput control={form.control} name="country" label="Country" placeholder="Example: USA" />
-                          <CustomInput control={form.control} name="phoneNumber" label="Phone Number" placeholder="+11101" />
-                        </div>
-                        <CustomSelect control={form.control} name="roleType" label="Role" placeholder="Select your role" options={roleOptions} />
-                      </>
-                    )}
+                    <div className="flex flex-col gap-4 mt-6">
+                      <Button className="form-btn" type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                          <>
+                            <LoaderIcon className="size-4 animate-spin mr-2" />
+                            Loading...
+                          </>
+                        ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+                      </Button>
+                    </div>
 
-                    <CustomInput control={form.control} name="email" label="Email" placeholder="Enter your email" />
-                    <CustomInput control={form.control} name="password" label="Password" placeholder="Enter your password" />
-                  </div>
+                    <div className="flex items-center gap-4 my-4">
+                      <hr className="flex-grow border-t border-gray-300" />
+                      <span className="text-sm text-gray-500">OR</span>
+                      <hr className="flex-grow border-t border-gray-300" />
+                    </div>
 
-                  <div className="flex flex-col gap-4 mt-6">
-                    <Button className="form-btn" type="submit" disabled={isLoading}>
-                      {isLoading ? (
-                        <>
-                          <LoaderIcon className="size-4 animate-spin mr-2" />
-                    Loading...
-                        </>
-                      ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+                    <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                      <GoogleIcon className="size-5" />
+                      Continue with Google
                     </Button>
-                  </div>
-                  <div className="flex items-center gap-4 my-4">
-                    <hr className="flex-grow border-t border-gray-300" />
-                    <span className="text-sm text-gray-500">OR</span>
-                    <hr className="flex-grow border-t border-gray-300" />
-                  </div>
-                  <Button
-                    variant="outline"
-                    className="w-full flex items-center justify-center gap-2"
-                  >
-                    <GoogleIcon className="size-5" />
-					Continue with Google
-                  </Button>
-
-                </form>
-              </Form>
-            </div>
-	   </div>
+                  </form>
+                </Form>
+              </div>
+            )}
+          </div>
         </div>
+
+        {/* Right Panel */}
         <div className="hidden lg:flex lg:col-span-1 relative overflow-hidden bg-primary-800 text-white p-10">
           <div className="absolute top-[-120px] right-[-120px] size-[500px] bg-white/20 rounded-full z-0" />
-          <div className='flex justify-center flex-col max-w-[550px] mx-auto'>
-			 <AuthCardCta />
-            <div className='flex flex-col items-center text-center justify-center gap-5 mt-20'>
+          <div className="flex justify-center flex-col max-w-[550px] mx-auto z-10">
+            <AuthCardCta />
+            <div className="flex flex-col items-center text-center justify-center gap-5 mt-20">
               <h3 className="text-4xl font-semibold">Introducing new features</h3>
               <p className="text-base text-white">
-				Analyzing previous trends ensures that businesses always make the right decision. And as the scale of the decision and it’s impact magnifies...              </p>
+                Analyzing previous trends ensures that businesses always make the right decision. And as the scale of the decision and its impact magnifies...
+              </p>
             </div>
           </div>
         </div>
       </div>
     </section>
-
   );
 };
 

@@ -2,7 +2,7 @@
 import z from 'zod';
 import { redisClient } from '@/redis/redis';
 import { sessionSchema } from '../_nextjs/schema';
-import { COOKIE_SESSION_KEY, SESSION_EXPIRATION_SECONDS } from '@/constants';
+import { COOKIE_SESSION_KEY, SESSION_EXPIRATION_SECONDS } from '@/constants/session';
 
 // This type represents the minimal data stored in Redis
 export type UserSession = z.infer<typeof sessionSchema>;
@@ -25,9 +25,7 @@ export type Cookies = {
 export async function getUserFromSession(cookies: Pick<Cookies, 'get'>) {
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
   if (!sessionId) return null;
-
   return getUserSessionById(sessionId);
-
 }
 
 export async function updateUserSession(user: UserSession, cookies: Pick<Cookies, 'get'>) {
@@ -37,8 +35,8 @@ export async function updateUserSession(user: UserSession, cookies: Pick<Cookies
   await redisClient.set(`session:${sessionId}`, JSON.stringify(user), {
     ex: SESSION_EXPIRATION_SECONDS,
 	  });
-
 }
+
 export async function removeUserFromSession(cookies: Pick<Cookies, 'get' | 'delete'>) {
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
 
@@ -81,3 +79,4 @@ export async function updateUserSessionExpiration(cookies: Pick<Cookies, 'set' |
 
   setCookie(sessionId, cookies);
 }
+
