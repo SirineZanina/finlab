@@ -1,147 +1,91 @@
 'use server';
 
-import {
-  ACHClass,
-  CountryCode,
-  TransferAuthorizationCreateRequest,
-  TransferCreateRequest,
-  TransferNetwork,
-  TransferType,
-} from 'plaid';
+import { CountryCode } from 'plaid';
 
 import { plaidClient } from '../plaid';
 import { parseStringify } from '../utils';
 
-import { getTransactionsByBankId } from './transaction.actions';
-import { getAccountProps, getAccountsProps } from '@/types/account';
-import { Bank } from '@/types/bank';
-import { getBank, getBanks } from './account.actions';
+import { prisma } from '@/lib/prisma';
 import { AppError } from '../errors/appError';
-import { getInstitutionProps, getTransactionsProps, Transaction } from '@/types/transaction';
+import { getAccountProps } from '@/types/account';
+import { getInstitutionProps, getTransactionsProps } from '@/types/transaction';
 
-// Get multiple bank accounts
-export const getAccounts = async ({ userId }: getAccountsProps) => {
+export const getAccounts = async (userId: string) => {
   try {
-    // get banks from db
-    const banks = await getBanks({ userId });
 
-    if (!banks || banks.length === 0) {
-	  throw new AppError('NO_BANKS_FOUND', 'No banks found for the user', 404);
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { businessId: true},
+    });
+
+    if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
+
+    const accounts = await prisma.account.findMany({
+	  where: { businessId: user.businessId },
+    });
+
+    if (!accounts || accounts.length === 0) {
+	  throw new AppError('NO_ACCOUNTS_FOUND', 'No accounts found for this user', 404);
     }
 
-    const accounts = await Promise.all(
-      (banks).map(async (bank: Bank) => {
-        // get each account info from plaid
-        const accountsResponse = await plaidClient.accountsGet({
-          access_token: bank.accessToken,
-        });
-        const accountData = accountsResponse.data.accounts[0];
-
-        // get institution info from plaid
-        const institution = await getInstitution({
-          institutionId: accountsResponse.data.item.institution_id!,
-        });
-
-        const account = {
-          id: accountData.account_id,
-          availableBalance: accountData.balances.available!,
-          currentBalance: accountData.balances.current!,
-          institutionId: institution.institution_id,
-          name: accountData.name,
-          officialName: accountData.official_name,
-          mask: accountData.mask!,
-          type: accountData.type as string,
-          subtype: accountData.subtype! as string,
-          sharaebleId: bank.shareableId,
-        };
-
-        return account;
-      })
+    const totalBanks = accounts.length;
+    const totalCurrentBalance = accounts.reduce(
+      (total, account) => total + account.currentBalance.toNumber(),
+      0
     );
 
-    const totalBanks = accounts.length;
-    const totalCurrentBalance = accounts.reduce((total, account) => {
-      return total + account.currentBalance;
-    }, 0);
-
-    return parseStringify({ data: accounts, totalBanks, totalCurrentBalance });
+    return {
+      data: parseStringify(accounts),
+      totalBanks,
+      totalCurrentBalance,
+    };
   } catch (error) {
     console.error('An error occurred while getting the accounts:', error);
+    throw new AppError(
+      'GET_ACCOUNTS_FAILED',
+      'Failed to retrieve accounts',
+      500
+    );
   }
 };
 
-// Get one bank account
 export const getAccount = async ({ accountId }: getAccountProps) => {
   try {
-    // get bank from db
-    const bank = await getBank({ id: accountId });
+    const account = await prisma.account.findUnique({
+      where: { id: accountId },
+      include: {
+        transactions: true,
+        bank: true,
+      },
+    });
 
-    if (!bank) {
-	  throw new AppError('BANK_NOT_FOUND', 'Bank not found for the given account ID', 404);
+    if (!account) {
+      throw new AppError('ACCOUNT_NOT_FOUND', 'Account not found', 404);
     }
 
-    // get account info from plaid
-    const accountsResponse = await plaidClient.accountsGet({
-      access_token: bank.accessToken,
-    });
-    const accountData = accountsResponse.data.accounts[0];
-
-    // get transfer transactions from appwrite
-    const transferTransactionsData = await getTransactionsByBankId({
-      bankId: bank.id,
-    });
-
-    const transferTransactions = transferTransactionsData.documents.map(
-      (transferData) => {
-        return {
-          id: transferData.id,
-          name: transferData.name!,
-          amount: transferData.amount!,
-          date: transferData.createdAt,
-          paymentChannel: transferData.paymentChannel,
-          type: transferData.senderBankId === bank.id ? 'debit' : 'credit',
-          categoryId: transferData.categoryId,
-        };
-      }
-    );
-
-    // get institution info from plaid
     const institution = await getInstitution({
-      institutionId: accountsResponse.data.item.institution_id!,
+      institutionId: account.institutionId,
     });
 
-    const transactions = await getTransactions({
-      accessToken: bank?.accessToken,
-    });
-
-    const account = {
-      id: accountData.account_id,
-      availableBalance: accountData.balances.available!,
-      currentBalance: accountData.balances.current!,
-      institutionId: institution.institution_id,
-      name: accountData.name,
-      officialName: accountData.official_name,
-      mask: accountData.mask!,
-      type: accountData.type as string,
-      subtype: accountData.subtype! as string,
-      appwriteItemId: bank.id,
-    };
-
-    // sort transactions by date such that the most recent transaction is first
-    const allTransactions = [...transactions, ...transferTransactions].sort(
+    const allTransactions = [...account.transactions].sort(
       (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
     );
 
-    return parseStringify({
-      data: account,
-      transactions: allTransactions,
-    });
+    return {
+      data: parseStringify(account),
+      transactions: parseStringify(allTransactions),
+      institution: parseStringify(institution),
+    };
   } catch (error) {
     console.error('An error occurred while getting the account:', error);
+    throw new AppError(
+      'GET_ACCOUNT_FAILED',
+      'Failed to retrieve account',
+      500
+    );
   }
 };
 
-// Get bank info
 export const getInstitution = async ({
   institutionId,
 }: getInstitutionProps) => {
@@ -151,15 +95,20 @@ export const getInstitution = async ({
       country_codes: ['US'] as CountryCode[],
     });
 
-    const intitution = institutionResponse.data.institution;
-
-    return parseStringify(intitution);
+    return parseStringify(institutionResponse.data.institution);
   } catch (error) {
-    console.error('An error occurred while getting the accounts:', error);
+    console.error(
+      'An error occurred while getting the institution:',
+      error
+    );
+    throw new AppError(
+      'GET_INSTITUTION_FAILED',
+      'Failed to retrieve institution',
+      500
+    );
   }
 };
 
-// Get transactions
 export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
@@ -167,7 +116,6 @@ export const getTransactions = async ({
   let transactions: any = [];
 
   try {
-    // Iterate through each page of new transaction updates for item
     while (hasMore) {
       const response = await plaidClient.transactionsSync({
         access_token: accessToken,
@@ -193,6 +141,14 @@ export const getTransactions = async ({
 
     return parseStringify(transactions);
   } catch (error) {
-    console.error('An error occurred while getting the accounts:', error);
+    console.error(
+      'An error occurred while getting the transactions:',
+      error
+    );
+    throw new AppError(
+      'GET_TRANSACTIONS_FAILED',
+      'Failed to retrieve transactions',
+      500
+    );
   }
 };

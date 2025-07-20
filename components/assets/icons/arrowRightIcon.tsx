@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-function ArrowRight(props: React.SVGProps<SVGSVGElement>) {
+function ArrowRightIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
 	  width={props.width ?? '20px'}
@@ -8,7 +8,7 @@ function ArrowRight(props: React.SVGProps<SVGSVGElement>) {
       viewBox="0 0 20 20"
       fill={props.fill ?? 'none'}
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full"
+      className={props?.className ?? 'w-full h-full'}
       {...props}
     >
       <path
@@ -19,4 +19,4 @@ function ArrowRight(props: React.SVGProps<SVGSVGElement>) {
   );
 }
 
-export { ArrowRight };
+export { ArrowRightIcon };

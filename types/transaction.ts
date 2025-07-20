@@ -7,7 +7,7 @@ export type Transaction = {
 	paymentChannel: string;
 	type: string;
 	pending: boolean;
-	categoryId: string;
+	category: string;
 	date: Date;
 	senderBankId: string;
 	receiverBankId: string;

@@ -66,6 +66,8 @@ function getUserFromDb(id: string) {
 	  country: true,
 	  phoneNumber: true,
 	  profilePhotoUrl: true,
+	  dwollaCustomerUrl: true,
+	  dwollaCustomerId: true,
     }
   });
 }

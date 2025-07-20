@@ -5,7 +5,7 @@ import {Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { getCurrentUser } from './(auth)/_nextjs/currentUser';
 import { SessionProvider } from './components/sessionProvider';
-import { SessionData } from '@/types/session/sessionData';
+import { SessionData } from '@/types/session';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],

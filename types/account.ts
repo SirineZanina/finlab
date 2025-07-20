@@ -13,7 +13,7 @@ export type Account = {
 	shareableId: string;
 };
 
-const AccountType = [
+const AccountTypes = [
   'depository',
   'credit',
   'loan',
@@ -21,7 +21,7 @@ const AccountType = [
   'other',
 ];
 
-export type AccountType = typeof AccountType[number];
+export type AccountType = typeof AccountTypes[number];
 
 export type Receiver = {
   firstName: string;

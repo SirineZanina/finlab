@@ -10,7 +10,7 @@ import { createUserSession } from '@/app/(auth)/_core/createUserSession';
 import { getUserFromSession, removeUserFromSession } from '@/app/(auth)/_core/session';
 import { AppError } from '../errors/appError';
 import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
-import { extractCustomerIdFromUrl, parseStringify } from '../utils';
+import { extractCustomerIdFromUrl } from '../utils';
 import { LoginParams, SignUpParams } from '@/types/user';
 
 // ================ SIGN IN ================
@@ -187,7 +187,7 @@ export async function getLoggedInUser() {
       },
     });
     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
-    return parseStringify(user);
+    return user;
 
   } catch (error) {
     console.error('Error fetching logged in user:', error);

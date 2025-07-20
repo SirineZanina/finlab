@@ -20,8 +20,8 @@ export const sidebarLinks = [
   },
   {
     icon: Transaction,
-    route: '/dashboard/transactions',
-    label: 'Transactions',
+    route: '/dashboard/transaction-history',
+    label: 'Transaction History',
     position: 'top',
   },
   {

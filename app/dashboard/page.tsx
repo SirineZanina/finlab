@@ -1,19 +1,46 @@
-'use client';
+'use server';
 import React from 'react';
 import TotalBalanceBox from './_nextjs/components/totalBalanceBox/totalBalanceBox';
-import RightSidebar from './_nextjs/components/rightSideBar/rightSidebar';
-import { useSession } from '@/hooks';
-const Home = () => {
+import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
+import { getLoggedInUser } from '@/lib/actions/user.actions';
+import { SearchParamProps } from '@/types/pagination';
+import RecentTransactions from './_nextjs/components/recentTransactions/recentTransactions';
 
-  const session = useSession();
+const Home = async ({ params } : SearchParamProps) => {
 
-  console.log('session', session);
+  const { id, page} = await params;
+
+  const currentPage = Number(page as string) || 1;
+
+  const loggedInUser = await getLoggedInUser();
+  const data = await getAccounts(loggedInUser.id);
+
+  if (!data) return;
+
+  const accountsData = data?.data;
+
+  if (!accountsData || accountsData.length === 0) return;
+
+  const accountId = (id as string) || accountsData[0]?.id;
+
+  const account = await getAccount({ accountId });
+  console.log('Account Details:', account);
 
   return (
     <section className='home no-scrollbar'>
       <div className='home-content no-scrollbar'>
-        <TotalBalanceBox totalBanks={3} totalCurrentBalance={1200}  />
-		RECENT TRANSACTIONS
+        <TotalBalanceBox
+          accounts={accountsData}
+          totalBanks={data.totalBanks}
+		  totalCurrentBalance={data.totalCurrentBalance}
+        />
+
+        <RecentTransactions
+          accounts={accountsData}
+          transactions={account?.transactions}
+          accountId={accountId}
+          page={currentPage}
+        />
       </div>
 	 {/* {
         session.user && (

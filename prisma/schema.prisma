@@ -114,7 +114,7 @@ model Account {
     officialName     String
     mask             String
     institutionId    String
-    type             AccountType
+    type             String
     subtype          String
     shareableId      String
     businessId       String

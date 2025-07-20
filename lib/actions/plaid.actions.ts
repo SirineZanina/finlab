@@ -7,15 +7,17 @@ import { ExchangePublicTokenProps, User } from '@/types/user';
 import { addFundingSource } from './dwolla.actions';
 import { createBankAccount } from './account.actions';
 import { revalidatePath } from 'next/cache';
+import { prisma } from '../prisma';
+import { AppError } from '../errors/appError';
+import { AccountType } from '@prisma/client';
 
 export const createLinkToken = async (user: User) => {
-  console.log('user id', user.id);
   const tokenParams: LinkTokenCreateRequest = {
     user: {
       client_user_id: user.id,
     },
     client_name: `${user.firstName} ${user.lastName}`,
-    products: ['auth'] as Products[],
+    products: ['auth','transactions'] as Products[],
     language: 'en',
     country_codes: ['US'] as CountryCode[],
     client_id: process.env.PLAID_CLIENT_ID as string,
@@ -40,7 +42,7 @@ export const exchangePublicToken = async({
   try {
     // Exchange public token for access token and item ID
     const response = await plaidClient.itemPublicTokenExchange({
-      public_token: publicToken
+      public_token: publicToken,
     });
 
     const accessToken = response.data.access_token;
@@ -51,51 +53,49 @@ export const exchangePublicToken = async({
       access_token: accessToken,
     });
 
-    const accountData = accountsResponse.data.accounts[0];
+    const accountsData = accountsResponse.data.accounts;
 
-    // Create a processor token for Dwolla using the access token and account ID
-    const request: ProcessorTokenCreateRequest = {
-      access_token: accessToken,
-      account_id: accountData.account_id,
-      processor: 'dwolla' as ProcessorTokenCreateRequestProcessorEnum,
-    };
-
-    const processorTokenResponse = await plaidClient.processorTokenCreate(request);
-    const processorToken = processorTokenResponse.data.processor_token;
-
-    // Create a funding source URL for the account using the Dwolla customer ID,
-    // processor token, and bank name
-    const fundingSourceUrl = await addFundingSource({
-      dwollaCustomerId: user.dwollaCustomerId,
-      processorToken,
-      bankName: accountData.name
+    // Create a bank record
+    const bank = await prisma.bank.create({
+      data: {
+        plaidBankId: itemId,
+        accessToken: accessToken,
+        plaidAccountId: accountsData[0].account_id, // Assuming at least one account
+        fundingSourceUrl: '', // You might need to handle this differently
+        shareableId: '', // You might need to handle this differently
+        userId: user.id,
+      },
     });
 
-    // If the funding source URL is not created, throw an error
-    if (!fundingSourceUrl) throw Error;
-
-    // Create a bank account using the user ID, item ID, account ID, access token, funding source URL
-    // and sharable ID
-    await createBankAccount({
-      userId: user.id,
-      plaidBankId: itemId,
-      plaidAccountId: accountData.account_id,
-      accessToken,
-      fundingSourceUrl,
-      shareableId: encryptId(accountData.account_id)
-    });
+    // Create account records for each account
+    for (const accountData of accountsData) {
+      await prisma.account.create({
+        data: {
+          name: accountData.name,
+          availableBalance: accountData.balances.available || 0,
+          currentBalance: accountData.balances.current || 0,
+          officialName: accountData.official_name || '',
+          mask: accountData.mask || '',
+          institutionId: accountsResponse.data.item.institution_id || '',
+          type: accountData.type.toUpperCase() as any,
+          subtype: accountData.subtype || '',
+          shareableId: '', // You might need to handle this differently
+          businessId: user.businessId,
+          bankId: bank.id,
+        },
+      });
+    }
 
     // Revalidate the path
-    revalidatePath('/');
+    revalidatePath('/dashboard');
 
     // return a success message
-
     return parseStringify({
       publicTokenExchange: 'complete'
     });
 
   } catch (error) {
     console.error('An error occured while creating exchanging token:', error);
-
+    throw new AppError('EXCHANGE_PUBLIC_TOKEN_FAILED', 'Failed to exchange public token', 500);
   }
 };

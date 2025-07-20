@@ -58,7 +58,6 @@ const AuthForm = ({ type }: { type: string }) => {
 
         const user = await signUp(userData);
         setUser(user);
-        redirect('/dashboard');
       }
 
       if (type === 'sign-in') {
