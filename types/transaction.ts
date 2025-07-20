@@ -1,15 +1,39 @@
+import { Decimal } from '@prisma/client/runtime/library';
+
 export type Transaction = {
 	id: string;
 	name: string;
-	amount: number;
+	amount: Decimal;
 	paymentChannel: string;
 	type: string;
 	pending: boolean;
-	category: string;
+	categoryId: string;
 	date: Date;
-	image: string;
-	createdAt: Date;
-	channel: string;
 	senderBankId: string;
 	receiverBankId: string;
+	createdAt: Date;
+	image?: string;
+}
+
+export type getInstitutionProps = {
+	institutionId: string;
+}
+
+export type getTransactionsByBankIdProps = {
+	bankId: string;
+}
+
+export type CreateTransactionProps = {
+  name: string;
+  amount: string;
+  senderId: string;
+  senderBankId: string;
+  receiverId: string;
+  receiverBankId: string;
+  categoryId: string;
+  email: string;
+}
+
+export type getTransactionsProps = {
+	accessToken: string;
 }

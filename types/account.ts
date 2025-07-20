@@ -1,7 +1,9 @@
+import { Decimal } from '@prisma/client/runtime/library';
+
 export type Account = {
 	id: string;
-	availableBalance: number;
-	currentBalance: number;
+	availableBalance: Decimal;
+	currentBalance: Decimal;
 	officialName: string;
 	mask: string;
 	institutionId: string;
@@ -39,4 +41,12 @@ export type CreateBankAccountProps = {
   plaidAccountId: string;
   fundingSourceUrl: string;
   shareableId: string;
+}
+
+export type getAccountsProps = {
+	userId: string;
+}
+
+export type getAccountProps = {
+	accountId: string
 }

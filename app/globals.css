@@ -236,6 +236,19 @@
 		@apply flex flex-col justify-between gap-8 px-6 py-8;
 	}
 
+	  /* PlaidLink */
+	.plaidlink-primary {
+		@apply text-base rounded-lg bg-primary-500 font-semibold text-white;
+	}
+
+	.plaidlink-ghost {
+		@apply flex cursor-pointer items-center justify-center gap-3 rounded-lg px-3 py-7 hover:bg-white lg:justify-start;
+	}
+
+	.plaidlink-default {
+		@apply flex !justify-start cursor-pointer gap-3 rounded-lg !bg-transparent flex-row;
+	}
+
 }
 
 @layer base {

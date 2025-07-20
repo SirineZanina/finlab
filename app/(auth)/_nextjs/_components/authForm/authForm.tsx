@@ -20,6 +20,7 @@ import { authFormSchema } from '../../schema';
 import { signIn, signUp } from '@/lib/actions/user.actions';
 import { BusinessIndustries } from '@/types/business';
 import { RoleType, User } from '@/types/user';
+import { redirect } from 'next/navigation';
 
 const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -57,6 +58,7 @@ const AuthForm = ({ type }: { type: string }) => {
 
         const user = await signUp(userData);
         setUser(user);
+        redirect('/dashboard');
       }
 
       if (type === 'sign-in') {

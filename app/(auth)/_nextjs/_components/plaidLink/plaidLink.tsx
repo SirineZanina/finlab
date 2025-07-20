@@ -3,7 +3,8 @@ import { PlaidLinkOnSuccess, PlaidLinkOptions, usePlaidLink } from 'react-plaid-
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { PlaidLinkProps } from './plaidLink.types';
-import { createLinkToken } from '@/lib/actions/plaid.actions';
+import { createLinkToken, exchangePublicToken } from '@/lib/actions/plaid.actions';
+import ConnectBankIcon from '@/components/assets/icons/connectBankIcon';
 
 const PlaidLink = ({ user, variant } : PlaidLinkProps) => {
 
@@ -15,20 +16,20 @@ const PlaidLink = ({ user, variant } : PlaidLinkProps) => {
     const getLinkToken = async () => {
       if (user) {
         const data = await createLinkToken(user);
-        //   setToken(data?.linkToken);
+        setToken(data?.linkToken);
       }
     };
     getLinkToken();
-  }, []);
+  }, [user]);
 
   const onSuccess = useCallback<PlaidLinkOnSuccess>(async (public_token: string) => {
-    // await exchangePublicToken({
-    //   publicToken: public_token,
-    //   user
-    // })
+    await exchangePublicToken({
+      publicToken: public_token,
+      user
+    });
 
     router.push('/');
-  }, [user]);
+  }, [user, router]);
 
   const config: PlaidLinkOptions ={
     token,
@@ -42,20 +43,27 @@ const PlaidLink = ({ user, variant } : PlaidLinkProps) => {
         (<Button
           onClick={() => open()}
 		  disabled={!ready}
-          variant='default'>
+          variant='default'
+		  className='plaidlink-primary'
+		  >
 			Connect bank
         </Button>)
         : variant === 'ghost' ?
-          <Button>
-		Connect bank
+          <Button onClick={() => open()} variant='ghost' className='plaidlink-ghost'>
+            <ConnectBankIcon />
+            <p className='hidden text-base font-semibold text-secondary-500 xl:block'>
+				Connect bank
+            </p>
           </Button>
           : (
-            <Button>
-			Connect bank
+            <Button onClick={() => open()} className='plaidlink-default'>
+              <ConnectBankIcon />
+			  <p className='text-base font-semibold text-secondary-500'>
+				Connect bank
+			  </p>
             </Button>
           )
       }
-
     </>
   );
 };

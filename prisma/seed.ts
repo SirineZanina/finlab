@@ -33,6 +33,7 @@ async function seedPermissions() {
       Permission.EXPORT_REPORTS,
     ],
     MEMBER: [Permission.VIEW_TRANSACTIONS],
+    GUEST: [Permission.VIEW_TRANSACTIONS], // Assuming GUEST has no permissions
   };
 
   const roles = await prisma.userRole.findMany();

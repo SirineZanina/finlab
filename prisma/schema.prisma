@@ -93,6 +93,7 @@ enum RoleType {
     OWNER
     ACCOUNTANT
     MEMBER
+    GUEST
 }
 
 enum Permission {
@@ -137,26 +138,27 @@ enum AccountType {
 }
 
 model Transaction {
-    id             String   @id @default(cuid())
+    id             String    @id @default(cuid())
     name           String
     amount         Decimal
     paymentChannel String
     type           String
-    pending        Boolean
-    category       String
-    date           DateTime
-    image          String
-    channel        String
+    pending        Boolean?
+    image          String?
+    senderId       String
     senderBankId   String
     receiverBankId String
     businessId     String
-    business       Business @relation(fields: [businessId], references: [id])
+    business       Business? @relation(fields: [businessId], references: [id])
     accountId      String
-    account        Account  @relation(fields: [accountId], references: [id])
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
+    account        Account?  @relation(fields: [accountId], references: [id])
+    categoryId     String
+    category       Category  @relation(fields: [categoryId], references: [id])
+    date           DateTime
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
 
-    @@unique([name, date, accountId, businessId], name: "transaction_unique")
+    @@unique([name, createdAt, accountId, businessId], name: "transaction_unique")
     @@map("transactions")
 }
 
@@ -176,8 +178,9 @@ model Bank {
 }
 
 model Category {
-    id   String @id @default(cuid())
-    name String @unique
+    id          String        @id @default(cuid())
+    name        String        @unique
+    Transaction Transaction[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

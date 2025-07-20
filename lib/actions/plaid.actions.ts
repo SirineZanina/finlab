@@ -1,4 +1,6 @@
-import { CountryCode, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from 'plaid';
+'use server';
+
+import { CountryCode, LinkTokenCreateRequest, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from 'plaid';
 import { plaidClient } from '../plaid';
 import { encryptId, parseStringify } from '../utils';
 import { ExchangePublicTokenProps, User } from '@/types/user';
@@ -7,25 +9,27 @@ import { createBankAccount } from './account.actions';
 import { revalidatePath } from 'next/cache';
 
 export const createLinkToken = async (user: User) => {
+  console.log('user id', user.id);
+  const tokenParams: LinkTokenCreateRequest = {
+    user: {
+      client_user_id: user.id,
+    },
+    client_name: `${user.firstName} ${user.lastName}`,
+    products: ['auth'] as Products[],
+    language: 'en',
+    country_codes: ['US'] as CountryCode[],
+    client_id: process.env.PLAID_CLIENT_ID as string,
+    secret: process.env.PLAID_SECRET as string,
+  };
+
   try {
-    const tokenParams = {
-      user: {
-        client_user_id: user.id,
-      },
-      client_name: `${user.firstName  } ${  user.lastName}`,
-	  products: ['auth'] as Products[],
-	  language: 'en',
-	  country_codes: ['US'] as CountryCode[],
-    };
-
     const response = await plaidClient.linkTokenCreate(tokenParams);
-
     return parseStringify({
       linkToken: response.data.link_token
     });
 
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    console.error('Plaid API Error: ', error.response.data);
   }
 };
 

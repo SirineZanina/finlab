@@ -10,3 +10,16 @@ export type Bank = {
   shareableId: string;
   accounts: Account[];
 };
+
+export type getBanksProps = {
+  userId: string;
+}
+
+export type getBankProps = {
+  id: string;
+}
+
+export type getBankByAccountIdProps = {
+  accountId: string;
+}
+
