@@ -168,7 +168,7 @@
   	}
 
   	.home-content {
-    	@apply flex w-full flex-1 flex-col gap-8 xl:max-h-screen xl:overflow-y-scroll;
+    	@apply flex w-full flex-1 flex-col gap-6 xl:max-h-screen xl:overflow-y-scroll;
   	}
 
    .home-header {

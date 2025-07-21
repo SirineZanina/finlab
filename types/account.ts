@@ -1,16 +1,23 @@
 import { Decimal } from '@prisma/client/runtime/library';
+import { Transaction } from './transaction';
 
 export type Account = {
 	id: string;
+	name: string;
 	availableBalance: Decimal;
 	currentBalance: Decimal;
 	officialName: string;
 	mask: string;
 	institutionId: string;
-	name: string;
 	type: string;
 	subtype: string;
 	shareableId: string;
+	businessId: string;
+	createdAt: Date;
+	updatedAt: Date;
+	transactions?: Transaction[];
+	bankId: string;
+	plaidAccountId: string;
 };
 
 const AccountTypes = [
@@ -48,5 +55,5 @@ export type getAccountsProps = {
 }
 
 export type getAccountProps = {
-	accountId: string
+	plaidAccountId: string
 }

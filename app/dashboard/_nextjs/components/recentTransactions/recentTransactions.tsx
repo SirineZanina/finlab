@@ -11,7 +11,7 @@ import { Pagination } from './pagination/pagination';
 const RecentTransactions = ({
   accounts,
   transactions = [],
-  accountId,
+  plaidAccountId,
   page = 1,
 }: RecentTransactionsProps) => {
   const rowsPerPage = 10;
@@ -19,9 +19,6 @@ const RecentTransactions = ({
 
   const indexOfLastTransaction = page * rowsPerPage;
   const indexOfFirstTransaction = indexOfLastTransaction - rowsPerPage;
-
-  console.log('Transactions:', transactions);
-  console.log('Account ID:', accountId);
 
   const currentTransactions = transactions.slice(
     indexOfFirstTransaction, indexOfLastTransaction
@@ -32,21 +29,21 @@ const RecentTransactions = ({
       <header className="flex items-center justify-between">
         <h2 className="recent-transactions-label">Recent transactions</h2>
         <Link
-          href={`/transaction-history/?id=${accountId}`}
+          href={`/transaction-history/?id=${plaidAccountId}`}
           className="view-all-btn"
         >
           View all
         </Link>
       </header>
 
-      <Tabs defaultValue={accountId} className="w-full">
+      <Tabs defaultValue={plaidAccountId} className="w-full">
         <TabsList className="recent-transactions-tablist">
           {accounts.map((account: Account) => (
-            <TabsTrigger key={account.id} value={account.id} className='' >
+            <TabsTrigger key={account.id} value={account.plaidAccountId} className='' >
               <BankTabItem
                 key={account.id}
                 account={account}
-                accountId={accountId}
+                plaidAccountId={plaidAccountId}
               />
             </TabsTrigger>
           ))}
@@ -60,7 +57,7 @@ const RecentTransactions = ({
           >
             <BankInfo
               account={account}
-              accountId={accountId}
+              plaidAccountId={plaidAccountId}
               type="full"
             />
 

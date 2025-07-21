@@ -12,11 +12,11 @@ import { BankInfoProps } from './bankInfo.types';
 import { AccountType } from '@/types/account';
 import ConnectBankIcon from '@/components/assets/icons/connectBankIcon';
 
-const BankInfo = ({ account, accountId, type }: BankInfoProps) => {
+const BankInfo = ({ account, plaidAccountId, type }: BankInfoProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const isActive = accountId === account?.id;
+  const isActive = plaidAccountId === account?.id;
 
   const handleBankChange = () => {
     const newUrl = formUrlQuery({

@@ -26,7 +26,6 @@ export const createBankAccount = async ({
         shareableId,
       },
     });
-    console.log('Bank account created successfully:', bankAccount);
     return bankAccount;
   } catch (error) {
     console.error('Error creating bank account:', error);
@@ -50,7 +49,7 @@ export const getBanks = async ({ userId }: getBanksProps) => {
 
     return banks;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -69,15 +68,15 @@ export const getBank = async ({ id }: getBankProps) => {
 
     return bank;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
-export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps) => {
+export const getBankByAccountId = async ({ plaidAccountId }: getBankByAccountIdProps) => {
   try {
 
     const bank = await prisma.bank.findFirst({
-	  where: { plaidAccountId: accountId },
+	  where: { plaidAccountId: plaidAccountId },
 	  include: {
         accounts: true,
 	  },
@@ -88,6 +87,6 @@ export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps)
 
     return bank;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };

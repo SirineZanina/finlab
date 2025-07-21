@@ -17,9 +17,9 @@ const TransactionHistory = async ({ params } : SearchParamProps) => {
   if(!accounts) return;
 
   const accountsData = accounts?.data;
-  const accountId = (id as string) || accountsData[0]?.id;
+  const plaidAccountId = (id as string) || accountsData[0]?.id;
 
-  const account = await getAccount({ accountId });
+  const account = await getAccount({ plaidAccountId });
 
   const rowsPerPage = 10;
   const totalPages = Math.ceil(account?.transactions.length / rowsPerPage);

@@ -21,8 +21,8 @@ const Header = () => {
   const subtitle = subtitlesMap[subPath?.toLowerCase() || 'home'] ?? '';
 
   return (
-    <header className='sticky top-0 '>
-      <div className='flex justify-between items-start bg-white'>
+    <header>
+      <div className='flex justify-between items-start'>
         <HeaderBox
           pathLocation={pathLocation}
 		  subtitle={subtitle}

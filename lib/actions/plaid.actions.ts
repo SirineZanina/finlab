@@ -48,9 +48,6 @@ export const exchangePublicToken = async({
 	  throw new AppError('EXCHANGE_PUBLIC_TOKEN_FAILED', 'Failed to exchange public token', 500);
     }
 
-    console.log('Access Token:', response.data.access_token);
-    console.log('Item ID:', response.data.item_id);
-
     const accessToken = response.data.access_token;
     const itemId = response.data.item_id;
     // Get account information from Plaid using the access token
@@ -110,47 +107,58 @@ export const exchangePublicToken = async({
     console.log('Transactions:', transactions);
 
     // Create account records for each account
-    for (const accountData of accountsData) {
-      const createdAccount = await prisma.account.create({
-        data: {
-          name: accountData.name,
-          availableBalance: accountData.balances.available || 0,
-          currentBalance: accountData.balances.current || 0,
-          officialName: accountData.official_name || '',
-          mask: accountData.mask || '',
-          institutionId: accountsResponse.data.item.institution_id || '',
-          type: accountData.type.toUpperCase(),
-          subtype: accountData.subtype || '',
-          shareableId: encryptId(accountData.account_id),
-          businessId: user.businessId,
-          bankId: bank.id,
-          plaidAccountId: accountData.account_id,
-        },
-      });
+    const plaidToDbIdMap: Record<string, string> = {};
 
-      // Insert transactions for this account
-      const accountTransactions = transactions.filter(
-        (tx) => tx.account_id === accountData.account_id
-      );
-
-      for (const tx of accountTransactions) {
-        await prisma.transaction.create({
+    await Promise.all(
+      accountsData.map(async (accountData) => {
+        const createdAccount = await prisma.account.create({
           data: {
-            accountId: createdAccount.id,
-            name: tx.name,
-            amount: tx.amount,
-            date: tx.date,
-            category: tx.personal_finance_category?.primary || '',
-            pending: tx.pending,
-            paymentChannel: tx.payment_channel || 'online',
-            senderId: user.id,              // the current user
-            senderBankId: createdAccount.id, // your bank account record in DB
-            receiverId: '',               // unknown for Plaid transactions
-            receiverBankId: '',           // unknown for Plaid transactions
+            name: accountData.name,
+            availableBalance: accountData.balances.available || 0,
+            currentBalance: accountData.balances.current || 0,
+            officialName: accountData.official_name || '',
+            mask: accountData.mask || '',
+            institutionId: accountsResponse.data.item.institution_id || '',
+            type: accountData.type.toUpperCase(),
+            subtype: accountData.subtype || '',
+            shareableId: encryptId(accountData.account_id),
+            businessId: user.businessId,
+            bankId: bank.id,
+            plaidAccountId: accountData.account_id,
           },
         });
-      }
+
+        plaidToDbIdMap[accountData.account_id] = createdAccount.id;
+        return createdAccount;
+      })
+    );
+
+    // 2. Prepare all transactions for insertion
+    const transactionsToInsert = transactions.map((tx) => ({
+      accountId: plaidToDbIdMap[tx.account_id],
+      name: tx.name,
+      amount: tx.amount,
+      date: new Date(tx.date).toISOString(),
+      category: tx.personal_finance_category?.primary || '',
+      pending: tx.pending,
+      paymentChannel: tx.payment_channel || 'online',
+      senderId: user.id,
+      senderBankId: plaidToDbIdMap[tx.account_id],
+      receiverId: '', // unknown for Plaid transactions
+      receiverBankId: '', // unknown for Plaid transactions
+    }));
+
+    // 3. Insert all transactions in one go
+    const reponse = await prisma.transaction.createMany({
+      data: transactionsToInsert,
+	  skipDuplicates: true, // Skip duplicates if any
+
+    });
+
+    if (!reponse) {
+	  throw new AppError('CREATE_TRANSACTION_FAILED', 'Failed to create transactions', 500);
     }
+
     // Revalidate the path
     revalidatePath('/dashboard');
     // return a success message

@@ -20,8 +20,6 @@ export const getAccounts = async (userId: string) => {
 
     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
 
-    console.log('User Business ID:', user.businessId);
-
     const accounts = await prisma.account.findMany({
 	  where: { businessId: user.businessId },
     });
@@ -51,10 +49,10 @@ export const getAccounts = async (userId: string) => {
   }
 };
 
-export const getAccount = async ({ accountId }: getAccountProps) => {
+export const getAccount = async ({ plaidAccountId }: getAccountProps) => {
   try {
     const account = await prisma.account.findUnique({
-      where: { id: accountId },
+      where: { plaidAccountId: plaidAccountId },
       include: {
         transactions: true,
         bank: true,
@@ -130,10 +128,9 @@ export const getTransactions = async ({
         name: transaction.name,
         paymentChannel: transaction.payment_channel,
         type: transaction.payment_channel,
-        accountId: transaction.account_id,
+        plaidAccountId: transaction.account_id,
         amount: transaction.amount,
         pending: transaction.pending,
-        category: transaction.category ? transaction.category[0] : '',
         date: transaction.date,
         image: transaction.logo_url,
       }));

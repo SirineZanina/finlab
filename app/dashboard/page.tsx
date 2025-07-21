@@ -13,7 +13,6 @@ const Home = async ({ params } : SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
 
   const loggedInUser = await getLoggedInUser();
-  console.log('Logged In User:', loggedInUser);
   const data = await getAccounts(loggedInUser.id);
 
   if (!data) return;
@@ -22,10 +21,9 @@ const Home = async ({ params } : SearchParamProps) => {
 
   if (!accountsData || accountsData.length === 0) return;
 
-  const accountId = (id as string) || accountsData[0]?.id;
+  const plaidAccountId = (id as string) || accountsData[0]?.account_id;
 
-  const account = await getAccount({ accountId });
-  console.log('Account Details:', account);
+  const account = await getAccount({ plaidAccountId });
 
   return (
     <section className='home no-scrollbar'>
@@ -39,7 +37,7 @@ const Home = async ({ params } : SearchParamProps) => {
         <RecentTransactions
           accounts={accountsData}
           transactions={account?.transactions}
-          accountId={accountId}
+          plaidAccountId={plaidAccountId}
           page={currentPage}
         />
       </div>
