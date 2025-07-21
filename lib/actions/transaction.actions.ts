@@ -7,23 +7,18 @@ import { AppError } from '../errors/appError';
 export const createTransaction = async (transaction: CreateTransactionProps) => {
   try {
 
-    const { categoryId, ...rest } = transaction;
-
     const newTransaction = await prisma.transaction.create({
       data: {
-        ...rest,
+        name: transaction.name,
+        amount: transaction.amount,
+        senderBankId: transaction.senderBankId,
+        receiverBankId: transaction.receiverBankId,
+        senderId: transaction.senderId,
+        category: transaction.category,
         paymentChannel: 'online',
         type: 'Transfer',
         date: new Date(), // add the required date property
-        category: {
-          connect: {
-            id: categoryId, // make sure this exists
-          }
-        }
       },
-      include: {
-        category: true, // optional: include category details
-      }
     });
 
     return newTransaction;

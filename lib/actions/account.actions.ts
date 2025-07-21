@@ -7,16 +7,18 @@ import { CreateBankAccountProps } from './../../types/account';
 
 export const createBankAccount = async ({
   userId,
+  businessId,
   plaidBankId,
   plaidAccountId,
   accessToken,
   fundingSourceUrl,
   shareableId,
-}: CreateBankAccountProps) => {
+}: CreateBankAccountProps & { businessId: string }) => {
   try {
     const bankAccount = await prisma.bank.create({
       data: {
         userId,
+        businessId,
         plaidBankId,
         plaidAccountId,
         accessToken,
@@ -24,7 +26,7 @@ export const createBankAccount = async ({
         shareableId,
       },
     });
-
+    console.log('Bank account created successfully:', bankAccount);
     return bankAccount;
   } catch (error) {
     console.error('Error creating bank account:', error);

@@ -35,8 +35,8 @@ export type TransferParams = {
 };
 
 export type CreateBankAccountProps = {
-  accessToken: string;
   userId: string;
+  accessToken: string;
   plaidBankId: string;
   plaidAccountId: string;
   fundingSourceUrl: string;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from '@/components/assets/icons/arrowRightIcon';
+import { ArrowRightIcon } from '@/components/assets/icons/arrowRightIcon';
 
 const Hero = () => {
   return (
@@ -22,7 +22,7 @@ const Hero = () => {
               </Button>
               <Button variant='text' className='gap-1'>
             	<span>Learn more</span>
-		    	<ArrowRight className='size-5'/>
+		    	<ArrowRightIcon className='size-5'/>
               </Button>
 		  </div>
 		  <div className='flex mt-6 md:mt-12 items-center justify-between'>

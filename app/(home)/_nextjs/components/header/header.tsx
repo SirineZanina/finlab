@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { ArrowRight } from '@/components/assets/icons/arrowRightIcon';
+import { ArrowRightIcon } from '@/components/assets/icons/arrowRightIcon';
 import { MenuIcon } from '@/components/assets/icons/menuIcon';
 import { Button } from '@/components/ui/button';
 import { useSession } from '@/hooks';
@@ -18,7 +18,7 @@ const Header = () => {
         </p>
         <div className="inline-flex items-center gap-1">
           <p>Get started for free</p>
-          <ArrowRight className="h-4 w-4 inline-flex justify-center items-center"/>
+          <ArrowRightIcon className="h-4 w-4 inline-flex justify-center items-center"/>
         </div>
       </div>
       <div className="py-5">

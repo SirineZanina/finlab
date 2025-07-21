@@ -20,6 +20,8 @@ export const getAccounts = async (userId: string) => {
 
     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
 
+    console.log('User Business ID:', user.businessId);
+
     const accounts = await prisma.account.findMany({
 	  where: { businessId: user.businessId },
     });

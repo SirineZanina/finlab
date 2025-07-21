@@ -6,7 +6,6 @@ async function main() {
 
   await seedRoles();
   await seedPermissions();
-  await seedCategories();
 
   console.log('Seeding finished.');
 }
@@ -58,22 +57,6 @@ async function seedPermissions() {
     }
   }
   console.log('Permissions seeded.');
-}
-
-async function seedCategories() {
-  console.log('Seeding categories...');
-  const categories = [
-    { name: 'Office' },
-    { name: 'Software' },
-    { name: 'Travel' },
-    { name: 'Food' },
-    { name: 'Utilities' },
-  ];
-  await prisma.category.createMany({
-    data: categories,
-    skipDuplicates: true,
-  });
-  console.log('Categories seeded.');
 }
 
 main()

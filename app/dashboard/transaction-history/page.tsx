@@ -3,12 +3,14 @@ import { getLoggedInUser } from '@/lib/actions/user.actions';
 import { formatAmount } from '@/lib/utils';
 import { SearchParamProps } from '@/types/pagination';
 import React from 'react';
-import HeaderBox from '../_nextjs/components/headerBox/headerBox';
 import TransactionsTable from '../_nextjs/components/recentTransactions/transactionsTable/transactionsTable';
 import { Pagination } from '../_nextjs/components/recentTransactions/pagination/pagination';
 
-const TransactionHistory = async ({ searchParams: { id, page }}:SearchParamProps) => {
+const TransactionHistory = async ({ params } : SearchParamProps) => {
+  const { id, page} = await params;
+
   const currentPage = Number(page as string) || 1;
+
   const loggedIn = await getLoggedInUser();
   const accounts = await getAccounts(loggedIn.id);
 

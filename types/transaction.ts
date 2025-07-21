@@ -30,7 +30,7 @@ export type CreateTransactionProps = {
   senderBankId: string;
   receiverId: string;
   receiverBankId: string;
-  categoryId: string;
+  category: string;
   email: string;
 }
 
