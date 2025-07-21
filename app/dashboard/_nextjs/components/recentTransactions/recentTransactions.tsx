@@ -11,7 +11,7 @@ import { Pagination } from './pagination/pagination';
 const RecentTransactions = ({
   accounts,
   transactions = [],
-  plaidAccountId,
+  accountId,
   page = 1,
 }: RecentTransactionsProps) => {
   const rowsPerPage = 10;
@@ -29,21 +29,21 @@ const RecentTransactions = ({
       <header className="flex items-center justify-between">
         <h2 className="recent-transactions-label">Recent transactions</h2>
         <Link
-          href={`/transaction-history/?id=${plaidAccountId}`}
+          href={`/transaction-history/?id=${accountId}`}
           className="view-all-btn"
         >
           View all
         </Link>
       </header>
 
-      <Tabs defaultValue={plaidAccountId} className="w-full">
+      <Tabs defaultValue={accountId} className="w-full">
         <TabsList className="recent-transactions-tablist">
           {accounts.map((account: Account) => (
-            <TabsTrigger key={account.id} value={account.plaidAccountId} className='' >
+            <TabsTrigger key={account.id} value={account.id} className='' >
               <BankTabItem
                 key={account.id}
                 account={account}
-                plaidAccountId={plaidAccountId}
+                accountId={accountId}
               />
             </TabsTrigger>
           ))}
@@ -57,7 +57,7 @@ const RecentTransactions = ({
           >
             <BankInfo
               account={account}
-              plaidAccountId={plaidAccountId}
+              accountId={accountId}
               type="full"
             />
 

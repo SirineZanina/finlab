@@ -14,9 +14,9 @@ export const createTransaction = async (transaction: CreateTransactionProps) => 
         senderBankId: transaction.senderBankId,
         receiverBankId: transaction.receiverBankId,
         senderId: transaction.senderId,
+        receiverId: transaction.receiverId,
         category: transaction.category,
         paymentChannel: 'online',
-        type: 'Transfer',
         date: new Date(), // add the required date property
       },
     });

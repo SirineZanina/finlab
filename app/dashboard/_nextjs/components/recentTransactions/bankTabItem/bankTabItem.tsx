@@ -5,10 +5,10 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { cn, formUrlQuery } from '@/lib/utils';
 import { BankTabItemProps } from './bankTabItem.types';
 
-export const BankTabItem = ({ account, plaidAccountId }: BankTabItemProps) => {
+export const BankTabItem = ({ account, accountId }: BankTabItemProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const isActive = plaidAccountId === account?.id;
+  const isActive = accountId === account?.id;
 
   const handleBankChange = () => {
     const newUrl = formUrlQuery({

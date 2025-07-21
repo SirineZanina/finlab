@@ -1,25 +1,25 @@
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
-import { getLoggedInUser } from '@/lib/actions/user.actions';
 import { formatAmount } from '@/lib/utils';
-import { SearchParamProps } from '@/types/pagination';
 import React from 'react';
 import TransactionsTable from '../_nextjs/components/recentTransactions/transactionsTable/transactionsTable';
 import { Pagination } from '../_nextjs/components/recentTransactions/pagination/pagination';
+import { getCurrentUser } from '@/app/(auth)/_nextjs/currentUser';
 
-const TransactionHistory = async ({ params } : SearchParamProps) => {
-  const { id, page} = await params;
+const TransactionHistory = async (props: {params: Promise<{ id: string, page: string }> }) => {
+  const { params } = props;
+  const { id, page } = await params;
+  const currentPage = Number(page) || 1;
 
-  const currentPage = Number(page as string) || 1;
-
-  const loggedIn = await getLoggedInUser();
+  const loggedIn = await getCurrentUser({ withFullUser: true });
+  if (!loggedIn) return;
   const accounts = await getAccounts(loggedIn.id);
 
   if(!accounts) return;
 
   const accountsData = accounts?.data;
-  const plaidAccountId = (id as string) || accountsData[0]?.id;
+  const accountId = (id as string) || accountsData[0]?.id;
 
-  const account = await getAccount({ plaidAccountId });
+  const account = await getAccount(accountId);
 
   const rowsPerPage = 10;
   const totalPages = Math.ceil(account?.transactions.length / rowsPerPage);

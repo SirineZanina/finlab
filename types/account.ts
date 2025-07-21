@@ -55,5 +55,5 @@ export type getAccountsProps = {
 }
 
 export type getAccountProps = {
-	plaidAccountId: string
+	accountId: string
 }

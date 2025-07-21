@@ -1,18 +1,17 @@
-'use server';
 import React from 'react';
 import TotalBalanceBox from './_nextjs/components/totalBalanceBox/totalBalanceBox';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
-import { getLoggedInUser } from '@/lib/actions/user.actions';
-import { SearchParamProps } from '@/types/pagination';
 import RecentTransactions from './_nextjs/components/recentTransactions/recentTransactions';
+import { getCurrentUser } from '../(auth)/_nextjs/currentUser';
 
-const Home = async ({ params } : SearchParamProps) => {
+const Home = async (props: {params: Promise<{ id: string, page: string }> })=> {
+  const { params } = props;
+  const { id, page } = await params;
+  const currentPage = Number(page) || 1;
 
-  const { id, page} = await params;
+  const loggedInUser = await getCurrentUser({ withFullUser: true });
+  if (!loggedInUser) return;
 
-  const currentPage = Number(page as string) || 1;
-
-  const loggedInUser = await getLoggedInUser();
   const data = await getAccounts(loggedInUser.id);
 
   if (!data) return;
@@ -21,9 +20,13 @@ const Home = async ({ params } : SearchParamProps) => {
 
   if (!accountsData || accountsData.length === 0) return;
 
-  const plaidAccountId = (id as string) || accountsData[0]?.account_id;
+  console.log('Accounts Data:', accountsData);
 
-  const account = await getAccount({ plaidAccountId });
+  const accountId = (id as string) || accountsData[0]?.id;
+
+  console.log('Account ID:', accountId);
+
+  const account = await getAccount(accountId);
 
   return (
     <section className='home no-scrollbar'>
@@ -37,7 +40,7 @@ const Home = async ({ params } : SearchParamProps) => {
         <RecentTransactions
           accounts={accountsData}
           transactions={account?.transactions}
-          plaidAccountId={plaidAccountId}
+          accountId={accountId}
           page={currentPage}
         />
       </div>

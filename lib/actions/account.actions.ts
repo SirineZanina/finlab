@@ -72,11 +72,11 @@ export const getBank = async ({ id }: getBankProps) => {
   }
 };
 
-export const getBankByAccountId = async ({ plaidAccountId }: getBankByAccountIdProps) => {
+export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps) => {
   try {
 
     const bank = await prisma.bank.findFirst({
-	  where: { plaidAccountId: plaidAccountId },
+	  where: { id: accountId },
 	  include: {
         accounts: true,
 	  },

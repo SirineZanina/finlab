@@ -7,7 +7,7 @@ import { BusinessIndustry, RoleType } from '@prisma/client';
 import { signInSchema, signUpSchema } from '@/app/(auth)/_nextjs/schema';
 import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_core/passwordHasher';
 import { createUserSession } from '@/app/(auth)/_core/createUserSession';
-import { getUserFromSession, removeUserFromSession } from '@/app/(auth)/_core/session';
+import { removeUserFromSession } from '@/app/(auth)/_core/session';
 import { AppError } from '../errors/appError';
 import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
 import { extractCustomerIdFromUrl } from '../utils';
@@ -169,28 +169,4 @@ export async function logOut() {
 
   await removeUserFromSession(await cookies());
   redirect('/');
-}
-
-// ================ GET LOGGED IN USER ================
-
-export async function getLoggedInUser() {
-  try {
-    const sessionUser = await getUserFromSession(await cookies());
-    if (!sessionUser || !sessionUser.id || !sessionUser.role)
-      throw new AppError('UNAUTHORIZED', 'User not authenticated', 401);
-
-    const user = await prisma.user.findUnique({
-      where: { id: sessionUser.id },
-      include: {
-        role: true,
-        business: true,
-      },
-    });
-    if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
-    return user;
-
-  } catch (error) {
-    console.error('Error fetching logged in user:', error);
-    throw new AppError('UNAUTHORIZED', 'User not authenticated', 401);
-  }
 }

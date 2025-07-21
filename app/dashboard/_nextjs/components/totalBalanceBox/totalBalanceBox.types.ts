@@ -1,4 +1,4 @@
-import { Account } from '@/types/account/account';
+import { Account } from '@/types/account';
 
 export type TotalBalanceBoxProps = {
 	accounts?: Account[],

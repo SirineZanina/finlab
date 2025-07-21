@@ -49,10 +49,15 @@ export const getAccounts = async (userId: string) => {
   }
 };
 
-export const getAccount = async ({ plaidAccountId }: getAccountProps) => {
+export const getAccount = async ({ accountId }: getAccountProps) => {
   try {
+
+    if (!accountId) {
+	  throw new AppError('ACCOUNT_ID_REQUIRED', 'Account ID is required', 400);
+    }
+
     const account = await prisma.account.findUnique({
-      where: { plaidAccountId: plaidAccountId },
+      where: { id: accountId },
       include: {
         transactions: true,
         bank: true,

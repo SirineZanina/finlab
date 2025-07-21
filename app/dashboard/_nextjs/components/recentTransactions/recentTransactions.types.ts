@@ -4,6 +4,6 @@ import { Transaction } from '@/types/transaction';
 export type RecentTransactionsProps = {
 	accounts: Account[];
 	transactions: Transaction[];
-	plaidAccountId: string;
+	accountId: string;
 	page?: number;
 };

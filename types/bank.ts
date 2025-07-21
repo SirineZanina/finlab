@@ -20,6 +20,6 @@ export type getBankProps = {
 }
 
 export type getBankByAccountIdProps = {
-  plaidAccountId: string;
+  accountId: string;
 }
 

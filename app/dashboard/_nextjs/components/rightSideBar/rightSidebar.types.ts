@@ -1,9 +1,9 @@
-import { BankAccount } from '@/types/account/bankAccount';
-import { SafeUser } from '@/types/session/sessionData';
-import { Transaction } from '@/types/transaction/transaction';
+import { Bank } from '@/types/bank';
+import { Transaction } from '@/types/transaction';
+import { User } from '@/types/user';
 
 export type RightSidebarProps = {
-  user: SafeUser;
+  user: User;
   transactions?: Transaction[];
-  banks?: BankAccount[];
+  banks?: Bank[];
 };
