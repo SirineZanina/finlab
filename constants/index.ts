@@ -4,6 +4,7 @@ import Transaction from '@/components/assets/icons/transactionIcon';
 import MoneySend from '@/components/assets/icons/moneySendIcon';
 import EnterpriseIcon  from '@/components/assets/icons/enterpriseIcon';
 import SettingsIcon from '@/components/assets/icons/settingsIcon';
+import ConnectBankIcon from '@/components/assets/icons/connectBankIcon';
 
 export const sidebarLinks = [
   {
@@ -54,5 +55,13 @@ export const sidebarLinks = [
     route: '/dashboard/settings',
     label: 'Settings',
     position: 'bottom',
+  },
+  {
+    icon: ConnectBankIcon,
+    route: '#',
+    label: 'Connect Bank',
+    position: 'top',
+    isPlaid: true,
   }
+
 ];

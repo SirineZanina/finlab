@@ -49,8 +49,10 @@ export const getAccounts = async (userId: string) => {
   }
 };
 
-export const getAccount = async ({ accountId }: getAccountProps) => {
+export const getAccount = async (accountId: string) => {
   try {
+
+    console.log('Getting account with ID:', accountId);
 
     if (!accountId) {
 	  throw new AppError('ACCOUNT_ID_REQUIRED', 'Account ID is required', 400);

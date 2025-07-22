@@ -7,7 +7,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { transactionCategoryStyles } from '@/constants/transactions';
-import { cn, formatAmount, formatDateTime, getTransactionStatus, removeSpecialCharacters } from '@/lib/utils';
+import { cn, formatAmount, formatCategory, formatDateTime, getTransactionStatus, removeSpecialCharacters } from '@/lib/utils';
 import { CategoryBadgeProps } from './categoryBadge.types';
 import { TransactionTableProps } from './transactionTable.types';
 import { Transaction } from '@/types/transaction';
@@ -21,9 +21,11 @@ const CategoryBadge = ({ category }: CategoryBadgeProps) => {
   } = transactionCategoryStyles[category as keyof typeof transactionCategoryStyles] || transactionCategoryStyles.default;
 
   return (
-    <div className={cn('category-badge', borderColor, chipBackgroundColor)}>
+    <div className={cn('category-badge border border-blue-500', borderColor, chipBackgroundColor)}>
       <div className={cn('size-2 rounded-full', backgroundColor)} />
-      <p className={cn('text-[12px] font-medium', textColor)}>{category}</p>
+      <p className={cn('text-[12px] font-medium', textColor)}>
+        {formatCategory(category)}
+	  </p>
     </div>
   );
 };

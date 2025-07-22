@@ -42,6 +42,7 @@ const Sidebar = ({ user }: SidebarProps) => {
                       item={item}
                       isActive={isActive}
                       isSidebarExpanded={isSidebarExpanded}
+					  user={user}
                     />
                   </div>
                 );

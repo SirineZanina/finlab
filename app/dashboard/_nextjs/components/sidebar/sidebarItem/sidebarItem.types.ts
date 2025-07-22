@@ -1,4 +1,5 @@
 import { sidebarLinks } from '@/constants';
+import { User } from '@/types/user';
 
 export type SidebarItemProps = {
 	item: typeof sidebarLinks[number];
@@ -7,6 +8,7 @@ export type SidebarItemProps = {
 	hasSubmenu?: boolean;
 	submenuItems?: SubMenuItem[];
 	isSidebarExpanded?: boolean;
+	user?: User
 }
 
 export type SubMenuItem = {

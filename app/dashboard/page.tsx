@@ -39,7 +39,7 @@ const Home = async (props: {params: Promise<{ id: string, page: string }> })=> {
 
         <RecentTransactions
           accounts={accountsData}
-          transactions={account?.transactions}
+          initialTransactions={account?.transactions}
           accountId={accountId}
           page={currentPage}
         />

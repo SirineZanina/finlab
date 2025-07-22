@@ -256,7 +256,7 @@
 
 	  /* PlaidLink */
 	.plaidlink-primary {
-		@apply text-base rounded-lg bg-primary-500 font-semibold text-white;
+		@apply text-base rounded-lg bg-primary-200 font-semibold text-white;
 	}
 
 	.plaidlink-ghost {
@@ -267,9 +267,12 @@
 		@apply flex !justify-start cursor-pointer gap-3 rounded-lg !bg-transparent flex-row;
 	}
 
-		/* Bank Info */
+	/* Bank Info */
 	.bank-info {
 		@apply gap-4.5 flex p-4 transition-all border bg-primary-500 border-transparent;
+	}
+	.bank-info_content {
+		@apply flex flex-1 items-center justify-between gap-2 overflow-hidden;
 	}
 
 	/* Category Badge */
@@ -278,11 +281,11 @@
 	}
 
 	.banktab-item {
-		@apply gap-4.5 border-b-2 flex px-2 sm:px-4 py-2 transition-all;
+		@apply border-b-2 flex px-2 sm:px-4 py-2 transition-all;
 	}
 
 	.recent-transactions {
-		@apply flex w-full flex-col gap-6;
+		@apply flex w-full flex-col gap-4;
 	}
 
 	.recent-transactions-label {
@@ -290,14 +293,14 @@
 	}
 
 	.recent-transactions-tablist {
-		@apply custom-scrollbar mb-8 flex w-full flex-nowrap;
+		@apply custom-scrollbar mb-4 flex w-full flex-nowrap;
 	}
 	.view-all-btn {
 		@apply text-sm rounded-lg border border-gray-300 px-4 py-2.5 font-semibold text-gray-700;
 	}
 
 	 .transactions {
-		@apply flex max-h-screen w-full flex-col gap-8 overflow-y-scroll bg-secondary-100;
+		@apply flex max-h-screen w-full flex-col gap-8 overflow-y-scroll;
 	}
 
 	.transactions-header {

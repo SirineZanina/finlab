@@ -3,8 +3,16 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 const privateRoutesPrefix = ['/dashboard'];
 const adminRoutesPrefix = ['/admin'];
+const apiRoutesPrefix = ['/api'];
 
 export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  // Skip middleware processing for API routes
+  if (apiRoutesPrefix.some(prefix => path.startsWith(prefix))) {
+    return NextResponse.next();
+  }
+
   const response = (await middlewareAuth(request)) ?? NextResponse.next();
 
   updateUserSessionExpiration({

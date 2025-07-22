@@ -104,6 +104,15 @@ export function formUrlQuery({ params, key, value }: UrlQueryParams) {
   );
 }
 
+export function formatCategory(category: string): string {
+  if (!category) return '';
+  return category
+    .toLowerCase()
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
 export function getAccountTypeColors(type: AccountType) {
   switch (type) {
   case 'depository':
@@ -125,7 +134,7 @@ export function getAccountTypeColors(type: AccountType) {
   default:
     return {
       bg: 'bg-green-25',
-      lightBg: 'bg-green-100',
+      lightBg: 'bg-green-200',
       title: 'text-green-900',
       subText: 'text-green-700',
     };

@@ -32,7 +32,7 @@ const BankInfo = ({ account, accountId, type }: BankInfoProps) => {
   return (
     <div
       onClick={handleBankChange}
-      className={cn(`bank-info ${colors.bg}`, {
+      className={cn('bank-info bg-primary-100 rounded-xl', {
         'shadow-sm border-blue-700': type === 'card' && isActive,
         'rounded-xl': type === 'card',
         'hover:shadow-sm cursor-pointer': type === 'card',
@@ -42,7 +42,7 @@ const BankInfo = ({ account, accountId, type }: BankInfoProps) => {
         className={`flex-center h-fit rounded-full bg-blue-100 ${colors.lightBg}`}
       >
         <ConnectBankIcon
-          className='m-2 min-w-5'
+          className='m-2 min-w-5' fill='#23978D'
         />
       </figure>
       <div className="flex w-full flex-1 flex-col justify-center gap-1">
@@ -61,7 +61,7 @@ const BankInfo = ({ account, accountId, type }: BankInfoProps) => {
           )}
         </div>
 
-        <p className={`text-16 font-medium text-blue-700 ${colors.subText}`}>
+        <p className={`text-base font-medium text-blue-700 ${colors.subText}`}>
           {formatAmount(Number(account.currentBalance))}
         </p>
       </div>
