@@ -10,7 +10,12 @@ const Header = () => {
   const pathname = usePathname();
 
   const subPath = pathname.replace('/dashboard', '').split('/').filter(Boolean)[0];
-  const pathLocation = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Home';
+  const pathLocation = subPath
+    ? subPath
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+    : 'Home';
 
   const subtitlesMap: Record<string, string> = {
     home: 'Welcome to your dashboard',

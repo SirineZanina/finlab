@@ -49,11 +49,3 @@ export type CreateBankAccountProps = {
   fundingSourceUrl: string;
   shareableId: string;
 }
-
-export type getAccountsProps = {
-	userId: string;
-}
-
-export type getAccountProps = {
-	accountId: string
-}

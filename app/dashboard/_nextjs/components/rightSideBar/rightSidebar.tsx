@@ -1,4 +1,3 @@
-import React from 'react';
 import { RightSidebarProps } from './rightSidebar.types';
 
 const RightSidebar = ({ user, transactions, banks } : RightSidebarProps) => {

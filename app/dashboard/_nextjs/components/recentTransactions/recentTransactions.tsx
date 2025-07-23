@@ -46,6 +46,8 @@ const RecentTransactions = ({
       // Fetch transactions for the new account
       const response = await fetch(`/api/accounts/${newAccountId}/transactions`);
 
+	  console.log('Transactions length', response.body);
+
       if (!response.ok) {
         throw new Error('Failed to fetch transactions');
       }
@@ -66,13 +68,12 @@ const RecentTransactions = ({
       <header className="flex items-center justify-between">
         <h2 className="recent-transactions-label">Recent transactions</h2>
         <Link
-          href={`/transaction-history/?id=${currentAccountId}`}
+          href={`/dashboard/transaction-history?id=${currentAccountId}&page=${page}`}
           className="view-all-btn"
         >
           View all
         </Link>
       </header>
-
       <Tabs
         value={currentAccountId}
         onValueChange={handleTabChange}

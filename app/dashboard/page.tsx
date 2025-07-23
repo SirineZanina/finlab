@@ -4,10 +4,14 @@ import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import RecentTransactions from './_nextjs/components/recentTransactions/recentTransactions';
 import { getCurrentUser } from '../(auth)/_nextjs/currentUser';
 
-const Home = async (props: {params: Promise<{ id: string, page: string }> })=> {
-  const { params } = props;
-  const { id, page } = await params;
+const Home = async ({ searchParams }: {
+  searchParams: Promise<{ id?: string; page?: string }>;
+}) => {
+  const { id, page } = await searchParams;
   const currentPage = Number(page) || 1;
+
+  console.log('Home received id:', id); // Debug log
+  console.log('Home received page:', page); // Debug log
 
   const loggedInUser = await getCurrentUser({ withFullUser: true });
   if (!loggedInUser) return;
@@ -20,11 +24,9 @@ const Home = async (props: {params: Promise<{ id: string, page: string }> })=> {
 
   if (!accountsData || accountsData.length === 0) return;
 
-  console.log('Accounts Data:', accountsData);
-
   const accountId = (id as string) || accountsData[0]?.id;
 
-  console.log('Account ID:', accountId);
+  console.log('Home using accountId:', accountId); // Debug log
 
   const account = await getAccount(accountId);
 
@@ -34,7 +36,7 @@ const Home = async (props: {params: Promise<{ id: string, page: string }> })=> {
         <TotalBalanceBox
           accounts={accountsData}
           totalBanks={data.totalBanks}
-		  totalCurrentBalance={data.totalCurrentBalance}
+          totalCurrentBalance={data.totalCurrentBalance}
         />
 
         <RecentTransactions
@@ -44,12 +46,11 @@ const Home = async (props: {params: Promise<{ id: string, page: string }> })=> {
           page={currentPage}
         />
       </div>
-	 {/* {
+      {/* {
         session.user && (
-			 <RightSidebar user={session?.user}/>
+          <RightSidebar user={session?.user}/>
         )
-	 } */}
-
+      } */}
     </section>
   );
 };

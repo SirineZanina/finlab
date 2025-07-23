@@ -1,6 +1,6 @@
 'use client';
 import * as React from 'react';
-import { ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { Legend, ResponsiveContainer, Tooltip } from 'recharts';
 
 import { cn } from '@/lib/utils';
 
@@ -343,10 +343,9 @@ function getPayloadConfigFromPayload(
 }
 
 export {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
-  ChartStyle,
+	ChartContainer, ChartLegend,
+	ChartLegendContent,
+	ChartStyle, ChartTooltip,
+	ChartTooltipContent
 };
+

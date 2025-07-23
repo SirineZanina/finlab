@@ -47,6 +47,11 @@ export default function ProfileDropdown({
           </DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuItem>Earnings</DropdownMenuItem>
+		   <DropdownMenuItem>
+            <Link href="/dashboard/account-details">
+				Account Details
+            </Link>
+		   </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={async () => await logOut()}>Sign out</DropdownMenuItem>
         </DropdownMenuContent>

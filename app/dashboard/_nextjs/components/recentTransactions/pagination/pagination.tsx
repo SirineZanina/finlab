@@ -10,7 +10,7 @@ import { ArrowRightIcon } from '@/components/assets/icons/arrowRightIcon';
 
 export const Pagination = ({ page, totalPages }: PaginationProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams()!;
+  const searchParams = useSearchParams();
 
   const handleNavigation = (type: 'prev' | 'next') => {
     const pageNumber = type === 'prev' ? page - 1 : page + 1;
@@ -48,7 +48,7 @@ export const Pagination = ({ page, totalPages }: PaginationProps) => {
         disabled={Number(page) >= totalPages}
       >
         Next
-        <ArrowRightIcon className='ml-2 -scale-x-100'/>
+        <ArrowRightIcon className='ml-2 scale-x-100'/>
       </Button>
     </div>
   );

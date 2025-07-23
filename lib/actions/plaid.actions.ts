@@ -57,8 +57,6 @@ export const exchangePublicToken = async({
 
     const accountsData = accountsResponse.data.accounts;
 
-    console.log('Account Data:', accountsData);
-
 	 // Create a processor token for Dwolla using the access token and account ID
     const request: ProcessorTokenCreateRequest = {
       access_token: accessToken,
@@ -75,8 +73,6 @@ export const exchangePublicToken = async({
       processorToken,
       bankName: accountsData[0].name,
     });
-
-    console.log('Funding Source URL:', fundingSourceUrl);
 
     // If the funding source URL is not created, throw an error
     if (!fundingSourceUrl) throw Error;

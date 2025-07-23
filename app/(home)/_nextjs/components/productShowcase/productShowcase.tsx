@@ -18,7 +18,7 @@ const ProductShowcase = () => {
 	  	</div>
         <div className='flex justify-center mt-10'>
           <Image
-            src={'/images/product-image.png'}
+            src={'/images/landing-page/product-image.png'}
             alt="Product Image"
             width={1040}
             height={666}

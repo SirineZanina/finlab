@@ -50,7 +50,7 @@ const Hero = () => {
           </div>
           <div className='col-span-4 md:col-span-2 flex justify-end'>
             <Image
-              src={'/images/hero-img.png'}
+              src={'/images/landing-page/hero-img.png'}
               width={1801}
               height={1333}
               alt='Hero Image'
