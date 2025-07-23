@@ -1,6 +1,6 @@
 
 export const topCategoryStyles = {
-  'Food and Drink': {
+  'FOOD_AND_DRINK': {
     bg: 'bg-blue-25',
     circleBg: 'bg-blue-100',
     text: {
@@ -13,7 +13,7 @@ export const topCategoryStyles = {
     },
     icon: '/icons/monitor.svg',
   },
-  Travel: {
+  'TRAVEL': {
     bg: 'bg-success-25',
     circleBg: 'bg-success-100',
     text: {
@@ -42,19 +42,31 @@ export const topCategoryStyles = {
 };
 
 export const transactionCategoryStyles = {
-  'Food and Drink': {
+  'FOOD_AND_DRINK': {
     borderColor: 'border-pink-600',
     backgroundColor: 'bg-pink-500',
     textColor: 'text-pink-700',
     chipBackgroundColor: 'bg-inherit',
   },
-  Payment: {
+  'GENERAL_MERCHANDISE': {
+    borderColor: 'border-orange-700',
+    backgroundColor: 'bg-orange-700',
+    textColor: 'text-orange-700',
+    chipBackgroundColor: 'bg-inherit',
+  },
+  'BANK_FEES': {
     borderColor: 'border-success-600',
     backgroundColor: 'bg-green-600',
     textColor: 'text-success-700',
     chipBackgroundColor: 'bg-inherit',
   },
-  'Bank Fees': {
+  'TRAVEL': {
+    borderColor: 'border-purple-700',
+    backgroundColor: 'bg-purple-700',
+    textColor: 'text-purple-700',
+    chipBackgroundColor: 'bg-inherit',
+  },
+  Payment: {
     borderColor: 'border-success-600',
     backgroundColor: 'bg-green-600',
     textColor: 'text-success-700',

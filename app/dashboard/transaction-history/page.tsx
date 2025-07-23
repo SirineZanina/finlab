@@ -32,8 +32,6 @@ const TransactionHistory = async ({ searchParams }: {
     indexOfFirstTransaction, indexOfLastTransaction
   );
 
-  console.log('Current transactions count:', currentTransactions?.length);
-
   return (
     <div className="transactions">
       <div className="space-y-6">

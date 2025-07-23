@@ -20,9 +20,6 @@ const CategoryBadge = ({ category }: CategoryBadgeProps) => {
     chipBackgroundColor,
   } = transactionCategoryStyles[category as keyof typeof transactionCategoryStyles] || transactionCategoryStyles.default;
 
-  console.log('Category received:', category);
-  console.log('Available keys:', Object.keys(transactionCategoryStyles));
-  console.log('Styles found:', transactionCategoryStyles[category as keyof typeof transactionCategoryStyles]);
   return (
     <div className={cn('category-badge', borderColor, chipBackgroundColor)}>
       <div className={cn('size-2 rounded-full', backgroundColor)} />

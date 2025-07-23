@@ -46,8 +46,6 @@ const RecentTransactions = ({
       // Fetch transactions for the new account
       const response = await fetch(`/api/accounts/${newAccountId}/transactions`);
 
-	  console.log('Transactions length', response.body);
-
       if (!response.ok) {
         throw new Error('Failed to fetch transactions');
       }

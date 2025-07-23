@@ -2,13 +2,13 @@
 
 import { CountryCode, LinkTokenCreateRequest, ProcessorTokenCreateRequest, ProcessorTokenCreateRequestProcessorEnum, Products } from 'plaid';
 import { plaidClient } from '../plaid';
-import {  encryptId, parseStringify } from '../utils';
-import { ExchangePublicTokenProps, User } from '@/types/user';
-import { AppError } from '../errors/appError';
-import { addFundingSource } from './dwolla.actions';
-import { revalidatePath } from 'next/cache';
-import { createBankAccount } from './account.actions';
 import { prisma } from '../prisma';
+import { revalidatePath } from 'next/cache';
+import { addFundingSource } from './dwolla.actions';
+import { createBankAccount } from './account.actions';
+import { AppError } from '../errors/appError';
+import { ExchangePublicTokenProps, User } from '@/types/user';
+import {  encryptId, parseStringify } from '../utils';
 
 export const createLinkToken = async (user: User) => {
   const tokenParams: LinkTokenCreateRequest = {
@@ -100,7 +100,6 @@ export const exchangePublicToken = async({
     });
 
     const transactions = transactionsResponse.data.transactions;
-    console.log('Transactions:', transactions);
 
     // Create account records for each account
     const plaidToDbIdMap: Record<string, string> = {};

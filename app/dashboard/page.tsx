@@ -10,9 +10,6 @@ const Home = async ({ searchParams }: {
   const { id, page } = await searchParams;
   const currentPage = Number(page) || 1;
 
-  console.log('Home received id:', id); // Debug log
-  console.log('Home received page:', page); // Debug log
-
   const loggedInUser = await getCurrentUser({ withFullUser: true });
   if (!loggedInUser) return;
 
@@ -25,8 +22,6 @@ const Home = async ({ searchParams }: {
   if (!accountsData || accountsData.length === 0) return;
 
   const accountId = (id as string) || accountsData[0]?.id;
-
-  console.log('Home using accountId:', accountId); // Debug log
 
   const account = await getAccount(accountId);
 
