@@ -6,8 +6,8 @@ import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
-import CustomInput from '../customInput/customInput';
-import CustomSelect from '../customSelect/customSelect';
+import CustomInput from '@/components/shared/customInput/customInput';
+import CustomSelect from '@/components/shared/customSelect/customSelect';
 import { LoaderIcon } from '@/components/assets/icons/loaderIcon';
 import { GoogleIcon } from '@/components/assets/icons/googleIcon';
 import AuthCardCta from './authCardCta';

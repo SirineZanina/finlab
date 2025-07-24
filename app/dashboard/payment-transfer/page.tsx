@@ -2,9 +2,13 @@ import React from 'react';
 
 const PaymentTransfer = () => {
   return (
-    <div>
+    <section className='payment-transfer'>
 
-    </div>
+      <section className='size-full pt-5'>
+
+	  </section>
+
+    </section>
   );
 };
 
