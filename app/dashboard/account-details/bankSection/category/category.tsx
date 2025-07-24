@@ -21,7 +21,7 @@ const Category = ({ category }: CategoryProps) => {
         <Image src={icon} width={20} height={20} alt={category.name} />
       </figure>
       <div className="flex w-full flex-1 flex-col gap-2">
-        <div className="text-14 flex justify-between">
+        <div className="text-sm flex justify-between">
           <h2 className={cn('font-medium', main)}>{category.name}</h2>
           <h3 className={cn('font-normal', count)}>{category.count}</h3>
         </div>

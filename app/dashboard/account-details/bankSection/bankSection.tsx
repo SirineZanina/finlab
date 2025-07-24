@@ -10,12 +10,12 @@ const BankSection = ({ user, accounts, transactions }: BankSectionProps) => {
   const categories: CategoryCount[] = countTransactionCategories(transactions);
 
   return (
-    <section className="banks">
+    <section>
       <div className="flex w-full justify-between">
         <h2 className="header-2">My Banks</h2>
-        <Link href="/dashboard" className="flex gap-2">
+        <Link href="/dashboard/banks" className="flex gap-2">
           <PlusIcon />
-          <h2 className="text-14 font-semibold text-gray-600">
+          <h2 className="text-base font-semibold text-gray-600">
               Add Bank
           </h2>
         </Link>

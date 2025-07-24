@@ -19,8 +19,9 @@ const Header = () => {
 
   const subtitlesMap: Record<string, string> = {
     home: 'Welcome to your dashboard',
-    banks: 'Manage your bank accounts',
-    transactions: 'Track your spending and income',
+    banks: 'Manage your bank accounts efficiently',
+    'transaction-history': 'View your complete transaction history',
+    'payment-transfer': 'Transfer funds securely',
   };
 
   const subtitle = subtitlesMap[subPath?.toLowerCase() || 'home'] ?? '';

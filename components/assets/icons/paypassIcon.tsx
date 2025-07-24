@@ -12,7 +12,7 @@ function PaypassIcon (props: React.SVGProps<SVGSVGElement>) {
 	  className={props?.className}
 	  {...props}
     >
-      <g clip-path="url(#clip0_3316_34535)">
+      <g clipPath="url(#clip0_3316_34535)">
         <path d="M15.143 1.28572C17.0237 4.54328 18.0139 8.23851 18.0139 12C18.0139 15.7615 17.0237
 		19.4567 15.143 22.7143M10.4287 3.64286C11.8957 6.18376 12.668 9.06604 12.668
 		12C12.668 14.934 11.8957 17.8163 10.4287 20.3571M5.92871 5.80715C6.98945
