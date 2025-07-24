@@ -256,7 +256,7 @@
 	
 	/* My Banks */
 	.my-banks {
-		@apply flex h-screen max-h-screen w-full flex-col gap-6 bg-secondary-100 rounded-2xl p-6;
+		@apply flex h-screen max-h-screen w-full flex-col gap-6;
 	}
 
 	  /* PlaidLink */
