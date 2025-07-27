@@ -147,14 +147,6 @@
 		@apply p-10 border border-[#F1F1F1] rounded-3xl shadow-[0_7px_14px_#EAEAEA] max-w-xs w-full
 	}
 
-	.auth-form {
-		@apply flex min-h-screen w-full max-w-[420px] flex-col justify-center gap-5 py-10 md:gap-8;
-	}
-
-	.form-message {
-		@apply text-[10px] text-red-500;
-	}
-
 	.form-btn {
 		@apply text-[16px] rounded-lg border bg-primary-500 font-semibold text-white;
 	}
@@ -162,7 +154,7 @@
 	.form-link {
 		@apply text-[14px] cursor-pointer font-medium text-primary-500;
 	}
-
+	
 	.home {
     	@apply flex w-full flex-row max-xl:max-h-screen max-xl:overflow-y-scroll;
   	}

@@ -73,31 +73,30 @@ const AuthForm = ({ type }: { type: string }) => {
     <>
       {type === 'sign-up' && (
         <>
-          <div className="flex gap-4">
+		   <div className='grid lg:grid-cols-2 w-full gap-4'>
             <CustomInput control={form.control} name="firstName" label="First Name" placeholder="Enter your first name" />
             <CustomInput control={form.control} name="lastName" label="Last Name" placeholder="Enter your last name" />
-          </div>
-          <div className="flex gap-4">
             <CustomInput control={form.control} name="businessName" label="Business Name" placeholder="Enter your business name" />
             <CustomSelect control={form.control} name="businessIndustry" label="Business Industry" placeholder="Select your business industry" options={businessIndustryOptions} />
-          </div>
-          <div className="flex gap-4">
             <CustomInput control={form.control} name="country" label="Country" placeholder="Example: USA" />
             <CustomInput control={form.control} name="phoneNumber" label="Phone Number" placeholder="+11101" />
           </div>
           <CustomSelect control={form.control} name="roleType" label="Role" placeholder="Select your role" options={roleOptions} />
-        </>
+	 	</>
+
       )}
-      <CustomInput control={form.control} name="email" label="Email" placeholder="Enter your email" />
-      <CustomInput control={form.control} name="password" label="Password" placeholder="Enter your password" />
+      <div className='flex flex-col gap-4'>
+        <CustomInput control={form.control} name="email" label="Email" placeholder="Enter your email" type="email" />
+        <CustomInput control={form.control} name="password" label="Password" placeholder="Enter your password" type="password" />
+	  </div>
     </>
   );
 
   return (
     <section>
-      <div className="grid grid-cols-2 h-screen">
+      <div className="grid grid-cols-2 h-screen  ">
         {/* Left Panel */}
-        <div className="col-span-2 lg:col-span-1 py-8 mx-30">
+        <div className="col-span-2 lg:col-span-1 p-10">
           <CompanyLogo />
           <div className="flex justify-center flex-col h-full">
             <div className="flex flex-col gap-4">
@@ -130,30 +129,32 @@ const AuthForm = ({ type }: { type: string }) => {
             ) : (
               <div className="justify-center mt-8">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6">
+                  <form onSubmit={form.handleSubmit(onSubmit)}>
                     {renderFormFields()}
 
-                    <div className="flex flex-col gap-4 mt-6">
-                      <Button className="form-btn" type="submit" disabled={isLoading}>
-                        {isLoading ? (
-                          <>
-                            <LoaderIcon className="size-4 animate-spin mr-2" />
+                    <div className='flex gap-4 flex-col mt-6'>
+                      <div className="flex flex-col gap-4">
+                        <Button className="form-btn" type="submit" disabled={isLoading}>
+                          {isLoading ? (
+                            <>
+                              <LoaderIcon className="size-4 animate-spin mr-2" />
                             Loading...
-                          </>
-                        ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+                            </>
+                          ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+                        </Button>
+                      </div>
+
+                      <div className="flex items-center">
+                        <hr className="flex-grow border-t border-gray-300" />
+                        <span className="text-sm text-gray-500">OR</span>
+                        <hr className="flex-grow border-t border-gray-300" />
+                      </div>
+
+                      <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                        <GoogleIcon className="size-5" />
+                      Continue with Google
                       </Button>
                     </div>
-
-                    <div className="flex items-center gap-4 my-4">
-                      <hr className="flex-grow border-t border-gray-300" />
-                      <span className="text-sm text-gray-500">OR</span>
-                      <hr className="flex-grow border-t border-gray-300" />
-                    </div>
-
-                    <Button variant="outline" className="w-full flex items-center justify-center gap-2">
-                      <GoogleIcon className="size-5" />
-                      Continue with Google
-                    </Button>
                   </form>
                 </Form>
               </div>

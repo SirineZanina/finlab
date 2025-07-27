@@ -1,10 +1,12 @@
-import { Control, FieldPath } from 'react-hook-form';
-import z from 'zod';
-import { signUpSchema } from '../../schema';
+import { Control, FieldPath, FieldValues } from 'react-hook-form';
 
-export type CustomInputProps = {
-	control: Control<z.infer<typeof signUpSchema>>;
-	name: FieldPath<z.infer<typeof signUpSchema>>;
-	label: string;
-	placeholder: string;
+export type CustomInputProps<T extends FieldValues = FieldValues> = {
+  control: Control<T>;
+  name: FieldPath<T>;
+  label: string;
+  placeholder: string;
+  description?: string;
+  type?: 'text' | 'email' | 'password' | 'number';
+  className?: string;
+  isTextarea?: boolean;
 }

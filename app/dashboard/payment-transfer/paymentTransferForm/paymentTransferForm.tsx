@@ -14,10 +14,10 @@ import { PaymentTransferFormProps } from './paymentTransferForm.types';
 import { getBank, getBankByAccountId } from '@/lib/actions/account.actions';
 import { AppError } from '@/lib/errors/appError';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import BankDropdown from './bankDropdown/bankDropdown';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { BankDropdown } from './bankDropdown/bankDropdown';
 
 const formSchema = z.object({
   email: z.string().email('Invalid email address'),

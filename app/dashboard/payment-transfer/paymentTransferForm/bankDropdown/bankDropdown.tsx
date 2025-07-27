@@ -1,85 +1,82 @@
-import React, { useState } from 'react';
-import { BankDropdownProps } from './bankDropdown.types';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select';
-import ConnectBankIcon from '@/components/assets/icons/connectBankIcon';
-import { Account } from '@/types/account';
+'use client';
 
-const BankDropdown = ({
+import Image from 'next/image';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from '@/components/ui/select';
+import { formUrlQuery, formatAmount } from '@/lib/utils';
+import { BankDropdownProps } from './bankDropdown.types';
+import { Account } from '@/types/account';
+import { CreditCardIcon } from '@/components/assets/icons/creditCardIcon';
+
+export const BankDropdown = ({
   accounts = [],
   setValue,
-  otherStyles
-}:  BankDropdownProps) => {
+  otherStyles,
+}: BankDropdownProps) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [selected, setSeclected] = useState(accounts[0]);
 
-  const [selectedAccount, setSelectedAccount] = useState<Account>();
+  const handleBankChange = (id: string) => {
+    const account = accounts.find((account) => account.id === id)!;
 
-  const onHandleChange = (accountId: string) => {
-    const account = accounts.find(acc => acc.id === accountId);
-    setSelectedAccount(account);
+    setSeclected(account);
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      key: 'id',
+      value: id,
+    });
+    router.push(newUrl, { scroll: false });
+
+    if (setValue) {
+      setValue('senderBank', id);
+    }
   };
+
   return (
-    <Select defaultValue={selectedAccount?.id} onValueChange={(value) => onHandleChange(value)} >
+    <Select
+      defaultValue={selected.id}
+      onValueChange={(value) => handleBankChange(value)}
+    >
       <SelectTrigger
         className={`flex w-full bg-white gap-3 md:w-[300px] ${otherStyles}`}
       >
-        <ConnectBankIcon />
-        <p className="line-clamp-1 w-full text-left">{selectedAccount?.name}</p>
+        <CreditCardIcon />
+        <p className="line-clamp-1 w-full text-left">{selected.name}</p>
       </SelectTrigger>
-      <SelectContent>
+      <SelectContent
+        className={`w-full bg-white md:w-[300px] ${otherStyles}`}
+        align="end"
+      >
         <SelectGroup>
-          <SelectLabel>North America</SelectLabel>
-          <SelectItem value="est">Eastern Standard Time (EST)</SelectItem>
-          <SelectItem value="cst">Central Standard Time (CST)</SelectItem>
-          <SelectItem value="mst">Mountain Standard Time (MST)</SelectItem>
-          <SelectItem value="pst">Pacific Standard Time (PST)</SelectItem>
-          <SelectItem value="akst">Alaska Standard Time (AKST)</SelectItem>
-          <SelectItem value="hst">Hawaii Standard Time (HST)</SelectItem>
-        </SelectGroup>
-        <SelectGroup>
-          <SelectLabel>Europe & Africa</SelectLabel>
-          <SelectItem value="gmt">Greenwich Mean Time (GMT)</SelectItem>
-          <SelectItem value="cet">Central European Time (CET)</SelectItem>
-          <SelectItem value="eet">Eastern European Time (EET)</SelectItem>
-          <SelectItem value="west">
-            Western European Summer Time (WEST)
-          </SelectItem>
-          <SelectItem value="cat">Central Africa Time (CAT)</SelectItem>
-          <SelectItem value="eat">East Africa Time (EAT)</SelectItem>
-        </SelectGroup>
-        <SelectGroup>
-          <SelectLabel>Asia</SelectLabel>
-          <SelectItem value="msk">Moscow Time (MSK)</SelectItem>
-          <SelectItem value="ist">India Standard Time (IST)</SelectItem>
-          <SelectItem value="cst_china">China Standard Time (CST)</SelectItem>
-          <SelectItem value="jst">Japan Standard Time (JST)</SelectItem>
-          <SelectItem value="kst">Korea Standard Time (KST)</SelectItem>
-          <SelectItem value="ist_indonesia">
-            Indonesia Central Standard Time (WITA)
-          </SelectItem>
-        </SelectGroup>
-        <SelectGroup>
-          <SelectLabel>Australia & Pacific</SelectLabel>
-          <SelectItem value="awst">
-            Australian Western Standard Time (AWST)
-          </SelectItem>
-          <SelectItem value="acst">
-            Australian Central Standard Time (ACST)
-          </SelectItem>
-          <SelectItem value="aest">
-            Australian Eastern Standard Time (AEST)
-          </SelectItem>
-          <SelectItem value="nzst">New Zealand Standard Time (NZST)</SelectItem>
-          <SelectItem value="fjt">Fiji Time (FJT)</SelectItem>
-        </SelectGroup>
-        <SelectGroup>
-          <SelectLabel>South America</SelectLabel>
-          <SelectItem value="art">Argentina Time (ART)</SelectItem>
-          <SelectItem value="bot">Bolivia Time (BOT)</SelectItem>
-          <SelectItem value="brt">Brasilia Time (BRT)</SelectItem>
-          <SelectItem value="clt">Chile Standard Time (CLT)</SelectItem>
+          <SelectLabel className="py-2 font-normal text-gray-500">
+            Select a bank to display
+          </SelectLabel>
+          {accounts.map((account: Account) => (
+            <SelectItem
+              key={account.id}
+              value={account.id}
+              className="cursor-pointer border-t"
+            >
+              <div className="flex flex-col ">
+                <p className="font-medium">{account.name}</p>
+                <p className="text-sm font-medium text-blue-600">
+                  {formatAmount(Number(account.currentBalance))}
+                </p>
+              </div>
+            </SelectItem>
+          ))}
         </SelectGroup>
       </SelectContent>
     </Select>
   );
 };
-
-export default BankDropdown;
