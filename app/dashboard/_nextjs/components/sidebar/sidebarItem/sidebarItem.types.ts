@@ -8,7 +8,7 @@ export type SidebarItemProps = {
 	hasSubmenu?: boolean;
 	submenuItems?: SubMenuItem[];
 	isSidebarExpanded?: boolean;
-	user?: User
+	user: User
 }
 
 export type SubMenuItem = {

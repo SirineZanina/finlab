@@ -103,9 +103,17 @@ export async function signUp(unsafeData: SignUpParams) {
       businessName: validatedData.businessName,
       businessIndustry: validatedData.businessIndustry,
       country: validatedData.country,
-      phoneNumber: validatedData.phoneNumber,
+      phoneNumber: '5551234567',
       roleType: validatedData.roleType,
       email: validatedData.email,
+      type: 'personal',
+      address1: '123 Main St', // Replace with actual address if needed
+      city: 'Sample City', // Replace with actual city if needed
+      state: 'NY', // Replace with actual state if needed
+	  dateOfBirth: '1990-01-01', // Replace with actual date of
+      postalCode: '12345', // Replace with actual postal code if needed
+	  ssn: '1234', // Replace with actual last 4 digits of SSN
+      // Add any other required fields for NewDwollaCustomerParams here
     });
 
     if (!dwollaCustomerUrl) {

@@ -94,7 +94,7 @@ export const BankDropdown = ({
               <div className="flex flex-col ">
                 <p className="font-medium">{account.name}</p>
                 <p className="text-sm font-medium text-blue-600">
-                  {formatAmount(Number(account.currentBalance))}
+                  {formatAmount(account.currentBalance)}
                 </p>
               </div>
             </SelectItem>

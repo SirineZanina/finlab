@@ -10,6 +10,13 @@ export type NewDwollaCustomerParams = {
 	lastName: string;
 	businessName: string;
 	businessIndustry: string;
+	address1: string;
+	type: 'personal'; // only personal customers
+  	city: string;
+    state: string;
+    postalCode: string;
+    dateOfBirth: string; // YYYY-MM-DD
+    ssn: string; // last 4 digits of SSN
 	country: string;
 	phoneNumber: string;
 	roleType: string;

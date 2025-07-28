@@ -4,7 +4,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { CustomInputProps } from './customInput.types';
 
-const CustomInput = <T extends Record<string, any>>({
+const CustomInput = <T extends Record<string, string>>({
   control,
   name,
   label,

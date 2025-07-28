@@ -145,16 +145,12 @@ model Transaction {
     paymentChannel String
     pending        Boolean?
     image          String?
-    senderId       String
-    senderBankId   String
-    receiverId     String
-    receiverBankId String
     accountId      String
     account        Account? @relation(fields: [accountId], references: [id])
     category       String
-    date           DateTime
     createdAt      DateTime @default(now())
     updatedAt      DateTime @updatedAt
+    type           String
 
     @@unique([name, createdAt, accountId], name: "transaction_unique")
     @@map("transactions")

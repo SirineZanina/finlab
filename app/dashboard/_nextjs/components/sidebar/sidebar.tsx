@@ -58,8 +58,9 @@ const Sidebar = ({ user }: SidebarProps) => {
                 <div className="space-y-1" key={idx}>
                   <SidebarItem
                     item={item}
-						 isActive={pathname === item.route}
+                    isActive={pathname === item.route}
                     isSidebarExpanded={isSidebarExpanded}
+                    user={user}
                   />
                 </div>
               );

@@ -6,7 +6,7 @@ import { SidebarItemProps } from './sidebarItem.types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemProps & { user?: any }) => {
+const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemProps) => {
   const commonClasses = `group text-sm h-full relative flex items-center whitespace-nowrap rounded-md ${
     isActive
       ? ' bg-neutral-200 text-neutral-700 shadow-sm'

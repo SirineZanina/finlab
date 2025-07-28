@@ -57,9 +57,19 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
       const senderBank = await getBank({ id: senderAccount.bankId }); // ✅ Use the bankId from account
 
 	  console.log('Sender Bank:', senderBank);
+	  console.log('Receiver Bank:', receiverBank);
 	  if (!receiverBank || !senderBank) {
         throw new AppError('BANK_NOT_FOUND', 'Bank account not found', 404);
 	  }
+
+	  // Test the shareable ID lookup independently
+      console.log('Testing shareable ID:', data.shareableId);
+      const testBank = await getBankByShareableId({ shareableId: data.shareableId });
+      console.log('Found bank:', testBank ? 'YES' : 'NO');
+      if (testBank) {
+        console.log('Bank funding source URL:', testBank.fundingSourceUrl);
+      }
+
       const transferParams = {
         sourceFundingSourceUrl: senderBank.fundingSourceUrl,
         destinationFundingSourceUrl: receiverBank.fundingSourceUrl,
@@ -75,12 +85,10 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
         const transaction = {
           name: data.name,
           amount: data.amount,
-          senderId: senderBank.userId,
-          senderBankId: senderBank.id,
-          receiverId: receiverBank.userId,
-          receiverBankId: receiverBank.id,
+          accountId: senderAccount.id,
           category: 'transfer',
-          email: data.email,
+          type: 'debit' as 'debit',
+          createdAt: new Date(),
         };
 
         const newTransaction = await createTransaction(transaction);
@@ -89,7 +97,7 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
 
         if (newTransaction) {
           form.reset();
-          router.push('/');
+          router.push('/dashboard');
         }
       }
     } catch (error) {

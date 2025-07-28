@@ -29,9 +29,11 @@ export const createLinkToken = async (user: User) => {
       linkToken: response.data.link_token
     });
 
-  } catch (error: any) {
-    console.error('Plaid API Error: ', error.response.data);
+  } catch (error) {
+    console.error('Plaid API Error: ', error);
+    throw new AppError('CREATE_LINK_TOKEN_FAILED', 'Failed to create link token', 500);
   }
+
 };
 
 export const exchangePublicToken = async({
@@ -138,9 +140,9 @@ export const exchangePublicToken = async({
       pending: tx.pending,
       paymentChannel: tx.payment_channel || 'online',
       senderId: user.id,
-      senderBankId: plaidToDbIdMap[tx.account_id],
-      receiverId: '', // unknown for Plaid transactions
-      receiverBankId: '', // unknown for Plaid transactions
+      type: tx.amount < 0 ? 'debit' : 'credit', // Determine type based on amount
+	  createdAt: new Date(tx.date).toISOString(),
+	  image: tx.logo_url, // Optional image field
     }));
 
     // 3. Insert all transactions in one go

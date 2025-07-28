@@ -7,7 +7,7 @@ import { parseStringify } from '../utils';
 
 import { prisma } from '@/lib/prisma';
 import { AppError } from '../errors/appError';
-import { getInstitutionProps, getTransactionsProps } from '@/types/transaction';
+import { getInstitutionProps, getTransactionsProps, Transaction } from '@/types/transaction';
 
 export const getAccounts = async (userId: string) => {
   try {
@@ -29,18 +29,12 @@ export const getAccounts = async (userId: string) => {
 
     const totalBanks = accounts.length;
     const totalCurrentBalance = accounts.reduce(
-      (total, account) => total + account.currentBalance.toNumber(),
+      (total, account) => total + account.currentBalance,
       0
     );
 
-    const serializedAccounts = accounts.map(account => ({
-      ...account,
-      availableBalance: account.availableBalance.toNumber(), // or toString()
-      currentBalance: account.currentBalance.toNumber(),     // or toString()
-    }));
-
     return {
-      data: parseStringify(serializedAccounts),
+      data: parseStringify(accounts),
       totalBanks,
       totalCurrentBalance,
     };
@@ -78,7 +72,7 @@ export const getAccount = async (accountId: string) => {
     });
 
     const allTransactions = [...account.transactions].sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
 
     return {
@@ -123,7 +117,7 @@ export const getTransactions = async ({
   accessToken,
 }: getTransactionsProps) => {
   let hasMore = true;
-  let transactions: any = [];
+  let transactions: Transaction[] = [];
 
   try {
     while (hasMore) {
@@ -141,8 +135,9 @@ export const getTransactions = async ({
         plaidAccountId: transaction.account_id,
         amount: transaction.amount,
         pending: transaction.pending,
-        date: transaction.date,
-        image: transaction.logo_url,
+        image: transaction.logo_url ?? undefined,
+        category: transaction.personal_finance_category?.primary || '',
+        createdAt: new Date(transaction.date),
       }));
 
       hasMore = data.has_more;

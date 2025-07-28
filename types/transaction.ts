@@ -3,14 +3,11 @@ export type Transaction = {
 	name: string;
 	amount: number;
 	paymentChannel: string;
-	type: string;
 	pending: boolean;
-	category: string;
-	date: Date;
-	senderBankId: string;
-	receiverBankId: string;
-	createdAt: Date;
 	image?: string;
+	type: string;
+	category: string;
+	createdAt: Date;
 }
 
 export type getInstitutionProps = {
@@ -24,12 +21,10 @@ export type getTransactionsByBankIdProps = {
 export type CreateTransactionProps = {
   name: string;
   amount: string;
-  senderId: string;
-  senderBankId: string;
-  receiverId: string;
-  receiverBankId: string;
+  accountId: string; // Add this property
   category: string;
-  email: string;
+  type: 'debit' | 'credit'; // Specify the type of transaction
+  createdAt: Date;
 }
 
 export type getTransactionsProps = {

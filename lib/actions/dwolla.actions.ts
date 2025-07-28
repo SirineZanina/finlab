@@ -2,6 +2,7 @@
 
 import { AddFundingSourceParams, CreateFundingSourceOptions, NewDwollaCustomerParams, TransferParams } from '@/types/dwolla';
 import { Client } from 'dwolla-v2';
+import { AppError } from '../errors/appError';
 
 const getEnvironment = (): 'production' | 'sandbox' => {
   const environment = process.env.DWOLLA_ENV as string;
@@ -56,11 +57,26 @@ export const createDwollaCustomer = async (
   newCustomer: NewDwollaCustomerParams
 ) => {
   try {
+    const payload = {
+      firstName: newCustomer.firstName,
+      lastName: newCustomer.lastName,
+      email: newCustomer.email,
+      type: 'personal',
+      address1: newCustomer.address1,
+      city: newCustomer.city,
+      state: newCustomer.state,
+      postalCode: newCustomer.postalCode,
+      dateOfBirth: newCustomer.dateOfBirth,
+      ssn: newCustomer.ssn,
+      phone: newCustomer.phoneNumber,
+    };
+
     return await dwollaClient
-      .post('customers', newCustomer)
+      .post('customers', payload)
       .then((res) => res.headers.get('location'));
   } catch (err) {
-    console.error('Creating a Dwolla Customer Failed: ', err);
+    console.error('Creating a Personal Dwolla Customer Failed: ', err);
+    throw err;
   }
 };
 
@@ -84,11 +100,14 @@ export const createTransfer = async ({
         value: amount,
       },
     };
+    console.log('Dwolla request body:', JSON.stringify(requestBody, null, 2));
+
     return await dwollaClient
       .post('transfers', requestBody)
       .then((res) => res.headers.get('location'));
   } catch (err) {
     console.error('Transfer fund failed: ', err);
+    throw new AppError('TRANSFER_FAILED', 'Failed to create transfer', 500);
   }
 };
 
