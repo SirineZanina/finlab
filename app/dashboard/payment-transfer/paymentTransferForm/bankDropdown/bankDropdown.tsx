@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 import {
@@ -23,12 +23,28 @@ export const BankDropdown = ({
 }: BankDropdownProps) => {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [selected, setSeclected] = useState(accounts[0]);
+  const [selected, setSelected] = useState<Account | null>(null);
+
+  // Initialize selected account when accounts are available
+  useEffect(() => {
+    if (accounts.length > 0 && !selected) {
+      const firstAccount = accounts[0];
+      setSelected(firstAccount);
+
+      // Set the initial value in the form
+      if (setValue) {
+        setValue('senderBank', firstAccount.id);
+      }
+    }
+  }, [accounts, selected, setValue]);
 
   const handleBankChange = (id: string) => {
-    const account = accounts.find((account) => account.id === id)!;
+    const account = accounts.find((account) => account.id === id);
 
-    setSeclected(account);
+    if (!account) return;
+
+    setSelected(account);
+
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       key: 'id',
@@ -41,9 +57,18 @@ export const BankDropdown = ({
     }
   };
 
+  // Don't render if no accounts or no selected account
+  if (!accounts.length || !selected) {
+    return (
+      <div className="flex w-full bg-gray-100 gap-3 md:w-[300px] p-3 rounded border">
+        <p className="text-gray-500">No bank accounts available</p>
+      </div>
+    );
+  }
+
   return (
     <Select
-      defaultValue={selected.id}
+      value={selected.id}
       onValueChange={(value) => handleBankChange(value)}
     >
       <SelectTrigger

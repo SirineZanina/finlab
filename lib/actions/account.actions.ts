@@ -29,7 +29,7 @@ export const createBankAccount = async ({
     return bankAccount;
   } catch (error) {
     console.error('Error creating bank account:', error);
-    throw new AppError('CREATE_ACCOUNT_FAILED', 'Invalid input for creating bank account', 400);
+    throw new AppError('CREATE_BANK_ACCOUNT_FAILED', 'Invalid input for creating bank account', 400);
   }
 };
 
@@ -50,6 +50,7 @@ export const getBanks = async ({ userId }: getBanksProps) => {
     return banks;
   } catch (error) {
     console.error(error);
+    throw new AppError('GET_BANKS_FAILED', 'Failed to fetch banks', 500);
   }
 };
 
@@ -69,6 +70,7 @@ export const getBank = async ({ id }: getBankProps) => {
     return bank;
   } catch (error) {
     console.error(error);
+	 throw new AppError('GET_BANK_FAILED', 'Failed to fetch banks', 500);
   }
 };
 
@@ -88,6 +90,7 @@ export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps)
     return bank;
   } catch (error) {
     console.error(error);
+    throw new AppError('GET_BANK_BY_ACCOUNT_ID_FAILED', 'Failed to fetch bank by account ID', 500);
   }
 };
 
@@ -107,6 +110,6 @@ export const getBankByShareableId = async ({ shareableId }: { shareableId: strin
     return bank;
   } catch (error) {
     console.error(error);
-    throw new AppError('FETCH_BANK_FAILED', 'Failed to fetch bank by shareable ID', 500);
+    throw new AppError('GET_BANK_BY_SHAREABLE_ID_FAILED', 'Failed to fetch bank by shareable ID', 500);
   }
 };

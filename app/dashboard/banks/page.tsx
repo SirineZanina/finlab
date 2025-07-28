@@ -8,8 +8,6 @@ const Banks = async () => {
   const loggedInUser = await getCurrentUser({ withFullUser: true });
   if (!loggedInUser) return;
 
-  console.log('Logged in user:', loggedInUser);
-
   const accounts = await getAccounts(loggedInUser.id);
 
   return (

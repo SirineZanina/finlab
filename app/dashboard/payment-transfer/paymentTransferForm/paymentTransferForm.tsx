@@ -10,7 +10,7 @@ import * as z from 'zod';
 import { createTransfer } from '@/lib/actions/dwolla.actions';
 import { createTransaction } from '@/lib/actions/transaction.actions';
 import { PaymentTransferFormProps } from './paymentTransferForm.types';
-import { getBankByAccountId, getBankByShareableId } from '@/lib/actions/account.actions';
+import { getBank, getBankByShareableId } from '@/lib/actions/account.actions';
 import { AppError } from '@/lib/errors/appError';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
@@ -45,13 +45,16 @@ const PaymentTransferForm = ({ accounts }: PaymentTransferFormProps) => {
     setIsLoading(true);
 
     try {
-      console.log('Submitting create transfer request with data:', data);
-	  // Decrypt the shareableId if necessary
-
       const receiverBank = await getBankByShareableId({
         shareableId: data.shareableId,
       });
-      const senderBank = await getBankByAccountId({ accountId: data.senderBank });
+
+	  const senderAccount = accounts.find(acc => acc.id === data.senderBank);
+      if (!senderAccount) {
+        throw new AppError('ACCOUNT_NOT_FOUND', 'Account not found', 404);
+      }
+
+      const senderBank = await getBank({ id: senderAccount.bankId }); // ✅ Use the bankId from account
 
 	  console.log('Sender Bank:', senderBank);
 	  if (!receiverBank || !senderBank) {

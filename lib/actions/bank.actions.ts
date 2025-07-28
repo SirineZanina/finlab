@@ -33,8 +33,14 @@ export const getAccounts = async (userId: string) => {
       0
     );
 
+    const serializedAccounts = accounts.map(account => ({
+      ...account,
+      availableBalance: account.availableBalance.toNumber(), // or toString()
+      currentBalance: account.currentBalance.toNumber(),     // or toString()
+    }));
+
     return {
-      data: parseStringify(accounts),
+      data: parseStringify(serializedAccounts),
       totalBanks,
       totalCurrentBalance,
     };

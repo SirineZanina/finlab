@@ -109,8 +109,8 @@ enum Permission {
 model Account {
     id               String        @id @default(cuid())
     name             String
-    availableBalance Decimal
-    currentBalance   Decimal
+    availableBalance Float
+    currentBalance   Float
     officialName     String
     mask             String
     institutionId    String
@@ -141,7 +141,7 @@ enum AccountType {
 model Transaction {
     id             String   @id @default(cuid())
     name           String
-    amount         Decimal
+    amount         Float
     paymentChannel String
     pending        Boolean?
     image          String?

@@ -1,9 +1,7 @@
-import { Decimal } from '@prisma/client/runtime/library';
-
 export type Transaction = {
 	id: string;
 	name: string;
-	amount: Decimal;
+	amount: number;
 	paymentChannel: string;
 	type: string;
 	pending: boolean;

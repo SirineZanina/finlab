@@ -1,11 +1,10 @@
-import { Decimal } from '@prisma/client/runtime/library';
 import { Transaction } from './transaction';
 
 export type Account = {
 	id: string;
 	name: string;
-	availableBalance: Decimal;
-	currentBalance: Decimal;
+	availableBalance: number;
+	currentBalance: number;
 	officialName: string;
 	mask: string;
 	institutionId: string;
