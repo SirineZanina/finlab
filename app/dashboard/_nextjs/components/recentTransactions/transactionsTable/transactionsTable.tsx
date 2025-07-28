@@ -43,7 +43,7 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
       </TableHeader>
       <TableBody>
         {transactions.map((t: Transaction) => {
-          const status = getTransactionStatus(new Date(t.date));
+          const status = getTransactionStatus(new Date(t.createdAt));
           const amount = formatAmount(t.amount);
 
           const isDebit = t.type === 'debit';
@@ -72,7 +72,7 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
               </TableCell>
 
               <TableCell className="min-w-32 pl-2 pr-10">
-                {formatDateTime(new Date(t.date)).dateTime}
+                {formatDateTime(new Date(t.createdAt)).dateTime}
               </TableCell>
 
               <TableCell className="pl-2 pr-10 capitalize min-w-24">
