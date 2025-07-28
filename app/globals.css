@@ -330,7 +330,7 @@
 	/* Payment Transfer */
 	  /* Payment Transfer */
 	.payment-transfer {
-		@apply no-scrollbar flex flex-col overflow-y-scroll p-6 md:max-h-screen;
+		@apply no-scrollbar flex flex-col overflow-y-scroll md:max-h-screen;
 	}
 
 	.payment-transfer_form-item {
@@ -352,6 +352,11 @@
 	.payment-transfer_btn {
 		@apply text-sm w-full bg-primary-500 font-semibold text-white;
 	}
+
+	.input-class {
+		@apply rounded-lg border border-gray-300 text-gray-900 placeholder:text-gray-500;
+	}
+
 }
 
 @layer base {

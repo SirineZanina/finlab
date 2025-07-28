@@ -9,7 +9,7 @@ import { BankCardProps } from './bankCard.types';
 const BankCard = ({ account, username, showBalance } : BankCardProps) => {
   return (
     <div className="flex flex-col">
-      <Link href={`/dashboard/transaction-history/?id=${account.id}`} className="bank-card">
+      <Link href={`/dashboard/transaction-history?id=${account.id}`} className="bank-card">
         <div className="bank-card_content">
           <div>
             <h1 className="text-base font-semibold text-white">

@@ -8,7 +8,7 @@ export const AuthCardCta = () => (
     <div className="absolute inset-0 -right-10 z-0">
       <div className="relative w-full h-full">
         <Image
-          src="/images/credit-card-img.png"
+          src="/images/landing-page/credit-card-img.png"
           alt="Card illustration"
           className="object-contain translate-x-1/4"
           priority

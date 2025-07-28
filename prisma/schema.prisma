@@ -116,7 +116,7 @@ model Account {
     institutionId    String
     type             String
     subtype          String
-    shareableId      String
+    shareableId      String        @unique
     businessId       String
     business         Business      @relation(fields: [businessId], references: [id])
     createdAt        DateTime      @default(now())
@@ -126,7 +126,7 @@ model Account {
     bankId           String
     plaidAccountId   String        @unique
 
-    @@unique([name, businessId], name: "name_businessId")
+    @@unique([plaidAccountId, businessId], name: "plaid_business_unique")
     @@map("accounts")
 }
 
@@ -169,7 +169,7 @@ model Bank {
     plaidBankId      String
     accessToken      String
     fundingSourceUrl String
-    shareableId      String
+    shareableId      String    @unique
     createdAt        DateTime  @default(now())
     updatedAt        DateTime  @updatedAt
     accounts         Account[]

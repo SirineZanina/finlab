@@ -25,6 +25,8 @@ const Home = async ({ searchParams }: {
 
   const account = await getAccount(accountId);
 
+  console.log('Account Data:', account);
+
   return (
     <section className='home no-scrollbar'>
       <div className='home-content no-scrollbar'>

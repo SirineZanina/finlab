@@ -90,3 +90,23 @@ export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps)
     console.error(error);
   }
 };
+
+export const getBankByShareableId = async ({ shareableId }: { shareableId: string }) => {
+  try {
+    const bank = await prisma.bank.findUnique({
+	  where: { shareableId },
+	  include: {
+        accounts: true,
+	  },
+    });
+
+    if (!bank) {
+	  throw new AppError('BANK_NOT_FOUND', 'Bank not found for the given shareable ID', 404);
+    }
+
+    return bank;
+  } catch (error) {
+    console.error(error);
+    throw new AppError('FETCH_BANK_FAILED', 'Failed to fetch bank by shareable ID', 500);
+  }
+};

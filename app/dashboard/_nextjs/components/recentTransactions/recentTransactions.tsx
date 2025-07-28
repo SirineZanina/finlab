@@ -39,12 +39,16 @@ const RecentTransactions = ({
     setLoading(true);
     setCurrentAccountId(newAccountId);
 
+    console.log('Fetching transactions for account:', newAccountId);
+
     try {
       // Update URL
-      router.push(`/?id=${newAccountId}&page=1`);
+      router.push(`/dashboard?id=${newAccountId}&page=1`);
 
       // Fetch transactions for the new account
       const response = await fetch(`/api/accounts/${newAccountId}/transactions`);
+
+	  console.log('Response from transactions API:', response);
 
       if (!response.ok) {
         throw new Error('Failed to fetch transactions');

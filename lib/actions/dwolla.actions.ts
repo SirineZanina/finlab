@@ -106,6 +106,18 @@ export const addFundingSource = async ({
   bankName,
 }: AddFundingSourceParams) => {
   try {
+    const fundingSources = await dwollaClient.get(
+      `customers/${dwollaCustomerId}/funding-sources`
+    );
+
+    const existingFundingSource = fundingSources.body._embedded['funding-sources'].find(
+      (source: any) => source.name === bankName
+    );
+
+    if (existingFundingSource) {
+      return existingFundingSource._links.self.href;
+    }
+
     // create dwolla auth link
     const dwollaAuthLinks = await createOnDemandAuthorization();
 

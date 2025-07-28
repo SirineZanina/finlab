@@ -31,7 +31,7 @@ const CustomInput = <T extends Record<string, any>>({
                 </FormDescription>
               )}
             </div>
-            <div className="flex w-full flex-col">
+            <div className="flex w-full flex-col ">
               <FormControl>
                 {isTextarea ? (
                   <Textarea
@@ -45,6 +45,7 @@ const CustomInput = <T extends Record<string, any>>({
                     type={type}
                     id={field.name}
                     {...field}
+                    className='text-sm '
                   />
                 )}
               </FormControl>

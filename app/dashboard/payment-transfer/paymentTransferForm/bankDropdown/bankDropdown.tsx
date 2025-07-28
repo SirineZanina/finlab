@@ -1,8 +1,7 @@
 'use client';
 
-import Image from 'next/image';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 import {
   Select,
