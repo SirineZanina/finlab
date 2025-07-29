@@ -64,7 +64,7 @@ const TransactionsTable = ({ transactions }: TransactionTableProps) => {
                   'text-[#f04438]'
                   : 'text-[#039855]'
               }`}>
-                {isDebit ? `-${amount}` : isCredit ? amount : amount}
+                {isDebit ? `${amount}` : isCredit ? amount : amount}
               </TableCell>
 
               <TableCell className="pl-2 pr-10">

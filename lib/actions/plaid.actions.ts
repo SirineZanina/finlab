@@ -4,11 +4,11 @@ import { CountryCode, LinkTokenCreateRequest, ProcessorTokenCreateRequest, Proce
 import { plaidClient } from '../plaid';
 import { prisma } from '../prisma';
 import { revalidatePath } from 'next/cache';
-import { addFundingSource } from './dwolla.actions';
+import { addMultipleAccountsFromPlaid } from './dwolla.actions';
 import { createBankAccount } from './account.actions';
 import { AppError } from '../errors/appError';
 import { ExchangePublicTokenProps, User } from '@/types/user';
-import {  encryptId, parseStringify } from '../utils';
+import { encryptId, parseStringify } from '../utils';
 
 export const createLinkToken = async (user: User) => {
   const tokenParams: LinkTokenCreateRequest = {
@@ -16,7 +16,7 @@ export const createLinkToken = async (user: User) => {
       client_user_id: user.id,
     },
     client_name: `${user.firstName} ${user.lastName}`,
-    products: ['auth','transactions'] as Products[],
+    products: ['auth', 'transactions'] as Products[],
     language: 'en',
     country_codes: ['US'] as CountryCode[],
     client_id: process.env.PLAID_CLIENT_ID as string,
@@ -33,10 +33,9 @@ export const createLinkToken = async (user: User) => {
     console.error('Plaid API Error: ', error);
     throw new AppError('CREATE_LINK_TOKEN_FAILED', 'Failed to create link token', 500);
   }
-
 };
 
-export const exchangePublicToken = async({
+export const exchangePublicToken = async ({
   publicToken,
   user
 }: ExchangePublicTokenProps) => {
@@ -47,11 +46,12 @@ export const exchangePublicToken = async({
     });
 
     if (!response.data.access_token || !response.data.item_id) {
-	  throw new AppError('EXCHANGE_PUBLIC_TOKEN_FAILED', 'Failed to exchange public token', 500);
+      throw new AppError('EXCHANGE_PUBLIC_TOKEN_FAILED', 'Failed to exchange public token', 500);
     }
 
     const accessToken = response.data.access_token;
     const itemId = response.data.item_id;
+
     // Get account information from Plaid using the access token
     const accountsResponse = await plaidClient.accountsGet({
       access_token: accessToken,
@@ -59,40 +59,57 @@ export const exchangePublicToken = async({
 
     const accountsData = accountsResponse.data.accounts;
 
-	 // Create a processor token for Dwolla using the access token and account ID
-    const request: ProcessorTokenCreateRequest = {
-      access_token: accessToken,
-      account_id: accountsData[0].account_id,
-      processor: 'dwolla' as ProcessorTokenCreateRequestProcessorEnum,
-    };
+    // ===== NEW: Create funding sources for ALL accounts =====
+    const plaidAccountsForDwolla = [];
 
-    const processorTokenResponse = await plaidClient.processorTokenCreate(request);
-    const processorToken = processorTokenResponse.data.processor_token;
+    for (const account of accountsData) {
+      // Create processor token for each account
+      const request: ProcessorTokenCreateRequest = {
+        access_token: accessToken,
+        account_id: account.account_id,
+        processor: 'dwolla' as ProcessorTokenCreateRequestProcessorEnum,
+      };
 
-    // Create a funding source URL for the account using the Dwolla customer ID, processor token, and bank name
-    const fundingSourceUrl = await addFundingSource({
-      dwollaCustomerId: user.dwollaCustomerId,
-      processorToken,
-      bankName: accountsData[0].name,
-    });
+      const processorTokenResponse = await plaidClient.processorTokenCreate(request);
+      const processorToken = processorTokenResponse.data.processor_token;
 
-    // If the funding source URL is not created, throw an error
-    if (!fundingSourceUrl) throw Error;
+      // Prepare account data for Dwolla
+      plaidAccountsForDwolla.push({
+        processorToken,
+        bankName: account.name, // e.g., "Chase Bank"
+        accountType: account.subtype || account.type, // e.g., "checking", "savings"
+        accountId: account.account_id,
+        accountName: account.official_name || account.name,
+      });
+    }
 
-    // Create a bank account using the user ID, item ID, account ID, access token, funding source URL, and shareableId ID
+    // Use the new function to create multiple funding sources
+    const fundingSourceUrls = await addMultipleAccountsFromPlaid(
+      user.dwollaCustomerId,
+      plaidAccountsForDwolla
+    );
+
+    console.log(`Created ${fundingSourceUrls.length} funding sources:`, fundingSourceUrls);
+
+    // Create bank record (using the first account for backward compatibility)
+    const primaryFundingSourceUrl = fundingSourceUrls[0];
+    if (!primaryFundingSourceUrl) {
+      throw new AppError('CREATE_FUNDING_SOURCE_FAILED', 'Failed to create any funding sources', 500);
+    }
+
     const bank = await createBankAccount({
       userId: user.id,
       businessId: user.businessId,
       plaidBankId: itemId,
       plaidAccountId: accountsData[0].account_id,
       accessToken,
-      fundingSourceUrl,
+      fundingSourceUrl: primaryFundingSourceUrl,
       shareableId: encryptId(accountsData[0].account_id),
     });
 
     // Fetch transactions for the last 30 days
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30); // 30 days ago
+    startDate.setDate(startDate.getDate() - 30);
     const endDate = new Date();
 
     const transactionsResponse = await plaidClient.transactionsGet({
@@ -130,40 +147,38 @@ export const exchangePublicToken = async({
       })
     );
 
-    // 2. Prepare all transactions for insertion
+    // Prepare all transactions for insertion
     const transactionsToInsert = transactions.map((tx) => ({
       accountId: plaidToDbIdMap[tx.account_id],
       name: tx.name,
       amount: tx.amount,
-      date: new Date(tx.date).toISOString(),
       category: tx.personal_finance_category?.primary || '',
       pending: tx.pending,
       paymentChannel: tx.payment_channel || 'online',
-      senderId: user.id,
-      type: tx.amount < 0 ? 'debit' : 'credit', // Determine type based on amount
-	  createdAt: new Date(tx.date).toISOString(),
-	  image: tx.logo_url, // Optional image field
+      type: tx.amount < 0 ? 'debit' : 'credit',
+      createdAt: new Date(tx.date).toISOString(),
+      image: tx.logo_url,
     }));
 
-    // 3. Insert all transactions in one go
-    const reponse = await prisma.transaction.createMany({
+    // Insert all transactions
+    const transactionCreateResult = await prisma.transaction.createMany({
       data: transactionsToInsert,
-	  skipDuplicates: true, // Skip duplicates if any
-
+      skipDuplicates: true,
     });
 
-    if (!reponse) {
-	  throw new AppError('CREATE_TRANSACTION_FAILED', 'Failed to create transactions', 500);
+    if (!transactionCreateResult) {
+      throw new AppError('CREATE_TRANSACTION_FAILED', 'Failed to create transactions', 500);
     }
 
     // Revalidate the path
     revalidatePath('/dashboard');
-    // return a success message
+
     return parseStringify({
-      publicTokenExchange: 'complete'
+      publicTokenExchange: 'complete',
+      fundingSourcesCreated: fundingSourceUrls.length,
     });
   } catch (error) {
-    console.error('An error occured while creating exchanging token:', error);
+    console.error('An error occurred while exchanging token:', error);
     throw new AppError('EXCHANGE_PUBLIC_TOKEN_FAILED', 'Failed to exchange public token', 500);
   }
 };
