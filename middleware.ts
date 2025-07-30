@@ -1,4 +1,4 @@
-import { getUserFromSession, Cookies, updateUserSessionExpiration } from '@/app/(auth)/_core/session';
+import { getUserFromSession, Cookies, updateUserSessionExpiration } from '@/app/(auth)/_core/session/session';
 import { NextResponse, type NextRequest } from 'next/server';
 
 const privateRoutesPrefix = ['/dashboard'];

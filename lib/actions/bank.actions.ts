@@ -132,7 +132,7 @@ export const getTransactions = async ({
         name: transaction.name,
         paymentChannel: transaction.payment_channel,
         type: transaction.payment_channel,
-        plaidAccountId: transaction.account_id,
+        plaidId: transaction.account_id,
         amount: transaction.amount,
         pending: transaction.pending,
         image: transaction.logo_url ?? undefined,

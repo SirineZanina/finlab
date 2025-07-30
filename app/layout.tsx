@@ -6,6 +6,7 @@ import './globals.css';
 import { getCurrentUser } from './(auth)/_nextjs/currentUser';
 import { SessionProvider } from './components/sessionProvider';
 import { SessionData } from '@/types/session';
+import { QueryProvider } from '@/providers/query-provider';
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -33,9 +34,11 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={twMerge(plusJakartaSans.variable, 'antialiased')}>
-        <SessionProvider value={sessionData}>
-          {children}
-        </SessionProvider>
+        <QueryProvider>
+		 <SessionProvider value={sessionData}>
+            {children}
+          </SessionProvider>
+	   </QueryProvider>
       </body>
     </html>
   );

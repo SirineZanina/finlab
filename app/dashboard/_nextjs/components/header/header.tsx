@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
 import ProfileDropdown from '@/app/components/profileDropdown/profileDropdown';
-import { useSession } from '@/hooks';
 import HeaderBox from '../headerBox/headerBox';
 import { usePathname } from 'next/navigation';
+import { useSession } from '@/features/auth/use-session';
 
 const Header = () => {
   const session = useSession();

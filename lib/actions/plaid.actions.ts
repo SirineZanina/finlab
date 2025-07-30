@@ -101,7 +101,7 @@ export const exchangePublicToken = async ({
       userId: user.id,
       businessId: user.businessId,
       plaidBankId: itemId,
-      plaidAccountId: accountsData[0].account_id,
+      plaidId: accountsData[0].account_id,
       accessToken,
       fundingSourceUrl: primaryFundingSourceUrl,
       shareableId: encryptId(accountsData[0].account_id),
@@ -138,7 +138,7 @@ export const exchangePublicToken = async ({
             shareableId: encryptId(accountData.account_id),
             businessId: user.businessId,
             bankId: bank.id,
-            plaidAccountId: accountData.account_id,
+            plaidId: accountData.account_id,
           },
         });
 

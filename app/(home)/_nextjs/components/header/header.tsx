@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { ArrowRightIcon } from '@/components/assets/icons/arrowRightIcon';
 import { MenuIcon } from '@/components/assets/icons/menuIcon';
 import { Button } from '@/components/ui/button';
-import { useSession } from '@/hooks';
 import ProfileDropdown from '@/app/components/profileDropdown/profileDropdown';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
+import { useSession } from '@/features/auth/use-session';
 
 const Header = () => {
   const session = useSession();

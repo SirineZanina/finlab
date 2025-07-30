@@ -2,7 +2,7 @@ import { Account } from './account';
 
 export type Bank = {
   id: string;
-  plaidAccountId: string;
+  plaidId: string;
   plaidBankId: string;
   accessToken: string;
   fundingSourceUrl: string;

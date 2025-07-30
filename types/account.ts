@@ -12,11 +12,11 @@ export type Account = {
 	subtype: string;
 	shareableId: string;
 	businessId: string;
-	createdAt: Date;
-	updatedAt: Date;
 	transactions?: Transaction[];
 	bankId: string;
-	plaidAccountId: string;
+	plaidId: string;
+	createdAt: Date;
+	updatedAt: Date;
 };
 
 const AccountTypes = [
@@ -29,22 +29,11 @@ const AccountTypes = [
 
 export type AccountType = typeof AccountTypes[number];
 
-export type Receiver = {
-  firstName: string;
-  lastName: string;
-};
-
-export type TransferParams = {
-  sourceFundingSourceUrl: string;
-  destinationFundingSourceUrl: string;
-  amount: string;
-};
-
 export type CreateBankAccountProps = {
   userId: string;
   accessToken: string;
   plaidBankId: string;
-  plaidAccountId: string;
+  plaidId: string;
   fundingSourceUrl: string;
   shareableId: string;
 }

@@ -6,12 +6,12 @@ import { cookies } from 'next/headers';
 import { BusinessIndustry, RoleType } from '@prisma/client';
 import { signInSchema, signUpSchema } from '@/app/(auth)/_nextjs/schema';
 import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_core/passwordHasher';
-import { createUserSession } from '@/app/(auth)/_core/createUserSession';
-import { removeUserFromSession } from '@/app/(auth)/_core/session';
+import { removeUserFromSession } from '@/app/(auth)/_core/session/session';
 import { AppError } from '../errors/appError';
 import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
 import { extractCustomerIdFromUrl } from '../utils';
 import { LoginParams, SignUpParams } from '@/types/user';
+import { createUserSession } from '@/app/(auth)/_core/session/createUserSession';
 
 // ================ SIGN IN ================
 

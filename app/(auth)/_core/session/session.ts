@@ -1,7 +1,7 @@
 'use server';
 import z from 'zod';
 import { redisClient } from '@/redis/redis';
-import { sessionSchema } from '../_nextjs/schema';
+import { sessionSchema } from '../../_nextjs/schema';
 import { COOKIE_SESSION_KEY, SESSION_EXPIRATION_SECONDS } from '@/constants/session';
 
 // This type represents the minimal data stored in Redis

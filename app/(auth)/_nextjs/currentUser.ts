@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { cache } from 'react';
 import { redirect } from 'next/navigation';
-import { getUserFromSession } from '../_core/session';
+import { getUserFromSession } from '../_core/session/session';
 import { prisma } from '@/lib/prisma';
 
 type FullUser = Exclude<

@@ -124,9 +124,9 @@ model Account {
     transactions     Transaction[]
     bank             Bank          @relation(fields: [bankId], references: [id])
     bankId           String
-    plaidAccountId   String        @unique
+    plaidId          String        @unique
 
-    @@unique([plaidAccountId, businessId], name: "plaid_business_unique")
+    @@unique([plaidId, businessId], name: "plaid_business_unique")
     @@map("accounts")
 }
 
@@ -161,7 +161,7 @@ model Bank {
     userId           String
     businessId       String
     business         Business  @relation(fields: [businessId], references: [id])
-    plaidAccountId   String
+    plaidId          String
     plaidBankId      String
     accessToken      String
     fundingSourceUrl String
