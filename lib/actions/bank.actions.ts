@@ -9,86 +9,86 @@ import { prisma } from '@/lib/prisma';
 import { AppError } from '../errors/appError';
 import { getInstitutionProps, getTransactionsProps, Transaction } from '@/types/transaction';
 
-export const getAccounts = async (userId: string) => {
-  try {
+// export const getAccounts = async (userId: string) => {
+//   try {
 
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { businessId: true},
-    });
+//     const user = await prisma.user.findUnique({
+//       where: { id: userId },
+//       select: { businessId: true},
+//     });
 
-    if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
+//     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
 
-    const accounts = await prisma.account.findMany({
-	  where: { businessId: user.businessId },
-    });
+//     const accounts = await prisma.account.findMany({
+// 	  where: { businessId: user.businessId },
+//     });
 
-    if (!accounts || accounts.length === 0) {
-	  throw new AppError('NO_ACCOUNTS_FOUND', 'No accounts found for this user', 404);
-    }
+//     if (!accounts || accounts.length === 0) {
+// 	  throw new AppError('NO_ACCOUNTS_FOUND', 'No accounts found for this user', 404);
+//     }
 
-    const totalBanks = accounts.length;
-    const totalCurrentBalance = accounts.reduce(
-      (total, account) => total + account.currentBalance,
-      0
-    );
+//     const totalBanks = accounts.length;
+//     const totalCurrentBalance = accounts.reduce(
+//       (total, account) => total + account.currentBalance,
+//       0
+//     );
 
-    return {
-      data: parseStringify(accounts),
-      totalBanks,
-      totalCurrentBalance,
-    };
-  } catch (error) {
-    console.error('An error occurred while getting the accounts:', error);
-    throw new AppError(
-      'GET_ACCOUNTS_FAILED',
-      'Failed to retrieve accounts',
-      500
-    );
-  }
-};
+//     return {
+//       data: parseStringify(accounts),
+//       totalBanks,
+//       totalCurrentBalance,
+//     };
+//   } catch (error) {
+//     console.error('An error occurred while getting the accounts:', error);
+//     throw new AppError(
+//       'GET_ACCOUNTS_FAILED',
+//       'Failed to retrieve accounts',
+//       500
+//     );
+//   }
+// };
 
-export const getAccount = async (accountId: string) => {
-  try {
+// export const getAccount = async (accountId: string) => {
+//   try {
 
-    if (!accountId) {
-	  throw new AppError('ACCOUNT_ID_REQUIRED', 'Account ID is required', 400);
-    }
+//     if (!accountId) {
+// 	  throw new AppError('ACCOUNT_ID_REQUIRED', 'Account ID is required', 400);
+//     }
 
-    const account = await prisma.account.findUnique({
-      where: { id: accountId },
-      include: {
-        transactions: true,
-        bank: true,
-      },
-    });
+//     const account = await prisma.account.findUnique({
+//       where: { id: accountId },
+//       include: {
+//         transactions: true,
+//         bank: true,
+//       },
+//     });
 
-    if (!account) {
-      throw new AppError('ACCOUNT_NOT_FOUND', 'Account not found', 404);
-    }
+//     if (!account) {
+//       throw new AppError('ACCOUNT_NOT_FOUND', 'Account not found', 404);
+//     }
 
-    const institution = await getInstitution({
-      institutionId: account.institutionId,
-    });
+//     const institution = await getInstitution({
+//       institutionId: account.institutionId,
+//     });
 
-    const allTransactions = [...account.transactions].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+//     const allTransactions = [...account.transactions].sort(
+//       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+//     );
 
-    return {
-      data: parseStringify(account),
-      transactions: parseStringify(allTransactions),
-      institution: parseStringify(institution),
-    };
-  } catch (error) {
-    console.error('An error occurred while getting the account:', error);
-    throw new AppError(
-      'GET_ACCOUNT_FAILED',
-      'Failed to retrieve account',
-      500
-    );
-  }
-};
+//     return {
+//       data: parseStringify(account),
+//       transactions: parseStringify(allTransactions),
+//       institution: parseStringify(institution),
+//     };
+//   } catch (error) {
+//     console.error('An error occurred while getting the account:', error);
+//     throw new AppError(
+//       'GET_ACCOUNT_FAILED',
+//       'Failed to retrieve account',
+//       500
+//     );
+//   }
+// };
 
 export const getInstitution = async ({
   institutionId,

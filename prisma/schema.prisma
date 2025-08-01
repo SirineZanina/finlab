@@ -20,10 +20,11 @@ model Business {
     industry BusinessIndustry
     User     User[]
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    accounts  Account[]
-    banks     Bank[]
+    createdAt     DateTime       @default(now())
+    updatedAt     DateTime       @updatedAt
+    accounts      Account[]
+    banks         Bank[]
+    plaidAccounts PlaidAccount[]
 
     @@map("businesses")
 }
@@ -107,6 +108,20 @@ enum Permission {
 }
 
 model Account {
+    id          String        @id @default(cuid())
+    name        String
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
+    businessId  String
+    Business    Business      @relation(fields: [businessId], references: [id])
+    Transaction Transaction[]
+    Bank        Bank?         @relation(fields: [bankId], references: [id])
+    bankId      String?
+
+    @@map("accounts")
+}
+
+model PlaidAccount {
     id               String        @id @default(cuid())
     name             String
     availableBalance Float
@@ -127,7 +142,7 @@ model Account {
     plaidId          String        @unique
 
     @@unique([plaidId, businessId], name: "plaid_business_unique")
-    @@map("accounts")
+    @@map("plaid_accounts")
 }
 
 enum AccountType {
@@ -139,36 +154,39 @@ enum AccountType {
 }
 
 model Transaction {
-    id             String   @id @default(cuid())
+    id             String        @id @default(cuid())
     name           String
     amount         Float
     paymentChannel String
     pending        Boolean?
     image          String?
     accountId      String
-    account        Account? @relation(fields: [accountId], references: [id])
+    account        Account?      @relation(fields: [accountId], references: [id])
     category       String
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
+    createdAt      DateTime      @default(now())
+    updatedAt      DateTime      @updatedAt
     type           String
+    PlaidAccount   PlaidAccount? @relation(fields: [plaidAccountId], references: [id])
+    plaidAccountId String?
 
     @@unique([name, createdAt, accountId], name: "transaction_unique")
     @@map("transactions")
 }
 
 model Bank {
-    id               String    @id @default(cuid())
+    id               String         @id @default(cuid())
     userId           String
     businessId       String
-    business         Business  @relation(fields: [businessId], references: [id])
+    business         Business       @relation(fields: [businessId], references: [id])
     plaidId          String
     plaidBankId      String
     accessToken      String
     fundingSourceUrl String
-    shareableId      String    @unique
-    createdAt        DateTime  @default(now())
-    updatedAt        DateTime  @updatedAt
+    shareableId      String         @unique
+    createdAt        DateTime       @default(now())
+    updatedAt        DateTime       @updatedAt
     accounts         Account[]
+    PlaidAccount     PlaidAccount[]
 
     @@map("banks")
 }

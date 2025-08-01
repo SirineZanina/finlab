@@ -5,6 +5,7 @@ import MoneySend from '@/components/assets/icons/moneySendIcon';
 import EnterpriseIcon  from '@/components/assets/icons/enterpriseIcon';
 import SettingsIcon from '@/components/assets/icons/settingsIcon';
 import ConnectBankIcon from '@/components/assets/icons/connectBankIcon';
+import AccountIcon from '@/components/assets/icons/accountIcon';
 
 export const sidebarLinks = [
   {
@@ -14,9 +15,15 @@ export const sidebarLinks = [
     position: 'top',
   },
   {
+    icon: AccountIcon,
+    route: '/dashboard/accounts',
+    label: 'Accounts',
+    position: 'top',
+  },
+  {
     icon: DollarCircle,
     route: '/dashboard/banks',
-    label: 'My Banks',
+    label: 'Banks',
     position: 'top',
   },
   {

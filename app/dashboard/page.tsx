@@ -1,51 +1,57 @@
+'use client';
 import React from 'react';
 import TotalBalanceBox from './_nextjs/components/totalBalanceBox/totalBalanceBox';
-import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import RecentTransactions from './_nextjs/components/recentTransactions/recentTransactions';
-import { getCurrentUser } from '../(auth)/_nextjs/currentUser';
+import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
+import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
+import { Button } from '@/components/ui/button';
 
-const Home = async ({ searchParams }: {
-  searchParams: Promise<{ id?: string; page?: string }>;
-}) => {
-  const { id, page } = await searchParams;
-  const currentPage = Number(page) || 1;
+const Home = () => {
+  const { onOpen } = useNewAccount();
 
-  const loggedInUser = await getCurrentUser({ withFullUser: true });
-  if (!loggedInUser) return;
+  const { data: accounts, isLoading, error, isError } = useGetAccounts();
 
-  const data = await getAccounts(loggedInUser.id);
+  console.log('Accounts data:', accounts);
 
-  if (!data) return;
+  //   console.log('Query state:', { accounts, isLoading, error, isError });
 
-  const accountsData = data?.data;
+  //   if (isLoading) {
+  //     return <div>Loading accounts...</div>;
+  //   }
 
-  if (!accountsData || accountsData.length === 0) return;
+  //   if (isError) {
+  //     console.error('Accounts error:', error);
+  //     return <div>Error loading accounts: {error?.message}</div>;
+  //   }
 
-  const accountId = (id as string) || accountsData[0]?.id;
+  //   if (!accounts) {
+  //     return <div>No accounts data available</div>;
+  //   }
 
-  const account = await getAccount(accountId);
+  //   // Check if accounts.data exists and has items
+  //   if (!accounts.data || accounts.data.length === 0) {
+  //     return <div>No accounts found</div>;
+  //   }
 
   return (
     <section className='home no-scrollbar'>
       <div className='home-content no-scrollbar'>
-        <TotalBalanceBox
-          accounts={accountsData}
-          totalBanks={data.totalBanks}
-          totalCurrentBalance={data.totalCurrentBalance}
-        />
+        {/* <TotalBalanceBox
+          accounts={accounts?.data}
+          totalBanks={accounts?.totalBanks}
+          totalCurrentBalance={accounts?.totalCurrentBalance}
+        /> */}
+        <Button className='mb-4' onClick={onOpen}>
+		  Create New Account
+        </Button>
 
-        <RecentTransactions
-          accounts={accountsData}
-          initialTransactions={account?.transactions}
+        {/* <RecentTransactions
+          accounts={accounts.data}
+          initialTransactions={}
           accountId={accountId}
           page={currentPage}
-        />
+        /> */}
       </div>
-      {/* {
-        session.user && (
-          <RightSidebar user={session?.user}/>
-        )
-      } */}
     </section>
   );
 };

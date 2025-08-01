@@ -118,47 +118,43 @@ const AuthForm = ({ type }: { type: string }) => {
                 )}
               </div>
             </div>
+            {/* <div className="flex flex-col gap-4 mt-6">
+              <PlaidLink
+                user={user}
+                variant="primary"
+              />
+            </div> */}
+            <div className="justify-center mt-8">
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  {renderFormFields()}
 
-            {user ? (
-              <div className="flex flex-col gap-4 mt-6">
-                <PlaidLink
-                  user={user}
-                  variant="primary"
-                />
-              </div>
-            ) : (
-              <div className="justify-center mt-8">
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)}>
-                    {renderFormFields()}
-
-                    <div className='flex gap-4 flex-col mt-6'>
-                      <div className="flex flex-col gap-4">
-                        <Button className="form-btn" type="submit" disabled={isLoading}>
-                          {isLoading ? (
-                            <>
-                              <LoaderIcon className="size-4 animate-spin mr-2" />
+                  <div className='flex gap-4 flex-col mt-6'>
+                    <div className="flex flex-col gap-4">
+                      <Button className="form-btn" type="submit" disabled={isLoading}>
+                        {isLoading ? (
+                          <>
+                            <LoaderIcon className="size-4 animate-spin mr-2" />
                             Loading...
-                            </>
-                          ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
-                        </Button>
-                      </div>
-
-                      <div className="flex items-center">
-                        <hr className="flex-grow border-t border-gray-300" />
-                        <span className="text-sm text-gray-500">OR</span>
-                        <hr className="flex-grow border-t border-gray-300" />
-                      </div>
-
-                      <Button variant="outline" className="w-full flex items-center justify-center gap-2">
-                        <GoogleIcon className="size-5" />
-                      Continue with Google
+                          </>
+                        ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
                       </Button>
                     </div>
-                  </form>
-                </Form>
-              </div>
-            )}
+
+                    <div className="flex items-center">
+                      <hr className="flex-grow border-t border-gray-300" />
+                      <span className="text-sm text-gray-500">OR</span>
+                      <hr className="flex-grow border-t border-gray-300" />
+                    </div>
+
+                    <Button variant="outline" className="w-full flex items-center justify-center gap-2">
+                      <GoogleIcon className="size-5" />
+                      Continue with Google
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </div>
           </div>
         </div>
 

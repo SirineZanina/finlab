@@ -15,8 +15,8 @@ export type Account = {
 	transactions?: Transaction[];
 	bankId: string;
 	plaidId: string;
-	createdAt: Date;
-	updatedAt: Date;
+	createdAt: string;
+	updatedAt: string;
 };
 
 const AccountTypes = [
