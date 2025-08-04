@@ -76,6 +76,8 @@ const Categories = () => {
 				Add new
           </Button>
         }
+        deleteEntityName='category'
+        deleteEntityNamePlural='categories'
       />
     </div>
   );

@@ -32,7 +32,9 @@ export function DataTable<TData, TValue>({
   filterKey,
   onDelete,
   disabled,
-  headerContent
+  headerContent,
+  deleteEntityName = 'item',
+  deleteEntityNamePlural= 'items'
 }: DataTableProps<TData, TValue>) {
 
   const [ConfirmDialog, confirm] = useConfirm('','');
@@ -49,6 +51,7 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
     state: {
@@ -75,15 +78,16 @@ export function DataTable<TData, TValue>({
             {table.getFilteredSelectedRowModel().rows.length > 0 && (
               <Button
                 disabled={disabled}
-		  	  size='sm'
+                size='sm'
                 variant='outline'
                 className='ml-auto font-normal text-xs'
-			  onClick={async () => {
+                onClick={async () => {
                   const selectedCount = table.getFilteredSelectedRowModel().rows.length;
                   const title = 'Are you sure?';
                   const message = selectedCount === 1
-                    ? 'You are about to delete this account. This action cannot be undone.'
-                    : `You are about to delete ${selectedCount} accounts. This action cannot be undone.`;
+                    ? `You are about to delete this ${deleteEntityName}. This action cannot be undone.`
+                    : `You are about to delete ${selectedCount} ${deleteEntityNamePlural}. 
+					This action cannot be undone.`;
 
                   const ok = await confirm({ title, message });
                   if (ok) {

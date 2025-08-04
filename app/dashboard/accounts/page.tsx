@@ -76,6 +76,8 @@ const Accounts = () => {
 			Add new
           </Button>
         }
+        deleteEntityName='account'
+        deleteEntityNamePlural='accounts'
       />
     </div>
   );
