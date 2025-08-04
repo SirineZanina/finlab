@@ -25,7 +25,7 @@ const routes = app.route('/accounts', accountsRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);
-export const PUT = handle(app);    // Add this for update operations
+export const PATCH = handle(app);    // Add this for update operations
 export const DELETE = handle(app); // Add this for delete operations
 
 export type AppType = typeof routes;

@@ -9,9 +9,6 @@ export const useGetAccounts = () => {
         // type safe RPC
         const response = await client.api.accounts.$get();
 
-        console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
-
         if (!response.ok) {
           const errorData = await response.text();
           console.error('Error response:', errorData);
@@ -19,13 +16,25 @@ export const useGetAccounts = () => {
         }
 
         const responseData = await response.json();
-        console.log('Response data:', responseData);
         return responseData;
       } catch (error) {
         console.error('Query function error:', error);
         throw error;
       }
-    }
+    },
+    // Add retry configuration to prevent infinite retries on 404
+    retry: (failureCount, error) => {
+      // Don't retry on 404 errors (no accounts found)
+      if (error.message.includes('404')) {
+        return false;
+      }
+      // Retry other errors up to 3 times
+      return failureCount < 3;
+    },
+    // Add stale time to prevent unnecessary refetches
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    // Cache time
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   return query;

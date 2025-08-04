@@ -4,6 +4,7 @@ import { Account, User } from '@prisma/client';
 export type GetAccountsVariables = {
   userId: string;
   user: User;
+  businessId: string;
 }
 
 // ─── API Response Types ───────────────────────────────────────
@@ -12,6 +13,11 @@ export type GetAccountsResponse = {
   data: Account[];
 //   totalBanks: number;
 //   totalCurrentBalance: number;
+}
+
+export type GetAccountResponse = {
+	success: true,
+	data: Account
 }
 
 export type CreateAccountResponse = {
@@ -26,11 +32,16 @@ export type UpdateAccountResponse = {
   message: string;
 }
 
+export type DeleteMultipleAccountsResponse = {
+	success: true;
+	message: string;
+	data: {
+		deletedCount: number;
+		deletedAccountIds: string[];
+	};
+}
+
 export type DeleteAccountResponse = {
   success: true;
   message: string;
-}
-
-export type createAccountBody = {
-  name: string;
 }

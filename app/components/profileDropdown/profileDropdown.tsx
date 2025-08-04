@@ -11,6 +11,7 @@ import {
 import { ProfileDropdownProps } from './profileDropdown.types';
 import Link from 'next/link';
 import { logOut } from '@/lib/actions/user.actions';
+import { cn } from '@/lib/utils';
 
 export default function ProfileDropdown({
   firstName,

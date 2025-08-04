@@ -25,7 +25,7 @@ export default async function RootLayout({
           {loggedInUser && <MobileNavbar user={loggedInUser} />}
         </div>
         {/* Page Content */}
-        <div className="flex-1 p-6 overflow-y-auto">
+        <div className="flex-1 p-6 overflow-y-auto bg-secondary-100">
           <Header />
           {children}
         </div>

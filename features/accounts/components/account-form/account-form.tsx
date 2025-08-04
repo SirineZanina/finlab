@@ -1,6 +1,5 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Input } from '@/components/ui/input';
@@ -30,7 +29,7 @@ const AccountForm = ({
 
   const handleSubmit = (values: FormValues) => {
     onSubmit(values);
-    form.reset();
+    form.reset(values);
   };
 
   const handleDelete = () => {
@@ -71,7 +70,7 @@ const AccountForm = ({
             className='w-full'
             variant='outline'
           >
-            <TrashIcon className='size-4 mr-2' />
+            <TrashIcon className='size-4' />
             Delete account
           </Button>
 

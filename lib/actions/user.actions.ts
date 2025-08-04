@@ -27,7 +27,8 @@ export async function signIn(unsafeData: LoginParams) {
 	  password: true,
 	  salt: true,
 	  email: true,
-	  role: true
+	  role: true,
+	  businessId: true,
     }
   });
 
@@ -41,7 +42,11 @@ export async function signIn(unsafeData: LoginParams) {
 
   if (!isCorrectPassword) throw new AppError('INVALID_CREDENTIALS', 'Invalid password', 400);
 
-  await createUserSession({ id: user.id, role: user.role.roleType }, await cookies());
+  await createUserSession({
+    id: user.id,
+    role: user.role.roleType,
+    businessId: user.businessId
+  }, await cookies());
 
   redirect('/dashboard');
 }
@@ -145,7 +150,7 @@ export async function signUp(unsafeData: SignUpParams) {
 
     // Create session + set cookie
     await createUserSession(
-      { id: user.id, role: user.role.roleType },
+      { id: user.id, role: user.role.roleType, businessId: user.businessId },
       await cookies()
     );
 

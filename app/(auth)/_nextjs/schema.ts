@@ -29,5 +29,6 @@ const roleTypeValues = Object.values(RoleType) as [string, ...string[]];
 export const sessionSchema = z.object({
   id: z.string(),
   role: z.enum(roleTypeValues),
+  businessId: z.string()
 });
 
