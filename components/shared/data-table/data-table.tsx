@@ -22,8 +22,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, TrashIcon } from 'lucide-react';
-import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
+import { TrashIcon } from 'lucide-react';
 import { useConfirm } from '@/hooks/use-confirm';
 import { DataTableProps } from './data-table.types';
 
@@ -32,12 +31,11 @@ export function DataTable<TData, TValue>({
   data,
   filterKey,
   onDelete,
-  disabled
+  disabled,
+  headerContent
 }: DataTableProps<TData, TValue>) {
 
   const [ConfirmDialog, confirm] = useConfirm('','');
-
-  const newAccount = useNewAccount();
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -63,7 +61,7 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <ConfirmDialog />
-      <div className="flex items-center justify-between	 py-4">
+      <div className="flex items-center justify-between py-4">
         <Input
           placeholder={`Filter by ${filterKey}`}
           value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ''}
@@ -73,36 +71,33 @@ export function DataTable<TData, TValue>({
           className="max-w-sm bg-white"
         />
         <div className='flex items-center gap-2'>
-          {table.getFilteredSelectedRowModel().rows.length > 0 && (
-            <Button
-              disabled={disabled}
+          <div className='flex items-center gap-2'>
+            {table.getFilteredSelectedRowModel().rows.length > 0 && (
+              <Button
+                disabled={disabled}
 		  	  size='sm'
-              variant='outline'
-              className='ml-auto font-normal text-xs'
+                variant='outline'
+                className='ml-auto font-normal text-xs'
 			  onClick={async () => {
-                const selectedCount = table.getFilteredSelectedRowModel().rows.length;
-                const title = 'Are you sure?';
-                const message = selectedCount === 1
-                  ? 'You are about to delete this account. This action cannot be undone.'
-                  : `You are about to delete ${selectedCount} accounts. This action cannot be undone.`;
+                  const selectedCount = table.getFilteredSelectedRowModel().rows.length;
+                  const title = 'Are you sure?';
+                  const message = selectedCount === 1
+                    ? 'You are about to delete this account. This action cannot be undone.'
+                    : `You are about to delete ${selectedCount} accounts. This action cannot be undone.`;
 
-                const ok = await confirm({ title, message });
-                if (ok) {
-                  onDelete(table.getFilteredSelectedRowModel().rows);
-                }
-                table.resetRowSelection();
-              }}
+                  const ok = await confirm({ title, message });
+                  if (ok) {
+                    onDelete(table.getFilteredSelectedRowModel().rows);
+                  }
+                  table.resetRowSelection();
+                }}
 			  >
-              <TrashIcon className='size-4 mr-2'/>
+                <TrashIcon className='size-4 mr-2'/>
 				Delete ({table.getFilteredSelectedRowModel().rows.length})
-            </Button>
-          )}
-          <Button onClick={() => {
-            newAccount.onOpen();
-          }} size="sm" >
-            <Plus className='size-4 mr-2' />
-			Add new
-          </Button>
+              </Button>
+            )}
+          </div>
+		  {headerContent}
         </div>
       </div>
       <div className="overflow-hidden rounded-md border bg-white">

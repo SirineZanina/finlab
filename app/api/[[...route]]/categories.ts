@@ -5,29 +5,22 @@ import { zValidator } from '@hono/zod-validator';
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 // prisma
-import { Account } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { Category } from '@prisma/client';
 // middleware
 import { withSession } from '@/lib/middleware';
 // utils
 import { parseStringify } from '@/lib/utils';
-// api types
-import {
-  CreateAccountResponse,
-  DeleteAccountResponse,
-  DeleteMultipleAccountsResponse,
-  GetAccountsResponse,
-  GetAccountsVariables,
-  UpdateAccountResponse }
-  from '@/types/api/accounts';
 // schema types
-import { CreateAccountSchema, UpdateAccountSchema } from '@/types/schemas/account-schema';
+import { CreateCategorySchema, UpdateCategorySchema } from '@/types/schemas/category-schema';
+// api types
+import { CreateCategoryResponse, DeleteCategoryResponse, DeleteMultipleCategoriesResponse, GetCategoriesResponse, GetCategoriesVariables, UpdateCategoryResponse } from '@/types/api/categories';
 
-// Main accounts router
-export const accountsRouter = new Hono<{
-  Variables: GetAccountsVariables;
+// Main categories router
+export const categoriesRouter = new Hono<{
+  Variables: GetCategoriesVariables;
 }>()
-  // GET /accounts
+  // GET /categories
   .get('/', withSession, async (c) => {
     const businessId: string = c.get('businessId') as string;
 
@@ -35,19 +28,19 @@ export const accountsRouter = new Hono<{
       return c.json({ error: 'Unauthorized'}, 401);
     }
 
-    const accounts: Account[] = await prisma.account.findMany({
+    const categories: Category[] = await prisma.category.findMany({
       where: { businessId },
     });
 
-    const response: GetAccountsResponse = {
+    const response: GetCategoriesResponse = {
       success: true,
-      data: parseStringify(accounts),
+      data: parseStringify(categories),
     };
 
-    return c.json<GetAccountsResponse>(response, 200);
+    return c.json<GetCategoriesResponse>(response, 200);
   })
 
-  // GET /accounts/:id
+  // GET /categories/:id
   .get('/:id', withSession, zValidator('param', z.object({
     id: z.string()
   })), async (c) => {
@@ -58,7 +51,7 @@ export const accountsRouter = new Hono<{
       return c.json({ error: 'Unauthorized'}, 401);
     }
 
-    const account = await prisma.account.findFirst({
+    const category = await prisma.category.findFirst({
       where: {
         id,
         businessId
@@ -69,18 +62,18 @@ export const accountsRouter = new Hono<{
 	  }
     });
 
-    if (!account) {
-      throw c.json({ error: 'Account not found' }, 404);
+    if (!category) {
+      throw c.json({ error: 'Category not found' }, 404);
     }
 
     return c.json({
       success: true,
-      data: account
+      data: category
     }, 200);
   })
 
-  // POST /accounts
-  .post('/', withSession, zValidator('json', CreateAccountSchema), async (c) => {
+  // POST /categories
+  .post('/', withSession, zValidator('json', CreateCategorySchema ), async (c) => {
     const businessId: string = c.get('businessId') as string;
     const body = c.req.valid('json');
 
@@ -88,28 +81,28 @@ export const accountsRouter = new Hono<{
       return c.json({ error: 'Unauthorized'}, 401);
     }
 
-    const account = await prisma.account.create({
+    const category = await prisma.category.create({
       data: {
         ...body,
-        businessId,
+        businessId
       },
     });
 
-    const response: CreateAccountResponse = {
+    const response: CreateCategoryResponse = {
       success: true,
-      data: parseStringify(account),
-      message: 'Account created successfully'
+      data: parseStringify(category),
+      message: 'Category created successfully'
     };
 
-    return c.json<CreateAccountResponse>(response, 201);
+    return c.json<CreateCategoryResponse>(response, 201);
   })
 
-  // PUT /accounts/:id
+  // PUT /categories/:id
   .patch('/:id', withSession,
     zValidator('param', z.object({
       id: z.string().optional()
     })),
-    zValidator('json',UpdateAccountSchema),
+    zValidator('json', UpdateCategorySchema),
     async (c) => {
       const businessId: string = c.get('businessId') as string;
 
@@ -124,19 +117,19 @@ export const accountsRouter = new Hono<{
         return c.json({ error: 'Unauthorized'}, 401);
       }
 
-      // Verify account belongs to user's business
-      const existingAccount = await prisma.account.findFirst({
+      // Verify category belongs to user's business
+      const existingCategory = await prisma.category.findFirst({
         where: {
           id: id,
           businessId
         },
       });
 
-      if (!existingAccount) {
-        return c.json({ error: "Account doesn't exist"}, 404);
+      if (!existingCategory) {
+        return c.json({ error: "Category doesn't exist"}, 404);
       }
 
-      const updatedAccount = await prisma.account.update({
+      const updatedCategory = await prisma.category.update({
         where: {
           id: id,
           businessId: businessId
@@ -144,62 +137,62 @@ export const accountsRouter = new Hono<{
         data: body,
       });
 
-      const response: UpdateAccountResponse = {
+      const response: UpdateCategoryResponse = {
         success: true,
-        data: parseStringify(updatedAccount),
-        message: 'Account updated successfully'
+        data: parseStringify(updatedCategory),
+        message: 'Category updated successfully'
       };
 
-      return c.json<UpdateAccountResponse>(response, 200);
+      return c.json<UpdateCategoryResponse>(response, 200);
     })
 
-  // DELETE /accounts/bulk-delete
+  // DELETE /categories/bulk-delete
   .delete('/bulk-delete', withSession, zValidator('json', z.object({
-    accountIds: z.array(z.string()).min(1, 'At least one account ID is required')
+    categoryIds: z.array(z.string()).min(1, 'At least one category ID is required')
   })), async (c) => {
     const businessId: string = c.get('businessId') as string;
-    const { accountIds } = c.req.valid('json');
+    const { categoryIds } = c.req.valid('json');
 
     if (!businessId) {
       throw new HTTPException(404, { message: 'Business ID not found.' });
     }
 
-    // Verify all accounts belong to the user's business before deleting
-    const existingAccounts = await prisma.account.findMany({
+    // Verify all categories belong to the user's business before deleting
+    const existingCategories = await prisma.category.findMany({
       where: {
-        id: { in: accountIds },
+        id: { in: categoryIds },
         businessId
       },
       select: { id: true }
     });
 
-    if (existingAccounts.length !== accountIds.length) {
+    if (existingCategories.length !== categoryIds.length) {
       throw new HTTPException(403, {
-        message: 'Some accounts do not belong to your business or do not exist'
+        message: 'Some categories do not belong to your business or do not exist'
       });
     }
 
-    // Delete the accounts
-    const result = await prisma.account.deleteMany({
+    // Delete the categories
+    const result = await prisma.category.deleteMany({
       where: {
-        id: { in: accountIds },
+        id: { in: categoryIds },
         businessId
       },
     });
 
-    const response: DeleteMultipleAccountsResponse = {
+    const response: DeleteMultipleCategoriesResponse = {
       success: true,
-      message: `${result.count} account${result.count === 1 ? '' : 's'} deleted successfully`,
+      message: `${result.count} category${result.count === 1 ? '' : 's'} deleted successfully`,
       data: {
         deletedCount: result.count,
-        deletedAccountIds: accountIds
+        deletedCategoriesIds: categoryIds
       }
     };
 
-    return c.json<DeleteMultipleAccountsResponse>(response, 200);
+    return c.json<DeleteMultipleCategoriesResponse>(response, 200);
   })
 
-  // DELETE /accounts/:id
+  // DELETE /categories/:id
   .delete('/:id', withSession,
     zValidator(
       'param',
@@ -219,29 +212,29 @@ export const accountsRouter = new Hono<{
         return c.json({ error: 'Unauthorized'}, 401);
       }
 
-      // Verify account belongs to user's business
-      const existingAccount = await prisma.account.findFirst({
+      // Verify category belongs to user's business
+      const existingCategory = await prisma.category.findFirst({
         where: {
           id: id,
           businessId
         },
       });
 
-      if (!existingAccount) {
-        return c.json({ error: "Account doesn't exist"}, 404);
+      if (!existingCategory) {
+        return c.json({ error: "Category doesn't exist"}, 404);
       }
 
-      const accountDeleted = await prisma.account.delete({
+      const categoryDeleted = await prisma.category.delete({
         where: {
           id: id,
           businessId: businessId
 		 },
       });
 
-      const response: DeleteAccountResponse = {
+      const response: DeleteCategoryResponse = {
         success: true,
-        message: `Account with id ${accountDeleted.id} deleted successfully`
+        message: `Category with id ${categoryDeleted.id} deleted successfully`
       };
 
-      return c.json<DeleteAccountResponse>(response, 200);
+      return c.json<DeleteCategoryResponse>(response, 200);
     });

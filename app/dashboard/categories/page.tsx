@@ -2,54 +2,54 @@
 import React from 'react';
 import { columns } from './columns';
 import { DataTable } from '@/components/shared/data-table/data-table';
-import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Loader2, Plus } from 'lucide-react';
-import { useBulkDeleteAccounts } from '@/features/accounts/api/use-bulk-delete-accounts';
 import { toast } from 'sonner';
+import { useGetCategories } from '@/features/categories/api/use-get-categories';
+import { useBulkDeleteCategories } from '@/features/categories/api/use-bulk-delete-categories';
+import { useNewCategory } from '@/features/categories/hooks/use-new-category';
 import { Button } from '@/components/ui/button';
-import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
 
-const Accounts = () => {
-  const bulkDeleteAccounts = useBulkDeleteAccounts();
-  const accountsQuery = useGetAccounts();
-  const accounts = accountsQuery.data?.data || [];
-  const newAccount = useNewAccount();
+const Categories = () => {
+  const bulkDeleteCategories = useBulkDeleteCategories();
+  const categoriesQuery = useGetCategories();
+  const categories = categoriesQuery.data?.data || [];
+  const newCategory = useNewCategory();
 
-  const isDisabled = accountsQuery.isLoading || bulkDeleteAccounts.isPending;
+  const isDisabled = categoriesQuery.isLoading || bulkDeleteCategories.isPending;
 
   const handleDelete = (row: any[]) => {
     const ids = row.map(r => r.original.id);
     const count = ids.length;
 
     // Show appropriate loading toast
-    const loadingMessage = count === 1 ? 'Deleting account...' : `Deleting ${count} accounts...`;
-    toast.loading(loadingMessage, { id: 'delete-accounts' });
+    const loadingMessage = count === 1 ? 'Deleting category...' : `Deleting ${count} categories...`;
+    toast.loading(loadingMessage, { id: 'delete-categories' });
 
-    bulkDeleteAccounts.mutate(
-      { accountIds: ids },
+    bulkDeleteCategories.mutate(
+      { categoryIds: ids },
       {
         onSuccess: () => {
-          toast.dismiss('delete-accounts');
+          toast.dismiss('delete-categories');
           if (count === 1) {
-            toast.success('Account deleted successfully');
+            toast.success('Category deleted successfully');
           } else {
-            toast.success(`${count} accounts deleted successfully`);
+            toast.success(`${count} categories deleted successfully`);
           }
         },
         onError: () => {
-          toast.dismiss('delete-accounts');
+          toast.dismiss('delete-categories');
           if (count === 1) {
-            toast.error('Failed to delete account');
+            toast.error('Failed to delete category');
           } else {
-            toast.error('Failed to delete accounts');
+            toast.error('Failed to delete categories');
           }
         }
       }
     );
   };
 
-  if (accountsQuery.isLoading) {
+  if (categoriesQuery.isLoading) {
     return (
       <>
         <div className='flex flex-col gap-6'>
@@ -66,14 +66,14 @@ const Accounts = () => {
     <div className='flex flex-col gap-6'>
       <DataTable
         columns={columns}
-        data={accounts}
+        data={categories}
         filterKey='name'
         onDelete={handleDelete}
         disabled={isDisabled}
         headerContent={
-          <Button onClick={() => { newAccount.onOpen();}} size="sm" >
+          <Button onClick={() => { newCategory.onOpen(); }} size="sm" >
             <Plus className='size-4 mr-2' />
-			Add new
+				Add new
           </Button>
         }
       />
@@ -81,4 +81,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default Categories;

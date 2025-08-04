@@ -21,6 +21,12 @@ export const sidebarLinks = [
     position: 'top',
   },
   {
+    icon: AccountIcon,
+    route: '/dashboard/categories',
+    label: 'Categories',
+    position: 'top',
+  },
+  {
     icon: DollarCircle,
     route: '/dashboard/banks',
     label: 'Banks',

@@ -1,4 +1,5 @@
 import { ColumnDef, Row } from '@tanstack/react-table';
+import React from 'react';
 
 export type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[]
@@ -6,4 +7,5 @@ export type DataTableProps<TData, TValue> = {
   filterKey: string;
   onDelete: (rows: Row<TData>[]) => void;
   disabled?: boolean;
+  headerContent?: React.ReactNode
 }
