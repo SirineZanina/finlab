@@ -18,8 +18,6 @@ export const useGetAccount = (id?: string) => {
         });
 
         if (!response.ok) {
-          const errorData = await response.text();
-          console.error('Error response:', errorData);
           throw new Error(`Failed to fetch accounts: ${response.status}`);
         }
 

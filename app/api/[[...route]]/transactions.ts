@@ -233,6 +233,81 @@ export const transactionsRouter = new Hono<{
       return c.json<UpdateTransactionResponse>(response, 200);
     })
 
+  // POST /transactions/bulk-create
+  .post('/bulk-create',
+    withSession,
+    zValidator('json',
+      z.array(CreateTransactionSchema)
+    ),
+    async (c) => {
+      const businessId: string = c.get('businessId') as string;
+      const transactionsData = c.req.valid('json');
+
+      if (!businessId) {
+        return c.json({ error: 'Unauthorized'}, 401);
+      }
+
+      try {
+        const result = await prisma.$transaction(async (tx) => {
+        // First, verify all accounts belong to the business
+          const accountIds = [...new Set(transactionsData.map(t => t.accountId))];
+
+          const validAccounts = await tx.account.findMany({
+            where: {
+              id: { in: accountIds },
+              businessId
+            },
+            select: { id: true }
+          });
+
+          const validAccountIds = new Set(validAccounts.map(a => a.id));
+
+          // Check if all provided accounts are valid
+          const invalidAccountIds = accountIds.filter(id => !validAccountIds.has(id));
+          if (invalidAccountIds.length > 0) {
+            throw new HTTPException(403, {
+              message: `Invalid account IDs: ${invalidAccountIds.join(', ')}`
+            });
+          }
+
+          // Create all transactions
+          const createdTransactions = await tx.transaction.createMany({
+            data: transactionsData.map(transaction => ({
+              ...transaction,
+              // Ensure any required fields are included
+              createdAt: new Date(),
+              updatedAt: new Date()
+            })),
+            skipDuplicates: false // Set to true if you want to skip duplicates
+          });
+
+          return createdTransactions;
+        });
+
+        const response = {
+          success: true,
+          message: `${result.count} transaction${result.count === 1 ? '' : 's'} created successfully`,
+          data: {
+            createdCount: result.count
+          }
+        };
+
+        return c.json(response, 201);
+
+      } catch (error) {
+        if (error instanceof HTTPException) {
+          throw error;
+        }
+
+        console.error('Bulk create transactions error:', error);
+        return c.json({
+          success: false,
+          error: 'Failed to create transactions'
+        }, 500);
+      }
+    }
+  )
+
   // DELETE /transactions/bulk-delete
   .delete('/bulk-delete',
     withSession,

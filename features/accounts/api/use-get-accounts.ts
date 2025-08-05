@@ -10,8 +10,6 @@ export const useGetAccounts = () => {
         const response = await client.api.accounts.$get();
 
         if (!response.ok) {
-          const errorData = await response.text();
-          console.error('Error response:', errorData);
           throw new Error(`Failed to fetch accounts: ${response.status}`);
         }
 
