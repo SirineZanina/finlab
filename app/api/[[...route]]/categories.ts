@@ -14,7 +14,14 @@ import { parseStringify } from '@/lib/utils';
 // schema types
 import { CreateCategorySchema, UpdateCategorySchema } from '@/types/schemas/category-schema';
 // api types
-import { CreateCategoryResponse, DeleteCategoryResponse, DeleteMultipleCategoriesResponse, GetCategoriesResponse, GetCategoriesVariables, UpdateCategoryResponse } from '@/types/api/categories';
+import {
+  CreateCategoryResponse,
+  DeleteCategoryResponse,
+  BulkDeleteCategoriesResponse,
+  GetCategoriesResponse,
+  GetCategoriesVariables,
+  UpdateCategoryResponse
+} from '@/types/api/categories';
 
 // Main categories router
 export const categoriesRouter = new Hono<{
@@ -158,38 +165,42 @@ export const categoriesRouter = new Hono<{
     }
 
     // Verify all categories belong to the user's business before deleting
-    const existingCategories = await prisma.category.findMany({
-      where: {
-        id: { in: categoryIds },
-        businessId
-      },
-      select: { id: true }
+    const result = await prisma.$transaction(async (tx) => {
+
+	  const categoriesToDelete = await tx.category.findMany({
+        where: {
+		  id: { in: categoryIds },
+		  businessId
+        }
+	  });
+
+	  if (categoriesToDelete.length !== categoryIds.length) {
+        throw new HTTPException(404, { message: 'Some categories do not belong to this business.' });
+	  }
+
+	  const deletedCategories = await tx.category.deleteMany({
+        where: {
+		  id: { in: categoryIds },
+		  businessId
+        }
+	  });
+
+	  return {
+        count: deletedCategories.count,
+        deletedCategoriesIds: categoriesToDelete.map(c => c.id)
+	  };
     });
 
-    if (existingCategories.length !== categoryIds.length) {
-      throw new HTTPException(403, {
-        message: 'Some categories do not belong to your business or do not exist'
-      });
-    }
-
-    // Delete the categories
-    const result = await prisma.category.deleteMany({
-      where: {
-        id: { in: categoryIds },
-        businessId
-      },
-    });
-
-    const response: DeleteMultipleCategoriesResponse = {
+    const response: BulkDeleteCategoriesResponse = {
       success: true,
       message: `${result.count} category${result.count === 1 ? '' : 's'} deleted successfully`,
       data: {
         deletedCount: result.count,
-        deletedCategoriesIds: categoryIds
+        deletedCategoriesIds: result.deletedCategoriesIds
       }
     };
 
-    return c.json<DeleteMultipleCategoriesResponse>(response, 200);
+    return c.json<BulkDeleteCategoriesResponse>(response, 200);
   })
 
   // DELETE /categories/:id

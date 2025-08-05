@@ -1,8 +1,9 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
-import { accountsRouter } from './accounts';
 import { HTTPException } from 'hono/http-exception';
+import { accountsRouter } from './accounts';
 import { categoriesRouter } from './categories';
+import { transactionsRouter } from './transactions';
 
 // export const runtime = 'edge';
 
@@ -24,7 +25,8 @@ app.onError((err, c) => {
 // Route the accounts endpoints
 const routes = app
   .route('/accounts', accountsRouter)
-  .route('/categories', categoriesRouter);
+  .route('/categories', categoriesRouter)
+  .route('/transactions', transactionsRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);

@@ -165,26 +165,29 @@ export const accountsRouter = new Hono<{
     }
 
     // Verify all accounts belong to the user's business before deleting
-    const existingAccounts = await prisma.account.findMany({
-      where: {
-        id: { in: accountIds },
-        businessId
-      },
-      select: { id: true }
-    });
+    const result = await prisma.$transaction(async (tx) => {
+	  const accountsToDelete = await tx.account.findMany({
+        where: {
+		  id: { in: accountIds },
+		  businessId
+        },
+	  });
 
-    if (existingAccounts.length !== accountIds.length) {
-      throw new HTTPException(403, {
-        message: 'Some accounts do not belong to your business or do not exist'
-      });
-    }
+	  if (accountsToDelete.length !== accountIds.length) {
+        throw new HTTPException(404, { message: 'Some accounts not found.' });
+	  }
 
-    // Delete the accounts
-    const result = await prisma.account.deleteMany({
-      where: {
-        id: { in: accountIds },
-        businessId
-      },
+	  const deletedAccounts = await tx.account.deleteMany({
+        where: {
+		  id: { in: accountIds },
+		  businessId
+        },
+	  });
+
+	  return {
+        count: deletedAccounts.count,
+        deletedAccountIds: accountsToDelete.map(a => a.id)
+	  };
     });
 
     const response: DeleteMultipleAccountsResponse = {
@@ -192,7 +195,7 @@ export const accountsRouter = new Hono<{
       message: `${result.count} account${result.count === 1 ? '' : 's'} deleted successfully`,
       data: {
         deletedCount: result.count,
-        deletedAccountIds: accountIds
+        deletedAccountIds: result.deletedAccountIds
       }
     };
 

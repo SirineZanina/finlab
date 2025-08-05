@@ -1,45 +1,45 @@
-import { Category, User } from '@prisma/client';
+import { Transaction, User } from '@prisma/client';
 
 // ─── Route Handler Variables ───────────────────────────────────────
-export type GetCategoriesVariables = {
+export type GetTransactionsVariables = {
   userId: string;
   user: User;
   businessId: string;
 }
 
 // ─── API Response Types ───────────────────────────────────────
-export type GetCategoriesResponse = {
+export type GetTransactionsResponse = {
   success: true;
-  data: Category[];
+  data: Transaction[];
 }
 
-export type GetCategoryResponse = {
+export type GetTransactionResponse = {
 	success: true,
-	data: Category
+	data: Transaction
 }
 
-export type CreateCategoryResponse = {
+export type CreateTransactionResponse = {
   success: true;
-  data: Omit<Category, 'id' | 'createdAt' | 'updatedAt'>;
+  data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>;
   message: string;
 }
 
-export type UpdateCategoryResponse = {
+export type UpdateTransactionResponse = {
   success: true;
-  data: Category;
+  data: Transaction;
   message: string;
 }
 
-export type BulkDeleteCategoriesResponse = {
+export type BulkDeleteTransactionsResponse = {
 	success: true;
 	message: string;
 	data: {
 		deletedCount: number;
-		deletedCategoriesIds: string[];
+		deletedTransactionsIds: string[];
 	};
 }
 
-export type DeleteCategoryResponse = {
+export type DeleteTransactionResponse = {
   success: true;
   message: string;
 }
