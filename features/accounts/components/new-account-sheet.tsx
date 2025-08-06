@@ -18,7 +18,7 @@ const NewAccountSheet = () => {
     });
   };
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
+    <Sheet open={isOpen} onOpenChange={onClose} >
       <SheetContent side='right'>
         <SheetHeader>
           <SheetTitle>

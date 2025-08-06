@@ -27,6 +27,12 @@ export const sidebarLinks = [
     position: 'top',
   },
   {
+    icon: Transaction,
+    route: '/dashboard/transactions',
+    label: 'Transactions',
+    position: 'top',
+  },
+  {
     icon: DollarCircle,
     route: '/dashboard/banks',
     label: 'Banks',

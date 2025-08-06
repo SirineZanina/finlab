@@ -179,16 +179,15 @@ model Transaction {
     name           String
     amount         Int
     payee          String
-    notes          String?
-    date           DateTime? // A seperate date field for the user to manually add a transaction
+    date           DateTime // A seperate date field for the user to manually add a transaction
     paymentChannel String
-    pending        Boolean
+    pending        Boolean?
     image          String?
+    notes          String?
     account        Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
     accountId      String
     category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
     categoryId     String?
-    type           String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

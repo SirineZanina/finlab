@@ -5,15 +5,17 @@ import { useSearchParams } from 'next/navigation';
 export const useGetTransactions = () => {
 
   const params = useSearchParams();
-  const from = params.get('from') || '';
-  const to = params.get('to') || '';
-  const accountId = params.get('accountId') || '';
+  const from = params.get('from') || undefined;
+  const to = params.get('to') || undefined;
+  const accountId = params.get('accountId') || undefined;
 
   const query = useQuery({
     // TOOD: check if params are needed in the key.
     queryKey: ['transactions', { from, to, accountId }],
     queryFn: async () => {
       try {
+		    console.log('GET request params:', { from, to, accountId }); // Add this
+
         // type safe RPC
         const response = await client.api.transactions.$get({
           query: {

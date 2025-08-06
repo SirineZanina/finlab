@@ -128,14 +128,6 @@ export const exchangePublicToken = async ({
         const createdAccount = await prisma.account.create({
           data: {
             name: accountData.name,
-            availableBalance: accountData.balances.available || 0,
-            currentBalance: accountData.balances.current || 0,
-            officialName: accountData.official_name || '',
-            mask: accountData.mask || '',
-            institutionId: accountsResponse.data.item.institution_id || '',
-            type: accountData.type.toUpperCase(),
-            subtype: accountData.subtype || '',
-            shareableId: encryptId(accountData.account_id),
             businessId: user.businessId,
             bankId: bank.id,
             plaidId: accountData.account_id,

@@ -6,7 +6,6 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 // prisma
 import { prisma } from '@/lib/prisma';
-import { Category } from '@prisma/client';
 // middleware
 import { withSession } from '@/lib/middleware';
 // utils
@@ -35,8 +34,12 @@ export const categoriesRouter = new Hono<{
       return c.json({ error: 'Unauthorized'}, 401);
     }
 
-    const categories: Category[] = await prisma.category.findMany({
+    const categories = await prisma.category.findMany({
       where: { businessId },
+	  select: {
+        id: true,
+        name: true
+	  },
     });
 
     const response: GetCategoriesResponse = {

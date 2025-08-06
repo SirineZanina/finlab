@@ -2,26 +2,24 @@ import { z } from 'zod';
 
 export const CreateTransactionSchema = z.object({
   name: z.string().min(1, 'Transaction name is required'),
-  amount: z.number().int().min(1, 'Amount must be a positive integer'),
+  amount: z.coerce.number(),
   payee: z.string().min(1, 'Payee is required'),
   notes: z.string().optional(),
-  date: z.date().optional(), // Optional date field for manual entry
+  date: z.coerce.date(),
   paymentChannel: z.string().min(1, 'Payment channel is required'),
   pending: z.boolean().default(false),
   image: z.string().url().optional(),
   // Include the foreign key fields
   accountId: z.string().cuid('Invalid account ID'),
   categoryId: z.string().cuid('Invalid category ID').optional(),
-  type: z.string().min(1, 'Transaction type is required'),
+});
+
+export const CreateTransactionAPISchema = CreateTransactionSchema.extend({
+  date: z.string().datetime().transform((str) => new Date(str)),
 });
 
 // Schema for updating (all fields optional )
 export const UpdateTransactionSchema = CreateTransactionSchema.partial();
-
-// Schema for API requests where date comes as string
-export const CreateTransactionAPISchema = CreateTransactionSchema.extend({
-  date: z.string().datetime().transform((str) => new Date(str)).optional(),
-});
 
 // Schema for bulk operations
 export const BulkDeleteTransactionSchema = z.object({
@@ -68,8 +66,8 @@ export const TransactionResponseSchema = z.object({
 
 // Type inference
 export type CreateTransactionInput = z.infer<typeof CreateTransactionSchema>;
-export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;
 export type CreateTransactionAPIInput = z.infer<typeof CreateTransactionAPISchema>;
+export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;
 export type TransactionQueryInput = z.infer<typeof TransactionQuerySchema>;
 export type BulkDeleteTransactionInput = z.infer<typeof BulkDeleteTransactionSchema>;
 export type TransactionResponse = z.infer<typeof TransactionResponseSchema>;

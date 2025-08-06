@@ -17,7 +17,6 @@ export default defineConfig([
 
   {
     rules: {
-      'no-unused-vars': ['warn'],
       'no-undef': ['warn'],
       quotes: ['error', 'single', { avoidEscape: true }],
       semi: ['error', 'always'],
@@ -31,6 +30,12 @@ export default defineConfig([
       'no-trailing-spaces': ['warn'],
       'no-useless-constructor': 0,
       'no-loop-func': 0,
+    },
+  },
+   {
+    files: ['**/*.tsx'],
+    rules: {
+      'no-unused-vars': ['warn'], // Only show unused variable warnings in .tsx files
     },
   },
 

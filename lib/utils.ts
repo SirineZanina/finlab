@@ -207,3 +207,12 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? 'Processing' : 'Success';
 };
 
+export function convertAmountFromMiliunits(amount: number) {
+// Convert the amount from miliunits (1 unit = 1000 miliunits) to a float
+  return amount / 1000;
+}
+
+export function convertAmountToMiliunits(amount: number) {
+  // Convert the amount to miliunits (1 unit = 1000 miliunits)
+  return Math.round(amount * 1000);
+}

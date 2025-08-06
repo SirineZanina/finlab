@@ -10,7 +10,7 @@ export type GetCategoriesVariables = {
 // ─── API Response Types ───────────────────────────────────────
 export type GetCategoriesResponse = {
   success: true;
-  data: Category[];
+  data: Omit<Category, 'createdAt' | 'updatedAt' | 'businessId' | 'plaidId'>[];
 }
 
 export type GetCategoryResponse = {

@@ -38,7 +38,7 @@ const AccountForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}
-        className='space-y-4 p-4'
+        className='space-y-4'
       >
         <FormField
           name='name'
@@ -56,9 +56,7 @@ const AccountForm = ({
               <FormMessage />
             </FormItem>
           )}
-        >
-
-        </FormField>
+        />
         <Button className='w-full' disabled={disabled}>
           {id ? 'Save changes' : 'Create Account'}
         </Button>

@@ -26,7 +26,7 @@ export const useBulkCreateTransactions = () => {
       });
       // Also invalidate to mark as stale
       queryClient.invalidateQueries({
-        queryKey: ['transactions']
+        queryKey: ['transactions'] // Adjust params as needed
       });
       // TODO: Also invalidate summary
     },

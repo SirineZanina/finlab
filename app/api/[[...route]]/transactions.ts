@@ -129,6 +129,7 @@ export const transactionsRouter = new Hono<{
           payee: true,
           amount: true,
           notes: true,
+		  paymentChannel: true,
           account: {
             select: {
               id: true,
