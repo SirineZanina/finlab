@@ -60,7 +60,8 @@ const EditTransactionSheet = () => {
       onSuccess: () => {
         onClose();
       }
-    });
+    }
+    );
   };
 
   const onDelete = async () => {
@@ -79,10 +80,9 @@ const EditTransactionSheet = () => {
     amount: transactionQuery.data.amount?.toString(),
     date: transactionQuery.data.date ? new Date(transactionQuery.data.date) : new Date(),
     payee: transactionQuery.data.payee,
-    paymentChannel: transactionQuery.data.paymentChannel,
     notes: transactionQuery.data.notes || '',
     categoryId: transactionQuery.data.category?.id,
-    accountId: transactionQuery.data.account?.id,
+    accountId: transactionQuery.data.account?.id ?? '',
   } : {
     name: '',
     amount: '',

@@ -55,10 +55,11 @@ const NewTransactionSheet = () => {
   accountQuery.isLoading;
 
   const onSubmit = (values: ApiFormValues) => {
+    console.log('Submitting new transaction:', values);
     createMutation.mutate(values, {
-      onSuccess: () => {
+	  onSuccess: () => {
         onClose();
-      }
+	  }
     });
   };
 

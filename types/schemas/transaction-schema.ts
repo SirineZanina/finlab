@@ -5,7 +5,16 @@ export const CreateTransactionSchema = z.object({
   amount: z.coerce.number(),
   payee: z.string().min(1, 'Payee is required'),
   notes: z.string().optional(),
-  date: z.coerce.date(),
+  date: z.string()
+    .transform((dateString) => {
+      // If it's just a date (YYYY-MM-DD), add noon UTC to avoid timezone issues
+      if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        return new Date(`${dateString  }T12:00:00.000Z`);
+      }
+      // If it already has time information, parse normally
+      return new Date(dateString);
+    })
+    .refine((date) => !isNaN(date.getTime()), 'Invalid date'),
   paymentChannel: z.string().min(1, 'Payment channel is required'),
   pending: z.boolean().default(false),
   image: z.string().url().optional(),
@@ -14,60 +23,15 @@ export const CreateTransactionSchema = z.object({
   categoryId: z.string().cuid('Invalid category ID').optional(),
 });
 
+// Schema for creating a transaction
 export const CreateTransactionAPISchema = CreateTransactionSchema.extend({
-  date: z.string().datetime().transform((str) => new Date(str)),
+  date: z.date().transform(date => date.toISOString())
 });
 
 // Schema for updating (all fields optional )
 export const UpdateTransactionSchema = CreateTransactionSchema.partial();
 
-// Schema for bulk operations
-export const BulkDeleteTransactionSchema = z.object({
-  transactionIds: z.array(z.string().cuid()).min(1, 'At least one transaction ID is required'),
-});
-
-// Query/filter schema
-export const TransactionQuerySchema = z.object({
-  accountId: z.string().cuid().optional(),
-  categoryId: z.string().cuid().optional(),
-  startDate: z.string().datetime().transform((str) => new Date(str)).optional(),
-  endDate: z.string().datetime().transform((str) => new Date(str)).optional(),
-  search: z.string().optional(),
-  type: z.string().optional(),
-  pending: z.boolean().optional(),
-});
-
-// Response schema (what comes back from database with relations)
-export const TransactionResponseSchema = z.object({
-  id: z.string().cuid(),
-  name: z.string(),
-  amount: z.number(),
-  payee: z.string(),
-  notes: z.string().nullable(),
-  date: z.string().datetime().transform((str) => new Date(str)).nullable(),
-  paymentChannel: z.string(),
-  pending: z.boolean(),
-  image: z.string().nullable(),
-  accountId: z.string().cuid(),
-  categoryId: z.string().cuid().nullable(),
-  type: z.string(),
-  createdAt: z.string().datetime().transform((str) => new Date(str)),
-  updatedAt: z.string().datetime().transform((str) => new Date(str)),
-  // Include relations if populated
-  account: z.object({
-    id: z.string().cuid(),
-    name: z.string(),
-  }).optional(),
-  category: z.object({
-    id: z.string().cuid(),
-    name: z.string(),
-  }).nullable().optional(),
-});
-
 // Type inference
 export type CreateTransactionInput = z.infer<typeof CreateTransactionSchema>;
-export type CreateTransactionAPIInput = z.infer<typeof CreateTransactionAPISchema>;
 export type UpdateTransactionInput = z.infer<typeof UpdateTransactionSchema>;
-export type TransactionQueryInput = z.infer<typeof TransactionQuerySchema>;
-export type BulkDeleteTransactionInput = z.infer<typeof BulkDeleteTransactionSchema>;
-export type TransactionResponse = z.infer<typeof TransactionResponseSchema>;
+export type CreateTransactionAPIInput = z.infer<typeof CreateTransactionAPISchema>;

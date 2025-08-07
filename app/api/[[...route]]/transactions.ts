@@ -153,6 +153,79 @@ export const transactionsRouter = new Hono<{
       }, 200);
     })
 
+  .get('/all',
+    withSession,
+    zValidator('query', z.object({
+      from: z.string().optional(),
+      to: z.string().optional(),
+      accountId: z.string().cuid().optional(),
+    })),
+    async (c) => {
+      const businessId: string = c.get('businessId') as string;
+
+      if (!businessId) {
+        return c.json({ error: 'Unauthorized'}, 401);
+      }
+
+      const { from, to, accountId } = c.req.valid('query');
+
+      const defaultTo = new Date();
+      const defaultFrom = subDays(defaultTo, 30);
+
+      const startDate = from
+        ? parse(from, 'yyyy-MM-dd', new Date())
+        : defaultFrom;
+
+      const endDate = to
+        ? parse(to, 'yyyy-MM-dd', new Date())
+        : defaultTo;
+
+      // Build where clause step by step
+      const whereClause: any = {
+        account: {
+          businessId: businessId // Only filter by businessId, not specific accountId
+        }
+      };
+
+      // Add date filter only if dates are provided
+      if (from || to) {
+        whereClause.date = {
+          gte: startDate,
+          lte: endDate
+        };
+      }
+
+      // Add specific account filter only if provided
+      if (accountId) {
+        whereClause.accountId = accountId;
+      }
+
+      console.log('Query filters:', {
+        businessId,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        accountId,
+        whereClause: JSON.stringify(whereClause, null, 2)
+      });
+
+      const data = await prisma.transaction.findMany({
+        where: whereClause,
+        include: {
+          account: true,
+          category: true,
+        },
+        orderBy: { date: 'desc' },
+      });
+
+      console.log(`Found ${data.length} transactions`);
+
+      const response: GetTransactionsResponse = {
+        success: true,
+        data: parseStringify(data),
+      };
+      return c.json<GetTransactionsResponse>(response, 200);
+    })
+
   // POST /transactions
   .post('/',
     withSession,
@@ -165,6 +238,8 @@ export const transactionsRouter = new Hono<{
 
       const body = c.req.valid('json');
 
+	  console.log('Creating transaction with body:', body);
+
       const transaction = await prisma.transaction.create({
         data: {
           ...body,
@@ -173,7 +248,7 @@ export const transactionsRouter = new Hono<{
 
 	  const response: CreateTransactionResponse = {
         success: true,
-        data: parseStringify(transaction),
+        data: transaction,
         message: 'Transaction created successfully'
 		  };
 

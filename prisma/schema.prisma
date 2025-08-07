@@ -180,7 +180,7 @@ model Transaction {
     amount         Int
     payee          String
     date           DateTime // A seperate date field for the user to manually add a transaction
-    paymentChannel String
+    paymentChannel String?
     pending        Boolean?
     image          String?
     notes          String?

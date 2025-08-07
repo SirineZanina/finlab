@@ -1,9 +1,9 @@
-import { CreateTransactionAPISchema } from '@/types/schemas/transaction-schema';
+import { CreateTransactionAPISchema, CreateTransactionSchema } from '@/types/schemas/transaction-schema';
 import z from 'zod';
 
 export const formSchema = z.object({
   name: z.string(),
-  paymentChannel: z.string(),
+  paymentChannel: z.string().optional(),
   date: z.coerce.date(),
   accountId: z.string(),
   categoryId: z.string().optional(),

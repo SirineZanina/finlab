@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import { format } from 'date-fns';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Input } from '@/components/ui/input';
@@ -41,17 +42,23 @@ const TransactionForm = ({
     mode: 'onChange',
     defaultValues: defaultValues
   });
-
   const handleSubmit = (values: FormValues) => {
+    console.log('Form values from resolver:', values);
+
     const amount = parseFloat(values.amount);
     const amountToMiliunits = convertAmountToMiliunits(amount);
-    console.log(values);
-    onSubmit({
+
+    const transformedData = {
       ...values,
-	  name: values.payee,
-	  paymentChannel: 'manual',
+      name: values.payee,
+      paymentChannel: 'manual',
       amount: amountToMiliunits,
-    });
+      date: format(values.date, 'yyyy-MM-dd'),
+    };
+
+    console.log('Transformed data being sent to API:', transformedData);
+
+    onSubmit(transformedData);
   };
 
   const handleDelete = () => {
@@ -63,10 +70,30 @@ const TransactionForm = ({
         className='space-y-4'
       >
         <FormField
+		  name='name'
+		  control={form.control}
+		  render={({ field }) => (
+            <FormItem>
+              <FormLabel>Transaction Name</FormLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  value={field.value || ''}
+                  disabled={disabled}
+                  placeholder='Add a transaction name'
+                />
+              </FormControl>
+              <FormMessage />
+              <FormMessage />
+            </FormItem>
+		  )}
+        />
+        <FormField
           name='date'
           control={form.control}
           render={({ field }) => (
             <FormItem>
+              <FormLabel>Date</FormLabel>
               <FormControl>
                 <DatePicker
                   value={field.value}
