@@ -50,10 +50,9 @@ const TransactionForm = ({
 
     const transformedData = {
       ...values,
-      name: values.payee,
       paymentChannel: 'manual',
       amount: amountToMiliunits,
-      date: format(values.date, 'yyyy-MM-dd'),
+      date: format(values.date, 'yyyy-MM-dd')
     };
 
     console.log('Transformed data being sent to API:', transformedData);

@@ -6,15 +6,8 @@ export const CreateTransactionSchema = z.object({
   payee: z.string().min(1, 'Payee is required'),
   notes: z.string().optional(),
   date: z.string()
-    .transform((dateString) => {
-      // If it's just a date (YYYY-MM-DD), add noon UTC to avoid timezone issues
-      if (dateString.match(/^\d{4}-\d{2}-\d{2}$/)) {
-        return new Date(`${dateString  }T12:00:00.000Z`);
-      }
-      // If it already has time information, parse normally
-      return new Date(dateString);
-    })
-    .refine((date) => !isNaN(date.getTime()), 'Invalid date'),
+  		.transform((dateString) => new Date(dateString))
+   		.refine((date) => !isNaN(date.getTime()), 'Invalid date'),
   paymentChannel: z.string().min(1, 'Payment channel is required'),
   pending: z.boolean().default(false),
   image: z.string().url().optional(),
