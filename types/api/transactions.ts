@@ -7,11 +7,41 @@ export type GetTransactionsVariables = {
   businessId: string;
 }
 
+import { Prisma } from '@prisma/client';
+
+export type TransactionWithAccountAndCategory = Prisma.TransactionGetPayload<{
+  select: {
+    id: true;
+    date: true;
+    name: true;
+    payee: true;
+    amount: true;
+    notes: true;
+    account: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
+    category: {
+      select: {
+        id: true;
+        name: true;
+      };
+    };
+  };
+}>;
+
 // ─── API Response Types ───────────────────────────────────────
 export type GetTransactionsResponse = {
   success: true;
-  data: Transaction[];
-}
+  data: TransactionWithAccountAndCategory[];
+};
+
+// export type GetTransactionsResponse = {
+//   success: true;
+//   data: Transaction[];
+// }
 
 export type GetTransactionResponse = {
 	success: true,

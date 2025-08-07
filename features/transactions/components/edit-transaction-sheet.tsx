@@ -1,17 +1,30 @@
 import React from 'react';
+// components
 import TransactionForm from '@/features/transactions/components/transaction-form/transaction-form';
-import { ApiFormValues } from '@/features/transactions/components/transaction-form/transaction-form.types';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { useOpenTransaction } from '@/features/transactions/hooks/use-open-transaction';
-import { useGetTransaction } from '@/features/transactions/api/use-get-transaction';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle
+} from '@/components/ui/sheet';
+// icons
 import { Loader2 } from 'lucide-react';
+// api
+import { useGetTransaction } from '@/features/transactions/api/use-get-transaction';
 import { useEditTransaction } from '@/features/transactions/api/use-edit-transaction';
 import { useDeleteTransaction } from '@/features/transactions/api/use-delete-transaction';
-import { useConfirm } from '@/hooks/use-confirm';
+
 import { useGetCategories } from '@/features/categories/api/use-get-categories';
 import { useCreateCategory } from '@/features/categories/api/use-create-category';
+
 import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
 import { useCreateAccount } from '@/features/accounts/api/use-create-account';
+// hooks
+import { useConfirm } from '@/hooks/use-confirm';
+import { useOpenTransaction } from '@/features/transactions/hooks/use-open-transaction';
+// types
+import { ApiFormValues } from '@/features/transactions/components/transaction-form/transaction-form.types';
 
 const EditTransactionSheet = () => {
   const { isOpen, onClose, id } = useOpenTransaction();
@@ -51,9 +64,15 @@ const EditTransactionSheet = () => {
 
   const isPending =
   	editMutation.isPending ||
-	deleteMutation.isPending;
+	deleteMutation.isPending ||
+	transactionQuery.isLoading ||
+	categoryMutation.isPending ||
+	accountMutation.isPending;
 
-  const isLoading = transactionQuery.isLoading;
+  const isLoading =
+	transactionQuery.isLoading ||
+	categoryQuery.isLoading ||
+	accountQuery.isLoading;
 
   const onSubmit = (values: ApiFormValues) => {
     editMutation.mutate(values, {
@@ -77,12 +96,12 @@ const EditTransactionSheet = () => {
 
   const defaultValues = transactionQuery.data ? {
     name: transactionQuery.data.name,
-    amount: transactionQuery.data.amount?.toString(),
+    amount: transactionQuery.data.amount.toString(),
     date: transactionQuery.data.date ? new Date(transactionQuery.data.date) : new Date(),
     payee: transactionQuery.data.payee,
-    notes: transactionQuery.data.notes || '',
+    notes: transactionQuery.data.notes ?? '',
     categoryId: transactionQuery.data.category?.id,
-    accountId: transactionQuery.data.account?.id ?? '',
+    accountId: transactionQuery.data.account.id,
   } : {
     name: '',
     amount: '',
@@ -114,14 +133,14 @@ const EditTransactionSheet = () => {
           ) :
             <TransactionForm
               id={id}
-              onSubmit={onSubmit}
-              disabled={isPending}
               defaultValues={defaultValues}
+              onSubmit={onSubmit}
               onDelete={onDelete}
-		  	  categoryOptions={categoryOptions}
-			  accountOptions={accountOptions}
 			  onCreateCategory={onCreateCategory}
 			  onCreateAccount={onCreateAccount}
+			  categoryOptions={categoryOptions}
+			  accountOptions={accountOptions}
+              disabled={isPending}
             />
           }
 	  </SheetContent>

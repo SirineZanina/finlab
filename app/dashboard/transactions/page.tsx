@@ -1,20 +1,26 @@
 'use client';
 import React from 'react';
-import { columns } from './columns';
+// components
 import { DataTable } from '@/components/shared/data-table/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Loader2, Plus } from 'lucide-react';
-import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+// icons
+import { Loader2, Plus } from 'lucide-react';
+// columns
+import { columns } from './columns/columns';
+// api
 import { useBulkDeleteTransactions } from '@/features/transactions/api/use-bulk-delete-transactions';
 import { useGetTransactions } from '@/features/transactions/api/use-get-transactions';
+// hooks
 import { useNewTransaction } from '@/features/transactions/hooks/use-new-transaction';
 
 const Transactions = () => {
-  const bulkDeleteTransactions = useBulkDeleteTransactions();
   const transactionsQuery = useGetTransactions();
-  const transactions = transactionsQuery.data?.data || [];
+  const transactions = transactionsQuery.data || [];
   const newTransaction = useNewTransaction();
+
+  const bulkDeleteTransactions = useBulkDeleteTransactions();
 
   const isDisabled = transactionsQuery.isLoading || bulkDeleteTransactions.isPending;
 
@@ -67,7 +73,7 @@ const Transactions = () => {
       <DataTable
         columns={columns}
         data={transactions}
-        filterKey='name'
+        filterKey='payee'
         onDelete={handleDelete}
         disabled={isDisabled}
         headerContent={

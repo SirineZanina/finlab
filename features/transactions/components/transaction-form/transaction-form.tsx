@@ -163,24 +163,6 @@ const TransactionForm = ({
           )}
         />
         <FormField
-          name='notes'
-          control={form.control}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Notes</FormLabel>
-              <FormControl>
-                <Textarea
-			 	  {...field}
-                  value={field.value || ''}
-                  disabled={disabled}
-                  placeholder='Optional notes'
-			    />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-		  <FormField
           name='amount'
           control={form.control}
           render={({ field }) => (
@@ -198,6 +180,26 @@ const TransactionForm = ({
             </FormItem>
           )}
         />
+
+        <FormField
+          name='notes'
+          control={form.control}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notes</FormLabel>
+              <FormControl>
+                <Textarea
+			 	  {...field}
+                  value={field.value || ''}
+                  disabled={disabled}
+                  placeholder='Optional notes'
+			    />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <Button
           className='w-full'
           disabled={disabled}
