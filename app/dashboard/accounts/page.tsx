@@ -1,14 +1,22 @@
 'use client';
 import React from 'react';
-import { columns } from './columns';
-import { DataTable } from '@/components/shared/data-table/data-table';
-import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Loader2, Plus } from 'lucide-react';
-import { useBulkDeleteAccounts } from '@/features/accounts/api/use-bulk-delete-accounts';
+import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
+// Components
+import { DataTable } from '@/components/shared/data-table/data-table';
+import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+// Icons
+import { Loader2, Plus } from 'lucide-react';
+// Columns
+import { columns } from './_components/columns';
+// API
+import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
+import { useBulkDeleteAccounts } from '@/features/accounts/api/use-bulk-delete-accounts';
+// Hooks
 import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
+// Types
+import { Account } from '@/types/account';
 
 const Accounts = () => {
   const bulkDeleteAccounts = useBulkDeleteAccounts();
@@ -18,9 +26,11 @@ const Accounts = () => {
 
   const isDisabled = accountsQuery.isLoading || bulkDeleteAccounts.isPending;
 
-  const handleDelete = (row: any[]) => {
-    const ids = row.map(r => r.original.id);
+  const handleDelete = (rows: Row<Account>[]) => {
+    const ids = rows.map(row => row.original.id);
     const count = ids.length;
+
+    console.log('Rows',rows.map(row => row.original)); // Log the actual account data
 
     // Show appropriate loading toast
     const loadingMessage = count === 1 ? 'Deleting account...' : `Deleting ${count} accounts...`;
@@ -71,8 +81,12 @@ const Accounts = () => {
         onDelete={handleDelete}
         disabled={isDisabled}
         headerContent={
-          <Button onClick={() => { newAccount.onOpen();}} size="sm" >
-            <Plus className='size-4 mr-2' />
+          <Button
+		    size="sm"
+		  	onClick={() => { newAccount.onOpen();}}
+            className='w-full lg:w-auto'
+		 >
+            <Plus className='size-4' />
 			Add new
           </Button>
         }

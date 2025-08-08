@@ -10,14 +10,10 @@ import AccountColumn from './account-column/account-column';
 import CategoryColumn from './category-column/category-column';
 // icons
 import { ArrowUpDown } from 'lucide-react';
-// hono
-import { InferResponseType } from 'hono';
-import { client } from '@/lib/hono';
 // utils
 import { format } from 'date-fns';
 import { formatAmount } from '@/lib/utils';
-
-export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>['data'][0];
+import { ResponseType } from '@/types/transaction';
 
 export const columns: ColumnDef<ResponseType>[] = [
   {

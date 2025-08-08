@@ -38,16 +38,6 @@ export type GetTransactionsResponse = {
   data: TransactionWithAccountAndCategory[];
 };
 
-// export type GetTransactionsResponse = {
-//   success: true;
-//   data: Transaction[];
-// }
-
-export type GetTransactionResponse = {
-	success: true,
-	data: Transaction
-}
-
 export type CreateTransactionResponse = {
   success: true;
   data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>;

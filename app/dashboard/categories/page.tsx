@@ -1,14 +1,21 @@
 'use client';
 import React from 'react';
-import { columns } from './columns';
+import { Row } from '@tanstack/react-table';
+import { toast } from 'sonner';
+// Components
 import { DataTable } from '@/components/shared/data-table/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { columns } from './_components/columns';
+// Icons
 import { Loader2, Plus } from 'lucide-react';
-import { toast } from 'sonner';
+// API
 import { useGetCategories } from '@/features/categories/api/use-get-categories';
 import { useBulkDeleteCategories } from '@/features/categories/api/use-bulk-delete-categories';
+// Hooks
 import { useNewCategory } from '@/features/categories/hooks/use-new-category';
-import { Button } from '@/components/ui/button';
+// Types
+import { Category } from '@/types/category';
 
 const Categories = () => {
   const bulkDeleteCategories = useBulkDeleteCategories();
@@ -18,8 +25,8 @@ const Categories = () => {
 
   const isDisabled = categoriesQuery.isLoading || bulkDeleteCategories.isPending;
 
-  const handleDelete = (row: any[]) => {
-    const ids = row.map(r => r.original.id);
+  const handleDelete = (rows: Row<Category>[]) => {
+    const ids = rows.map(row => row.original.id);
     const count = ids.length;
 
     // Show appropriate loading toast
@@ -71,8 +78,12 @@ const Categories = () => {
         onDelete={handleDelete}
         disabled={isDisabled}
         headerContent={
-          <Button onClick={() => { newCategory.onOpen(); }} size="sm" >
-            <Plus className='size-4 mr-2' />
+          <Button
+		  	size="sm"
+		  	onClick={() => { newCategory.onOpen(); }}
+            className='w-full lg:w-auto'
+          >
+            <Plus className='size-4' />
 				Add new
           </Button>
         }

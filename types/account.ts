@@ -1,24 +1,19 @@
-import { Transaction } from './transaction';
+import { client } from '@/lib/hono';
+import { InferResponseType } from 'hono';
 
 export type Account = {
-	id: string;
-	name: string;
-	availableBalance: number;
-	currentBalance: number;
-	officialName: string;
-	mask: string;
-	institutionId: string;
-	type: string;
-	subtype: string;
-	shareableId: string;
-	businessId: string;
-	transactions?: Transaction[];
-	bankId: string;
-	plaidId: string;
-	createdAt: string;
-	updatedAt: string;
+  id: string;
+  name: string;
+  businessId: string;
+  bankId: string | null;
+  plaidId: string | null;
+  createdAt: string;
+  updatedAt: string;
 };
 
+export type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>['data'][0];
+
+// TODO: change these
 const AccountTypes = [
   'depository',
   'credit',

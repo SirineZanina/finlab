@@ -1,14 +1,26 @@
+import { client } from '@/lib/hono';
+import { InferResponseType } from 'hono';
+
 export type Transaction = {
 	id: string;
 	name: string;
+	account: {
+		id: string;
+		name: string;
+	},
+	category: {
+		id: string;
+		name: string;
+	} | null,
 	amount: number;
-	paymentChannel: string;
-	pending: boolean;
-	image?: string;
-	type: string;
-	category: string;
-	createdAt: Date;
+	notes: string | null;
+	payee: string;
+	date: string; // ISO date string
 }
+
+export type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>['data'][0];
+
+// TODO: possibly remove this
 
 export type getInstitutionProps = {
 	institutionId: string;

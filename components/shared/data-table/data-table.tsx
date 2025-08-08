@@ -64,44 +64,42 @@ export function DataTable<TData, TValue>({
   return (
     <div>
       <ConfirmDialog />
-      <div className="flex items-center justify-between py-4">
+      <div className="flex flex-col lg:flex-row gap-2 lg:items-center lg:justify-between py-4">
         <Input
           placeholder={`Filter by ${filterKey}`}
           value={(table.getColumn(filterKey)?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
             table.getColumn(filterKey)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm bg-white"
+          className="w-full lg:max-w-sm bg-white"
         />
-        <div className='flex items-center gap-2'>
-          <div className='flex items-center gap-2'>
-            {table.getFilteredSelectedRowModel().rows.length > 0 && (
-              <Button
-                disabled={disabled}
-                size='sm'
-                variant='outline'
-                className='ml-auto font-normal text-xs'
-                onClick={async () => {
-                  const selectedCount = table.getFilteredSelectedRowModel().rows.length;
-                  const title = 'Are you sure?';
-                  const message = selectedCount === 1
-                    ? `You are about to delete this ${deleteEntityName}. This action cannot be undone.`
-                    : `You are about to delete ${selectedCount} ${deleteEntityNamePlural}. 
-					This action cannot be undone.`;
+        <div className='flex flex-col w-full lg:w-auto lg:flex-row items-center gap-2'>
+          {table.getFilteredSelectedRowModel().rows.length > 0 && (
+            <Button
+              disabled={disabled}
+              size='sm'
+              variant='outline'
+              className='w-full lg:w-auto font-normal text-xs'
+              onClick={async () => {
+                const selectedCount = table.getFilteredSelectedRowModel().rows.length;
+                const title = 'Are you sure?';
+                const message = selectedCount === 1
+                  ? `You are about to delete this ${deleteEntityName}. This action cannot be undone.`
+                  : `You are about to delete ${selectedCount} ${deleteEntityNamePlural}. 
+              This action cannot be undone.`;
 
-                  const ok = await confirm({ title, message });
-                  if (ok) {
-                    onDelete(table.getFilteredSelectedRowModel().rows);
-                  }
-                  table.resetRowSelection();
-                }}
-			  >
-                <TrashIcon className='size-4 mr-2'/>
-				Delete ({table.getFilteredSelectedRowModel().rows.length})
-              </Button>
-            )}
-          </div>
-		  {headerContent}
+                const ok = await confirm({ title, message });
+                if (ok) {
+                  onDelete(table.getFilteredSelectedRowModel().rows);
+                }
+                table.resetRowSelection();
+              }}
+            >
+              <TrashIcon className='size-4'/>
+        Delete ({table.getFilteredSelectedRowModel().rows.length})
+            </Button>
+          )}
+          {headerContent}
         </div>
       </div>
       <div className="overflow-hidden rounded-md border bg-white">
