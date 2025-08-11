@@ -1,12 +1,6 @@
-import { Transaction, User } from '@prisma/client';
+import { Transaction } from '@prisma/client';
 import { Prisma } from '@prisma/client';
-
-// ─── Route Handler Variables ───────────────────────────────────────
-export type GetTransactionsVariables = {
-  userId: string;
-  user: User;
-  businessId: string;
-}
+import { ApiSuccessResponse } from './common';
 
 export type TransactionWithAccountAndCategory = Prisma.TransactionGetPayload<{
   select: {
@@ -32,33 +26,17 @@ export type TransactionWithAccountAndCategory = Prisma.TransactionGetPayload<{
 }>;
 
 // ─── API Response Types ───────────────────────────────────────
-export type GetTransactionsResponse = {
-  success: true;
-  data: TransactionWithAccountAndCategory[];
-};
+export type GetTransactionsResponse = ApiSuccessResponse<TransactionWithAccountAndCategory[]>;
 
-export type CreateTransactionResponse = {
-  success: true;
-  data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>;
-  message: string;
-}
+export type GetTransactionResponse = ApiSuccessResponse<TransactionWithAccountAndCategory>;
 
-export type UpdateTransactionResponse = {
-  success: true;
-  data: Transaction;
-  message: string;
-}
+export type CreateTransactionResponse = ApiSuccessResponse<Omit<Transaction, 'id' | 'createdAt' | 'updatedAt'>>;
 
-export type BulkDeleteTransactionsResponse = {
-	success: true;
-	message: string;
-	data: {
-		deletedCount: number;
-		deletedTransactionsIds: string[];
-	};
-}
+export type UpdateTransactionResponse = ApiSuccessResponse<Transaction>;
 
-export type DeleteTransactionResponse = {
-  success: true;
-  message: string;
-}
+export type BulkDeleteTransactionsResponse = ApiSuccessResponse<{
+  deletedCount: number;
+  deletedTransactionsIds: string[];
+}>;
+
+export type DeleteTransactionResponse = ApiSuccessResponse<{ id: string }>;

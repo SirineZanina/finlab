@@ -1,10 +1,18 @@
-export interface ApiSuccessResponse<T> {
+import { User } from '@prisma/client';
+
+export type GetApiVariables = {
+  userId: string;
+  user: User;
+  businessId: string;
+}
+
+export type ApiSuccessResponse<T> ={
   success: true;
   data: T;
   message?: string;
 }
 
-export interface ApiErrorResponse {
+export type ApiErrorResponse = {
   success: false;
   error: {
     code: string;
@@ -13,9 +21,7 @@ export interface ApiErrorResponse {
   };
 }
 
-export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
-
-export interface PaginatedResponse<T> {
+export type PaginatedResponse<T> = {
   data: T[];
   pagination: {
     page: number;
@@ -24,3 +30,4 @@ export interface PaginatedResponse<T> {
     totalPages: number;
   };
 }
+

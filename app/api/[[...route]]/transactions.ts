@@ -18,13 +18,13 @@ import {
   CreateTransactionResponse,
   DeleteTransactionResponse,
   GetTransactionsResponse,
-  GetTransactionsVariables,
   UpdateTransactionResponse
 } from '@/types/api/transactions';
+import { GetApiVariables } from '@/types/api/common';
 
 // Main transactions router
 export const transactionsRouter = new Hono<{
-  Variables: GetTransactionsVariables;
+  Variables: GetApiVariables;
 }>()
   // GET /transactions
   .get('/',
@@ -418,6 +418,9 @@ export const transactionsRouter = new Hono<{
       const response: DeleteTransactionResponse = {
         success: true,
         message: `Transaction with id ${transactionDeleted.id} deleted successfully`,
+        data: {
+          id: transactionDeleted.id
+        }
       };
 
       return c.json<DeleteTransactionResponse>(response, 200);

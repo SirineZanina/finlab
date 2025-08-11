@@ -1,8 +1,8 @@
 
-import { AccountType } from '@/types/account';
-import { CategoryCount } from '@/types/category';
-import { Transaction } from '@/types/transaction';
+import { ActiveDaysData } from '@/types/api/summary';
+import { Transaction } from '@/types/client/entities';
 import { type ClassValue, clsx } from 'clsx';
+import { eachDayOfInterval, isSameDay } from 'date-fns';
 import qs from 'query-string';
 import { twMerge } from 'tailwind-merge';
 
@@ -215,4 +215,45 @@ export function convertAmountFromMiliunits(amount: number) {
 export function convertAmountToMiliunits(amount: number) {
   // Convert the amount to miliunits (1 unit = 1000 miliunits)
   return Math.round(amount * 1000);
+}
+
+export function calculatePercentageChange(
+  current: number,
+  previous: number
+) {
+  if (previous === 0) {
+    return previous === current ? 0 : 100;
+  }
+
+  return ((current - previous) / Math.abs(previous)) * 100;
+}
+
+export function fillMissingDays(
+  activeDays: ActiveDaysData[],
+  starDate: Date,
+  endDate: Date
+) {
+  if (!activeDays || activeDays.length === 0) {
+    return [];
+  }
+
+  const allDays = eachDayOfInterval({
+    start: starDate,
+    end: endDate,
+  });
+
+  const transactionsByDays = allDays.map((day) => {
+    const found = activeDays.find((d) => isSameDay(d.date, day));
+
+    if (!found){
+      return {
+        date: day,
+        income: 0,
+        expenses: 0,
+      };
+    }
+    return found;
+  });
+
+  return transactionsByDays;
 }
