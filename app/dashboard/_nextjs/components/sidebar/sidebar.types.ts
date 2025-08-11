@@ -1,4 +1,4 @@
-import { User } from '@/types/user';
+import { User } from '@/types/client/user';
 
 export type SidebarProps = {
 	user: User

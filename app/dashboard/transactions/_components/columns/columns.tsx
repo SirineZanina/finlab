@@ -13,7 +13,10 @@ import { ArrowUpDown } from 'lucide-react';
 // utils
 import { format } from 'date-fns';
 import { formatAmount } from '@/lib/utils';
-import { ResponseType } from '@/types/transaction';
+import { InferResponseType } from 'hono';
+import { client } from '@/lib/hono';
+
+type ResponseType = InferResponseType<typeof client.api.transactions.$get, 200>['data'][0];
 
 export const columns: ColumnDef<ResponseType>[] = [
   {

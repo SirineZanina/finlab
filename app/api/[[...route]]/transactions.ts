@@ -235,6 +235,7 @@ export const transactionsRouter = new Hono<{
     })
 
   // POST /transactions/bulk-create
+// POST /transactions/bulk-create
   .post('/bulk-create',
     withSession,
     zValidator('json',
@@ -245,6 +246,7 @@ export const transactionsRouter = new Hono<{
       const transactionsData = c.req.valid('json');
 
       if (!businessId) {
+        console.log('ERROR: No business ID provided');
         return c.json({ error: 'Unauthorized'}, 401);
       }
 
@@ -266,20 +268,23 @@ export const transactionsRouter = new Hono<{
           // Check if all provided accounts are valid
           const invalidAccountIds = accountIds.filter(id => !validAccountIds.has(id));
           if (invalidAccountIds.length > 0) {
+            console.log('ERROR: Invalid account IDs:', invalidAccountIds);
             throw new HTTPException(403, {
               message: `Invalid account IDs: ${invalidAccountIds.join(', ')}`
             });
           }
 
-          // Create all transactions
+		   // Add slight delays to ensure unique createdAt timestamps
+          const dataWithUniqueTimestamps = transactionsData.map((transaction, index) => ({
+            ...transaction,
+            // Add microseconds to ensure uniqueness
+            createdAt: new Date(Date.now() + index),
+            updatedAt: new Date(Date.now() + index)
+          }));
+
           const createdTransactions = await tx.transaction.createMany({
-            data: transactionsData.map(transaction => ({
-              ...transaction,
-              // Ensure any required fields are included
-              createdAt: new Date(),
-              updatedAt: new Date()
-            })),
-            skipDuplicates: false // Set to true if you want to skip duplicates
+            data: dataWithUniqueTimestamps,
+            skipDuplicates: false
           });
 
           return createdTransactions;
@@ -297,13 +302,15 @@ export const transactionsRouter = new Hono<{
 
       } catch (error) {
         if (error instanceof HTTPException) {
+          console.log('HTTPException thrown, re-throwing');
           throw error;
         }
 
         console.error('Bulk create transactions error:', error);
+
         return c.json({
           success: false,
-          error: 'Failed to create transactions'
+          error: 'Failed to create transactions',
         }, 500);
       }
     }
@@ -410,7 +417,7 @@ export const transactionsRouter = new Hono<{
 
       const response: DeleteTransactionResponse = {
         success: true,
-        message: `Transaction with id ${transactionDeleted.id} deleted successfully`
+        message: `Transaction with id ${transactionDeleted.id} deleted successfully`,
       };
 
       return c.json<DeleteTransactionResponse>(response, 200);

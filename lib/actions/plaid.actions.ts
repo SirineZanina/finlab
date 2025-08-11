@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 import { addMultipleAccountsFromPlaid } from './dwolla.actions';
 import { createBankAccount } from './account.actions';
 import { AppError } from '../errors/appError';
-import { ExchangePublicTokenProps, User } from '@/types/user';
+import { ExchangePublicTokenProps, User } from '@/types/client/user';
 import { encryptId, parseStringify } from '../utils';
 
 export const createLinkToken = async (user: User) => {

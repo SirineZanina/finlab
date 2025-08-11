@@ -7,8 +7,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ArrowUpDown } from 'lucide-react';
 // Actions
 import { Actions } from './actions/actions';
-// Types
-import { ResponseType } from '@/types/account';
+import { InferResponseType } from 'hono';
+import { client } from '@/lib/hono';
+
+type ResponseType = InferResponseType<typeof client.api.accounts.$get, 200>['data'][0];
 
 export const columns: ColumnDef<ResponseType>[] = [
   {

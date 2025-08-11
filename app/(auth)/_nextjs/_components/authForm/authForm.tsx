@@ -18,8 +18,8 @@ import { useAuthForm } from './authForm.hooks';
 import { authFormSchema } from '../../schema';
 
 import { signIn, signUp } from '@/lib/actions/user.actions';
-import { BusinessIndustries } from '@/types/business';
-import { RoleType, User } from '@/types/user';
+import { RoleType, User } from '@/types/client/user';
+import { BusinessIndustries } from '@/types/client/business';
 
 const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);

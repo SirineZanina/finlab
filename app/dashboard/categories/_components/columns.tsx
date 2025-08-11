@@ -5,7 +5,10 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { ColumnDef } from '@tanstack/react-table';
 import { ArrowUpDown } from 'lucide-react';
 import { Actions } from './actions/actions';
-import { ResponseType } from '@/types/category';
+import { InferResponseType } from 'hono';
+import { client } from '@/lib/hono';
+
+type ResponseType = InferResponseType<typeof client.api.categories.$get, 200>['data'][0];
 
 export const columns: ColumnDef<ResponseType>[] = [
   {

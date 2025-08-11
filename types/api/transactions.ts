@@ -1,4 +1,5 @@
 import { Transaction, User } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 
 // ─── Route Handler Variables ───────────────────────────────────────
 export type GetTransactionsVariables = {
@@ -6,8 +7,6 @@ export type GetTransactionsVariables = {
   user: User;
   businessId: string;
 }
-
-import { Prisma } from '@prisma/client';
 
 export type TransactionWithAccountAndCategory = Prisma.TransactionGetPayload<{
   select: {

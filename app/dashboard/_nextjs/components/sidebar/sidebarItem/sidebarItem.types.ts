@@ -1,5 +1,5 @@
 import { sidebarLinks } from '@/constants';
-import { User } from '@/types/user';
+import { User } from '@/types/client/user';
 
 export type SidebarItemProps = {
 	item: typeof sidebarLinks[number];

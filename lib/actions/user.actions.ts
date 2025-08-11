@@ -10,7 +10,7 @@ import { removeUserFromSession } from '@/app/(auth)/_core/session/session';
 import { AppError } from '../errors/appError';
 import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
 import { extractCustomerIdFromUrl } from '../utils';
-import { LoginParams, SignUpParams } from '@/types/user';
+import { LoginParams, SignUpParams } from '@/types/client/user';
 import { createUserSession } from '@/app/(auth)/_core/session/createUserSession';
 
 // ================ SIGN IN ================

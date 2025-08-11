@@ -90,6 +90,8 @@ const ImportCard = ({
 	  date: format(parse(item.date, dateFormat, new Date()), outputFormat),
     }));
 
+    console.log('Formatted Data:', formattedData);
+
     onSubmit(formattedData);
   };
 

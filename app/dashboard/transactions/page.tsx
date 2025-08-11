@@ -20,9 +20,10 @@ import { columns } from './_components/columns/columns';
 // Hooks
 import { useNewTransaction } from '@/features/transactions/hooks/use-new-transaction';
 // Types
-import { Transaction } from '@/types/transaction';
 import { INITIAL_IMPORT_RESULTS, VARIANTS } from './page.types';
 import { formattedDataType } from './_components/import-card/import-card.types';
+import { Transaction } from '@/types/client/entities';
+import { useBulkCreateTransactions } from '@/features/transactions/api/use-bulk-create-transactions';
 
 const Transactions = () => {
   const [AccountDialog, confirm] = useSelectAccount();
@@ -44,6 +45,7 @@ const Transactions = () => {
   const transactionsQuery = useGetTransactions();
   const transactions = transactionsQuery.data || [];
   const newTransaction = useNewTransaction();
+  const bulkCreateTransactions = useBulkCreateTransactions();
 
   const bulkDeleteTransactions = useBulkDeleteTransactions();
 
@@ -52,6 +54,30 @@ const Transactions = () => {
   const onSubmitImport = async (
     values: formattedDataType[],
   ) => {
+    const accountId = await confirm();
+    if (!accountId) {
+      return toast.error('Please select an account to continue');
+    }
+
+    const data = values.map((value) => ({
+      accountId: accountId as string,
+      amount: value.amount as number,
+      date: new Date(value.date).toISOString(),
+      name: value.payee as string,
+      payee: value.payee as string,
+      paymentChannel: 'import',
+      // Optional fields - include if available in your data
+      notes: value.notes as string ?? '',
+      pending: false,             // or value.pending if available
+      image: undefined,           // or value.image if available
+      categoryId: undefined,      // or value.categoryId if available
+    }));
+
+    bulkCreateTransactions.mutate(data, {
+      onSuccess: () => {
+        onCancelImport();
+      }
+    });
 
   };
 
@@ -102,6 +128,7 @@ const Transactions = () => {
   if (variant === VARIANTS.IMPORT) {
     return (
       <>
+	 	<AccountDialog />
 	  	<ImportCard
           data={importResults.data}
 		  onCancel={onCancelImport}

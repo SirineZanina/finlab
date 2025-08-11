@@ -1,6 +1,6 @@
 'use client';
 import React, { createContext } from 'react';
-import { SessionData } from '@/types/session';
+import { SessionData } from '@/types/client/session';
 
 const defaultSession: SessionData = {
   user: null,

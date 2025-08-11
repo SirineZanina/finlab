@@ -5,7 +5,7 @@ import {Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { getCurrentUser } from '@/app/(auth)/_nextjs/currentUser';
 import { SessionProvider } from '@/app/components/sessionProvider';
-import { SessionData } from '@/types/session';
+import { SessionData } from '@/types/client/session';
 import { QueryProvider } from '@/providers/query-provider';
 import { SheetProvider } from '@/providers/sheet-provider';
 import { Toaster } from '@/components/ui/sonner';
