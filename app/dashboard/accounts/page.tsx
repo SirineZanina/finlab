@@ -1,20 +1,19 @@
 'use client';
 import React from 'react';
+import { Loader2, Plus } from 'lucide-react';
 import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
-// Components
-import { DataTable } from '@/components/shared/data-table/data-table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-// Icons
-import { Loader2, Plus } from 'lucide-react';
-// Columns
-import { columns } from './_components/columns';
-// API
+// Features
 import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
 import { useBulkDeleteAccounts } from '@/features/accounts/api/use-bulk-delete-accounts';
 // Hooks
 import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
+// Components
+import { DataTable } from '@/components/shared/data-table/data-table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+
+import { columns } from './_components/columns';
 // Types
 import { Account } from '@/types/account';
 

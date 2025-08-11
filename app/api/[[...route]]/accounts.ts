@@ -1,17 +1,18 @@
-// zod
-import z from 'zod';
-import { zValidator } from '@hono/zod-validator';
-// hono
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-// prisma
+
+import z from 'zod';
+import { zValidator } from '@hono/zod-validator';
+
 import { Account } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
-// middleware
+// Middleware
 import { withSession } from '@/lib/middleware';
-// utils
+// Utils
 import { parseStringify } from '@/lib/utils';
-// api types
+// Schema types
+import { CreateAccountSchema, UpdateAccountSchema } from '@/types/schemas/account-schema';
+// Api types
 import {
   CreateAccountResponse,
   DeleteAccountResponse,
@@ -20,8 +21,6 @@ import {
   GetAccountsVariables,
   UpdateAccountResponse }
   from '@/types/api/accounts';
-// schema types
-import { CreateAccountSchema, UpdateAccountSchema } from '@/types/schemas/account-schema';
 
 // Main accounts router
 export const accountsRouter = new Hono<{

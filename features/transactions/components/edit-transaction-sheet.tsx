@@ -1,16 +1,6 @@
 import React from 'react';
-// components
-import TransactionForm from '@/features/transactions/components/transaction-form/transaction-form';
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle
-} from '@/components/ui/sheet';
-// icons
 import { Loader2 } from 'lucide-react';
-// api
+// Features
 import { useGetTransaction } from '@/features/transactions/api/use-get-transaction';
 import { useEditTransaction } from '@/features/transactions/api/use-edit-transaction';
 import { useDeleteTransaction } from '@/features/transactions/api/use-delete-transaction';
@@ -20,10 +10,19 @@ import { useCreateCategory } from '@/features/categories/api/use-create-category
 
 import { useGetAccounts } from '@/features/accounts/api/use-get-accounts';
 import { useCreateAccount } from '@/features/accounts/api/use-create-account';
-// hooks
-import { useConfirm } from '@/hooks/use-confirm';
+// Hooks
+import { useConfirm } from '@/hooks/use-confirm/use-confirm';
 import { useOpenTransaction } from '@/features/transactions/hooks/use-open-transaction';
-// types
+// Components
+import TransactionForm from '@/features/transactions/components/transaction-form/transaction-form';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle
+} from '@/components/ui/sheet';
+// Types
 import { ApiFormValues } from '@/features/transactions/components/transaction-form/transaction-form.types';
 
 const EditTransactionSheet = () => {

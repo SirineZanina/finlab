@@ -1,19 +1,19 @@
 'use client';
 import React from 'react';
+import { Loader2, Plus } from 'lucide-react';
 import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
-// Components
-import { DataTable } from '@/components/shared/data-table/data-table';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from '@/components/ui/button';
-import { columns } from './_components/columns';
-// Icons
-import { Loader2, Plus } from 'lucide-react';
 // API
 import { useGetCategories } from '@/features/categories/api/use-get-categories';
 import { useBulkDeleteCategories } from '@/features/categories/api/use-bulk-delete-categories';
 // Hooks
 import { useNewCategory } from '@/features/categories/hooks/use-new-category';
+// Components
+import { DataTable } from '@/components/shared/data-table/data-table';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+
+import { columns } from './_components/columns';
 // Types
 import { Category } from '@/types/category';
 

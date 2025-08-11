@@ -7,7 +7,7 @@ import { useGetCategory } from '@/features/categories/api/use-get-category';
 import { Loader2 } from 'lucide-react';
 import { useEditCategory } from '@/features/categories/api/use-edit-category';
 import { useDeleteCategory } from '@/features/categories/api/use-delete-category';
-import { useConfirm } from '@/hooks/use-confirm';
+import { useConfirm } from '@/hooks/use-confirm/use-confirm';
 
 const EditCategorySheet = () => {
   const { isOpen, onClose, id } = useOpenCategory();

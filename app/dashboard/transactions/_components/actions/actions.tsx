@@ -1,5 +1,11 @@
 'use client';
-// components
+import { Edit, MoreHorizontal, Trash } from 'lucide-react';
+// Features
+import { useDeleteTransaction } from '@/features/transactions/api/use-delete-transaction';
+// Hooks
+import { useOpenTransaction } from '@/features/transactions/hooks/use-open-transaction';
+import { useConfirm } from '@/hooks/use-confirm/use-confirm';
+// Components
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,14 +13,7 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-// icons
-import { Edit, MoreHorizontal, Trash } from 'lucide-react';
-// api
-import { useDeleteTransaction } from '@/features/transactions/api/use-delete-transaction';
-// hooks
-import { useOpenTransaction } from '@/features/transactions/hooks/use-open-transaction';
-import { useConfirm } from '@/hooks/use-confirm';
-// types
+// Types
 import { ActionsProps } from './actions.types';
 
 export const Actions = ({ id }: ActionsProps) => {

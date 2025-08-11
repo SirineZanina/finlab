@@ -2,6 +2,11 @@
 import React, { useState } from 'react';
 import { Row } from '@tanstack/react-table';
 import { toast } from 'sonner';
+// Features
+import { useBulkDeleteTransactions } from '@/features/transactions/api/use-bulk-delete-transactions';
+import { useGetTransactions } from '@/features/transactions/api/use-get-transactions';
+
+import { useSelectAccount } from '@/features/accounts/hooks/use-select-account';
 // Components
 import { DataTable } from '@/components/shared/data-table/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -12,24 +17,20 @@ import ImportCard from './_components/import-card/import-card';
 import { Loader2, Plus } from 'lucide-react';
 // Columns
 import { columns } from './_components/columns/columns';
-// API
-import { useBulkDeleteTransactions } from '@/features/transactions/api/use-bulk-delete-transactions';
-import { useGetTransactions } from '@/features/transactions/api/use-get-transactions';
 // Hooks
 import { useNewTransaction } from '@/features/transactions/hooks/use-new-transaction';
 // Types
 import { Transaction } from '@/types/transaction';
 import { INITIAL_IMPORT_RESULTS, VARIANTS } from './page.types';
+import { formattedDataType } from './_components/import-card/import-card.types';
 
 const Transactions = () => {
-
+  const [AccountDialog, confirm] = useSelectAccount();
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
 
   const onUpload = (results: typeof INITIAL_IMPORT_RESULTS) => {
-    // Handle the upload results here
-    console.log('Upload results:', results);
-    // You can set the variant to IMPORT if you want to switch views
+    // Set the import results and switch to the import variant
     setImportResults(results);
     setVariant(VARIANTS.IMPORT);
 
@@ -47,6 +48,12 @@ const Transactions = () => {
   const bulkDeleteTransactions = useBulkDeleteTransactions();
 
   const isDisabled = transactionsQuery.isLoading || bulkDeleteTransactions.isPending;
+
+  const onSubmitImport = async (
+    values: formattedDataType[],
+  ) => {
+
+  };
 
   const handleDelete = (rows: Row<Transaction>[]) => {
     const ids = rows.map(row => row.original.id);
@@ -98,7 +105,7 @@ const Transactions = () => {
 	  	<ImportCard
           data={importResults.data}
 		  onCancel={onCancelImport}
-          onSubmit={() => {}}
+          onSubmit={onSubmitImport}
         />
 	  </>
     );

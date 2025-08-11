@@ -4,7 +4,7 @@ export type ImportCardProps = {
 	onSubmit: (data: formattedDataType[]) => void;
 }
 
-type formattedDataType = {
+export type formattedDataType = {
 	[key: string]: string | number;
 }
 

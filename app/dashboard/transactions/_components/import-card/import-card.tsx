@@ -73,7 +73,7 @@ const ImportCard = ({
           : transformedRow;
 	  }).filter((row) => row.length > 0)
     };
-    console.log('Mapped Data:', mappedData);
+
     const arrayOfData = mappedData.body.map((row) => {
       return row.reduce((accumulater: TransactionData, cell, index ) => {
         const header = mappedData.headers[index];
@@ -90,7 +90,6 @@ const ImportCard = ({
 	  date: format(parse(item.date, dateFormat, new Date()), outputFormat),
     }));
 
-    console.log('Formatted data:', formattedData);
     onSubmit(formattedData);
   };
 

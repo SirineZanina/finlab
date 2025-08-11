@@ -1,18 +1,17 @@
-// zod
-import z from 'zod';
-import { zValidator } from '@hono/zod-validator';
-// hono
 import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
-// prisma
+
+import z from 'zod';
+import { zValidator } from '@hono/zod-validator';
+
 import { prisma } from '@/lib/prisma';
-// middleware
+// Middleware
 import { withSession } from '@/lib/middleware';
-// utils
+// Utils
 import { parseStringify } from '@/lib/utils';
-// schema types
+// Schema types
 import { CreateCategorySchema, UpdateCategorySchema } from '@/types/schemas/category-schema';
-// api types
+// Api types
 import {
   CreateCategoryResponse,
   DeleteCategoryResponse,
