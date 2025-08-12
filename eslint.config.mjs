@@ -32,7 +32,7 @@ export default defineConfig([
       'no-loop-func': 0,
     },
   },
-   {
+  {
     files: ['**/*.tsx'],
     rules: {
       'no-unused-vars': ['warn'], // Only show unused variable warnings in .tsx files

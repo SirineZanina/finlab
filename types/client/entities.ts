@@ -1,4 +1,4 @@
-export interface TransactionAccount {
+export interface Account {
   id: string;
   name: string;
   businessId: string;
@@ -8,7 +8,7 @@ export interface TransactionAccount {
   updatedAt: string;
 }
 
-export interface TransactionCategory {
+export interface Category {
   id: string;
   name: string;
 }
@@ -16,8 +16,8 @@ export interface TransactionCategory {
 export type Transaction = {
 	id: string;
 	name: string;
-	account: Pick<TransactionAccount, 'id' | 'name'>;
-	category: TransactionCategory | null;
+	account: Pick<Account, 'id' | 'name'>;
+	category: Category | null;
 	amount: number;
 	notes: string | null;
 	payee: string;

@@ -7,7 +7,7 @@ export const useGetAccount = (id?: string) => {
   const query = useQuery({
     enabled: !!id,
     queryKey: ['account', { id }],
-    queryFn: async (): Promise<GetAccountResponse> => {
+    queryFn: async () => {
       try {
         if (!id) {
           throw new AppError('NOT_FOUND', 'Account ID is required', 404);
@@ -21,8 +21,9 @@ export const useGetAccount = (id?: string) => {
           throw new Error(`Failed to fetch accounts: ${response.status}`);
         }
 
-        const responseData = await response.json() as GetAccountResponse;
-        return responseData;
+        const { data } = await response.json();
+        return data;
+
       } catch (error) {
         console.error('Query function error:', error);
         throw error;

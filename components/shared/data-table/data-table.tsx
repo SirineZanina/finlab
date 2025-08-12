@@ -37,7 +37,10 @@ export function DataTable<TData, TValue>({
   deleteEntityNamePlural= 'items'
 }: DataTableProps<TData, TValue>) {
 
-  const [ConfirmDialog, confirm] = useConfirm('','');
+  const [ConfirmDialog, confirm] = useConfirm({
+    defaultTitle: '',
+    defaultMessage: ''
+  });
 
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);

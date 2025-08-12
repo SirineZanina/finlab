@@ -1,6 +1,6 @@
 import React from 'react';
 import { TotalBalanceBoxProps } from './totalBalanceBox.types';
-import AnimatedCounter from '../animatedCounter/animatedCounter';
+import AnimatedCounter from '../../../../../components/shared/animated-counter/animated-counter';
 import DoughnutChart from '../doughnutChart/doughnutChart';
 
 const TotalBalanceBox = ({

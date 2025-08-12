@@ -15,12 +15,12 @@ import { Button } from '@/components/ui/button';
 
 import { columns } from './_components/columns';
 // Types
-import { Category } from '@/types/category';
+import { Category } from '@/types/client/entities';
 
-const Categories = () => {
+const CategoriesPage = () => {
   const bulkDeleteCategories = useBulkDeleteCategories();
   const categoriesQuery = useGetCategories();
-  const categories = categoriesQuery.data?.data || [];
+  const categories = categoriesQuery.data || [];
   const newCategory = useNewCategory();
 
   const isDisabled = categoriesQuery.isLoading || bulkDeleteCategories.isPending;
@@ -94,4 +94,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default CategoriesPage;

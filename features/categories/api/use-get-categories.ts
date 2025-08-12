@@ -13,8 +13,8 @@ export const useGetCategories = () => {
           throw new Error(`Failed to fetch categories: ${response.status}`);
         }
 
-        const responseData = await response.json();
-        return responseData;
+        const { data } = await response.json();
+        return data;
       } catch (error) {
         console.error('Query function error:', error);
         throw error;

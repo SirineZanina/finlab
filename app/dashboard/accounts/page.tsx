@@ -15,12 +15,12 @@ import { Button } from '@/components/ui/button';
 
 import { columns } from './_components/columns';
 // Types
-import { Account } from '@/types/account';
+import { Account } from '@/types/client/entities';
 
-const Accounts = () => {
+const AccountsPage = () => {
   const bulkDeleteAccounts = useBulkDeleteAccounts();
   const accountsQuery = useGetAccounts();
-  const accounts = accountsQuery.data?.data || [];
+  const accounts = accountsQuery.data || [];
   const newAccount = useNewAccount();
 
   const isDisabled = accountsQuery.isLoading || bulkDeleteAccounts.isPending;
@@ -96,4 +96,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default AccountsPage;

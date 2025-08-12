@@ -31,6 +31,7 @@ export const useGetTransactions = () => {
         }
 
         const responseData = await response.json();
+
         return responseData.data.map((transaction) => ({
           ...transaction,
           amount: convertAmountFromMiliunits(transaction.amount)

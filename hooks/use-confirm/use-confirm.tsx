@@ -9,12 +9,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { ConfirmOptions } from './use-confirm.types';
+import { ConfirmOptions, UseConfirmProps } from './use-confirm.types';
 
-export const useConfirm = (
-  defaultTitle: string,
-  defaultMessage: string,
-) : [() => JSX.Element, () => Promise<boolean>] => {
+export const useConfirm = ({
+  defaultTitle,
+  defaultMessage
+}: UseConfirmProps ) : [() => JSX.Element, (options?: Partial<ConfirmOptions>) => Promise<boolean>] => {
   // State to hold the promise and options for confirmation dialog
   // This will be used to resolve the promise when the user confirms or cancels
   const [promise, setPromise] = useState<{

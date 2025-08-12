@@ -25,7 +25,7 @@ import { formattedDataType } from './_components/import-card/import-card.types';
 import { Transaction } from '@/types/client/entities';
 import { useBulkCreateTransactions } from '@/features/transactions/api/use-bulk-create-transactions';
 
-const Transactions = () => {
+const TransactionsPage = () => {
   const [AccountDialog, confirm] = useSelectAccount();
   const [variant, setVariant] = useState<VARIANTS>(VARIANTS.LIST);
   const [importResults, setImportResults] = useState(INITIAL_IMPORT_RESULTS);
@@ -169,4 +169,4 @@ const Transactions = () => {
   );
 };
 
-export default Transactions;
+export default TransactionsPage;

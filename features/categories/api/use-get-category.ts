@@ -7,7 +7,7 @@ export const useGetCategory = (id?: string) => {
   const query = useQuery({
     enabled: !!id,
     queryKey: ['category', { id }],
-    queryFn: async (): Promise<GetCategoryResponse> => {
+    queryFn: async () => {
       try {
         if (!id) {
           throw new AppError('NOT_FOUND', 'Category ID is required', 404);
@@ -21,8 +21,8 @@ export const useGetCategory = (id?: string) => {
           throw new Error(`Failed to fetch categories: ${response.status}`);
         }
 
-        const responseData = await response.json() as GetCategoryResponse;
-        return responseData;
+        const { data } = await response.json();
+        return data;
       } catch (error) {
         console.error('Query function error:', error);
         throw error;
