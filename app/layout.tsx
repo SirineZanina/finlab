@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 import {Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { getCurrentUser } from '@/app/(auth)/_nextjs/currentUser';
-import { SessionProvider } from '@/app/components/sessionProvider';
+import { SessionProvider } from '@/providers/session-provider';
 import { SessionData } from '@/types/client/session';
 import { QueryProvider } from '@/providers/query-provider';
 import { SheetProvider } from '@/providers/sheet-provider';

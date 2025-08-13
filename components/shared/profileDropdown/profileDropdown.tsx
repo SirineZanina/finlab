@@ -11,7 +11,6 @@ import {
 import { ProfileDropdownProps } from './profileDropdown.types';
 import Link from 'next/link';
 import { logOut } from '@/lib/actions/user.actions';
-import { cn } from '@/lib/utils';
 
 export default function ProfileDropdown({
   firstName,
@@ -25,7 +24,7 @@ export default function ProfileDropdown({
 		 <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="cursor-pointer w-10 h-10">
-            <AvatarImage src={profilePhotoUrl || ''} alt="User avatar" />
+            <AvatarImage className='bg-black'  src={profilePhotoUrl || ''} alt="User avatar" />
             <AvatarFallback>{firstName?.[0] ?? 'U'}</AvatarFallback>
           </Avatar>
         </DropdownMenuTrigger>

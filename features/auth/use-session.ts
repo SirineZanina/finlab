@@ -1,5 +1,5 @@
 'use client';
-import { SessionContext } from '@/app/components/sessionProvider';
+import { SessionContext } from '@/providers/session-provider';
 import { useContext } from 'react';
 
 export function useSession() {

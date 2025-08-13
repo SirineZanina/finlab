@@ -7,10 +7,10 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 
 const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemProps) => {
-  const commonClasses = `group text-sm h-full relative flex items-center whitespace-nowrap rounded-md ${
+  const commonClasses = `group text-base h-full relative flex items-center whitespace-nowrap rounded-md ${
     isActive
-      ? ' bg-neutral-200 text-neutral-700 shadow-sm'
-      : 'hover:bg-neutral-200 hover:text-neutral-700 text-neutral-500'
+      ? 'bg-gray-200 text-gray-700 shadow-sm'
+      : 'hover:bg-gray-200 hover:text-gray-700 text-gray-500'
   }`;
 
   // Collapsed sidebar (tooltip mode): icon only
@@ -25,7 +25,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
                   <item.icon
                     width={20}
                     height={20}
-                    className="transition-colors fill-neutral-500 group-hover:text-neutral-700"
+                    className="transition-colors fill-gray-500 group-hover:text-gray-700"
                   />
                 )}
               </div>
@@ -38,8 +38,8 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
                     className={cn(
                       'transition-colors',
                       isActive
-                        ? 'fill-neutral-700'
-                        : 'group-hover:text-neutral-700 fill-neutral-500'
+                        ? 'fill-gray-700'
+                        : 'group-hover:text-gray-700 fill-gray-500'
                     )}
                   />
                 )}
@@ -58,12 +58,12 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
   if (item.isPlaid) {
     return (
       <div className={commonClasses}>
-        <div className="relative font-base text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
+        <div className="relative font-medium text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
           {item.icon && (
             <item.icon
               width={20}
               height={20}
-              className="transition-colors fill-neutral-500 group-hover:text-neutral-700"
+              className="transition-colors fill-gray-500 group-hover:text-gray-700"
             />
           )}
           <PlaidLink user={user} />
@@ -74,7 +74,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
 
   return (
     <Link href={item.route} className={commonClasses}>
-      <div className="relative font-base text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
+      <div className="relative font-medium text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
         {item.icon && (
           <item.icon
             width={20}
@@ -82,8 +82,8 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
             className={cn(
               'transition-colors',
               isActive
-                ? 'fill-neutral-700'
-                : 'group-hover:text-neutral-700 fill-neutral-500'
+                ? 'fill-gray-700'
+                : 'group-hover:text-gray-700 fill-gray-500'
             )}
           />
         )}

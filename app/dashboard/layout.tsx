@@ -1,9 +1,10 @@
 import React from 'react';
-import Header from './_nextjs/components/header/header';
-import Sidebar from './_nextjs/components/sidebar/sidebar';
+import Header from '../../components/shared/header/header';
 import { getCurrentUser } from '../(auth)/_nextjs/currentUser';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
-import MobileNavbar from './_nextjs/components/mobileNavbar/mobileNavbar';
+import MobileNavbar from '../../components/shared/mobileNavbar/mobileNavbar';
+import Sidebar from '@/components/shared/sidebar/sidebar';
+import HeaderBar from '@/components/shared/header-bar/header-bar';
 
 export default async function RootLayout({
   children,
@@ -24,8 +25,9 @@ export default async function RootLayout({
           <CompanyLogo />
           {loggedInUser && <MobileNavbar user={loggedInUser} />}
         </div>
+        <HeaderBar />
         {/* Page Content */}
-        <div className="flex-1 p-6 overflow-y-auto bg-secondary-100">
+        <div className="flex-1 p-6 overflow-y-auto bg-secondary-100/50">
           <Header />
           {children}
         </div>

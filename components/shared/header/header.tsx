@@ -1,12 +1,9 @@
 'use client';
 import React from 'react';
-import ProfileDropdown from '@/app/components/profileDropdown/profileDropdown';
 import HeaderBox from '../headerBox/headerBox';
 import { usePathname } from 'next/navigation';
-import { useSession } from '@/features/auth/use-session';
 
 const Header = () => {
-  const session = useSession();
   const pathname = usePathname();
 
   const subPath = pathname.replace('/dashboard', '').split('/').filter(Boolean)[0];
@@ -33,17 +30,7 @@ const Header = () => {
           pathLocation={pathLocation}
 		  subtitle={subtitle}
         />
-        <div>
-          {session && session.user && (
-            <ProfileDropdown
-              firstName={session.user.firstName}
-              lastName={session.user.lastName}
-              email={session.user.email}
-              profilePhotoUrl={session.user.profilePhotoUrl ?? ''}
-			  className='hidden md:block'
-            />
-          )}
-        </div>
+
       </div>
     </header>
   );
