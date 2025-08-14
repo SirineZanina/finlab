@@ -17,32 +17,33 @@ const Sidebar = ({ user }: SidebarProps) => {
   return (
     <div
       className={cn(
-        isSidebarExpanded ? 'w-[250px]' : 'w-[68px]',
-        ' border-r transition-all duration-300 ease-in-out transform hidden md:flex h-full',
+        isSidebarExpanded ? 'w-[280px]' : 'w-[68px]',
+        'bg-gradient-to-b from-primary-700 to-primary-800 transition-all duration-200 ease-in-out transform hidden md:flex h-full shadow-xl',
       )}
     >
-      <aside className={cn( isSidebarExpanded ? '' : 'items-center justify-center',
+      <aside className={cn(
+        isSidebarExpanded ? '' : 'items-center justify-center',
         'flex h-full flex-col w-full break-words p-6 overflow-x-hidden columns-1'
       )}>
-        {/* Top */}
-		  	 {isSidebarExpanded ? (
-          <CompanyLogo className="mb-7"  />
+        {/* Top - Logo Section */}
+        {isSidebarExpanded ? (
+          <CompanyLogo fillIcon={'#FFFFFF'} fillLogo={'#FFFFFF'} className='mb-7 ml-2'/>
         ) : (
-          <CompanyLogo className="mb-7 " hideTextLogo={true} />
+          <CompanyLogo fillIcon={'#FFFFFF'} hideTextLogo={true} className='mb-7' />
         )}
 
-        <div className="relative">
+        <div className="relative flex-1">
           <div className="flex flex-col gap-2">
             {sidebarLinks.map((item) => {
               const isActive = pathname === item.route;
               if (item.position === 'top') {
                 return (
-                  <div className="space-y-1" key={item.label}>
+                  <div className="space-y-2" key={item.label}>
                     <SidebarItem
                       item={item}
                       isActive={isActive}
                       isSidebarExpanded={isSidebarExpanded}
-					  user={user}
+                      user={user}
                     />
                   </div>
                 );
@@ -50,12 +51,13 @@ const Sidebar = ({ user }: SidebarProps) => {
             })}
           </div>
         </div>
+
         {/* Bottom */}
-        <div className="sticky bottom-0 mt-auto whitespace-nowrap mb-4 transition duration-200 block">
+        <div className="mt-auto mb-4 space-y-2">
           {sidebarLinks.map((item, idx) => {
             if (item.position === 'bottom') {
               return (
-                <div className="space-y-1" key={idx}>
+                <div className="space-y-2" key={idx}>
                   <SidebarItem
                     item={item}
                     isActive={pathname === item.route}
@@ -68,16 +70,19 @@ const Sidebar = ({ user }: SidebarProps) => {
           })}
         </div>
       </aside>
+
+      {/* Toggle Button */}
       <div className="mt-[calc(calc(90vh)-40px)] relative">
         <button
           type="button"
-          className="absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center border border-muted-foreground/20 rounded-full bg-accent shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out"
+          className="absolute bottom-32 right-[-12px] flex h-6 w-6 items-center justify-center border border-primary-400 rounded-full bg-white cursor-pointer transition-all duration-200 ease-in-out
+		 	hover:bg-primary-100 hover:shadow-lg hover:scale-105"
           onClick={toggleSidebar}
         >
           {isSidebarExpanded ? (
-            <ChevronLeftIcon width={16} height={16}/>
+            <ChevronLeftIcon width={12} height={12} className="text-primary-600"/>
           ) : (
-            <ChevronRightIcon width={16} height={16}/>
+            <ChevronRightIcon width={12} height={12} className="text-primary-600"/>
           )}
         </button>
       </div>

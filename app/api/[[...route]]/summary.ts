@@ -100,6 +100,18 @@ export const summaryRouter = new Hono<{
         remaining: Number(currentPeriodRaw.remaining),
       };
 
+	  console.log('Raw database values:', {
+        income: currentPeriodRaw.income,      // Should be 100000
+        expenses: currentPeriodRaw.expenses,   // Should be 0
+        remaining: currentPeriodRaw.remaining  // Should be 100000
+      });
+
+	  console.log('After conversion:', {
+        income: Number(currentPeriodRaw.income) / 1000,      // Should be 100
+        expenses: Number(currentPeriodRaw.expenses) / 1000,   // Should be 0
+        remaining: Number(currentPeriodRaw.remaining) / 1000  // Should be 100
+      });
+
       const lastPeriod = {
         income: Number(lastPeriodRaw.income),
         expenses: Number(lastPeriodRaw.expenses),
@@ -110,16 +122,28 @@ export const summaryRouter = new Hono<{
         currentPeriod.income,
         lastPeriod.income,
       );
+	  console.log('Income:', currentPeriod.income);
+	  console.log('Last Income:', lastPeriod.income);
+
+	  console.log('Income Change:', incomeChange);
 
       const expensesChange = calculatePercentageChange(
         currentPeriod.expenses,
         lastPeriod.expenses,
       );
 
+	  console.log('Expenses:', currentPeriod.expenses);
+	  console.log('Last Expenses:', lastPeriod.expenses);
+	  console.log('Expenses Change:', expensesChange);
+
       const remainingChange = calculatePercentageChange(
         currentPeriod.remaining,
         lastPeriod.remaining,
       );
+
+	  console.log('Remaining:', currentPeriod.remaining);
+	  console.log('Last Remaining:', lastPeriod.remaining);
+	  console.log('Remaining Change:', remainingChange);
 
 	  const categories = await prisma.$queryRaw<CategoryData[]>`
 		SELECT 

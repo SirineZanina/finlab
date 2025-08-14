@@ -12,10 +12,10 @@ import { useConfirm } from '@/hooks/use-confirm/use-confirm';
 const EditCategorySheet = () => {
   const { isOpen, onClose, id } = useOpenCategory();
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    'Are you sure?',
-    'You are about to delete this category.'
-  );
+  const [ConfirmDialog, confirm] = useConfirm({
+    defaultTitle: 'Are you sure?',
+    defaultMessage: 'You are about to delete this category.'
+  });
 
   const categoryQuery = useGetCategory(id);
   const editMutation = useEditCategory(id);
@@ -47,7 +47,7 @@ const EditCategorySheet = () => {
   };
 
   const defaultValues = categoryQuery.data ? {
-    name: categoryQuery.data.data.name
+    name: categoryQuery.data.name
   } : { name: ''};
 
   return (

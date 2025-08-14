@@ -15,8 +15,8 @@ import {
 } from '@/components/ui/card';
 import { AreaChart, BarChart3, FileSearch, LineChart } from 'lucide-react';
 import AreaVariant from '@/components/shared/area-variant/area-variant';
-import BarVarient from '@/components/shared/bar-varient/bar-varient';
-import LineVarient from '@/components/shared/line-varient/line-varient';
+import BarVariant from '@/components/shared/bar-variant/bar-variant';
+import LineVariant from '@/components/shared/line-variant/line-variant';
 
 const Chart = ({
   data = []
@@ -30,7 +30,7 @@ const Chart = ({
   };
 
   return (
-    <Card className='border-none drop-shadow-sm'>
+    <Card className='border border-secondary-200 bg-white rounded-2xl'>
       <CardHeader className='flex space-y-2 lg:space-y-0 lg:flex-row lg:items-center justify-between'>
         <CardTitle className='text-xl line-clamp-1'>Transactions</CardTitle>
         <Select
@@ -80,8 +80,8 @@ const Chart = ({
         ) : (
           <>
 		  	{chartType === 'area' && <AreaVariant data={data} />}
-            {chartType === 'line' && <LineVarient data={data} />}
-            {chartType === 'bar' && <BarVarient data={data} />}
+            {chartType === 'line' && <LineVariant data={data} />}
+            {chartType === 'bar' && <BarVariant data={data} />}
 	   	  </>
         )}
 	  </CardContent>

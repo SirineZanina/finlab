@@ -28,10 +28,10 @@ import { ApiFormValues } from '@/features/transactions/components/transaction-fo
 const EditTransactionSheet = () => {
   const { isOpen, onClose, id } = useOpenTransaction();
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    'Are you sure?',
-    'You are about to delete this transaction.'
-  );
+  const [ConfirmDialog, confirm] = useConfirm({
+    defaultTitle: 'Are you sure?',
+    defaultMessage: 'You are about to delete this transaction.'
+  });
 
   const transactionQuery = useGetTransaction(id);
   const editMutation = useEditTransaction(id);
@@ -44,7 +44,7 @@ const EditTransactionSheet = () => {
       name
 	  });
   };
-  const categoryOptions = (categoryQuery.data?.data ?? []).map((category) => ({
+  const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
 	  label: category.name,
 	  value: category.id
   }));
@@ -56,7 +56,7 @@ const EditTransactionSheet = () => {
       name
 	  });
   };
-  const accountOptions = (accountQuery.data?.data ?? []).map((account) => ({
+  const accountOptions = (accountQuery.data ?? []).map((account) => ({
 	  label: account.name,
 	  value: account.id
   }));

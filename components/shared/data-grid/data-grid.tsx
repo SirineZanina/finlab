@@ -19,7 +19,7 @@ const DataGrid = () => {
 
   if (isLoading) {
     return  (
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-2">
         <DataCardLoading />
         <DataCardLoading />
         <DataCardLoading />
@@ -28,7 +28,7 @@ const DataGrid = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-2 mb-8">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-2">
       <DataCard
         title='Remaining'
         value={data?.remainingAmount}
@@ -42,7 +42,7 @@ const DataGrid = () => {
         value={data?.incomeAmount}
         percentageChange={data?.incomeChange}
         icon={FaArrowTrendUp}
-        variant='default'
+        variant='success'
         dateRange={dateRangeLabel}
       />
 	   <DataCard
@@ -50,7 +50,7 @@ const DataGrid = () => {
         value={data?.expensesAmount}
         percentageChange={data?.expensesChange}
         icon={FaArrowTrendDown}
-        variant='default'
+        variant='danger'
         dateRange={dateRangeLabel}
       />
     </div>

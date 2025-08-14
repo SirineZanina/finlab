@@ -1,4 +1,4 @@
-export type LineVarientProps = {
+export type LineVariantProps = {
 	data?: {
 		date: string;
 		income: number;

@@ -7,11 +7,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { cn } from '@/lib/utils';
 
 const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemProps) => {
-  const commonClasses = `group text-base h-full relative flex items-center whitespace-nowrap rounded-md ${
+  const commonClasses = cn(
+    'group relative flex items-center whitespace-nowrap rounded-xl transition-all duration-200 ease-in-out',
     isActive
-      ? 'bg-gray-200 text-gray-700 shadow-sm'
-      : 'hover:bg-gray-200 hover:text-gray-700 text-gray-500'
-  }`;
+      ? 'bg-white/20 text-white border border-white/30 shadow-lg backdrop-blur-sm'
+      : 'hover:bg-white/10 hover:text-white text-primary-100 border border-transparent hover:border-white/20 hover:shadow-md backdrop-blur-sm'
+  );
 
   // Collapsed sidebar (tooltip mode): icon only
   if (!isSidebarExpanded) {
@@ -20,17 +21,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
         <Tooltip>
           <TooltipTrigger asChild>
             {item.isPlaid ? (
-              <div className={`${commonClasses} py-1.5 px-2 duration-100`}>
-                {item.icon && (
-                  <item.icon
-                    width={20}
-                    height={20}
-                    className="transition-colors fill-gray-500 group-hover:text-gray-700"
-                  />
-                )}
-              </div>
-            ) : (
-              <Link href={item.route} className={`${commonClasses} py-1.5 px-2 duration-100`}>
+              <div className={cn(commonClasses, 'py-3 px-3 justify-center')}>
                 {item.icon && (
                   <item.icon
                     width={20}
@@ -38,15 +29,34 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
                     className={cn(
                       'transition-colors',
                       isActive
-                        ? 'fill-gray-700'
-                        : 'group-hover:text-gray-700 fill-gray-500'
+                        ? 'fill-white'
+                        : 'fill-primary-200 group-hover:fill-white'
+                    )}
+                  />
+                )}
+              </div>
+            ) : (
+              <Link href={item.route} className={cn(commonClasses, 'py-3 px-3 justify-center')}>
+                {item.icon && (
+                  <item.icon
+                    width={20}
+                    height={20}
+                    className={cn(
+                      'transition-colors',
+                      isActive
+                        ? 'fill-white'
+                        : 'fill-primary-200 group-hover:fill-white'
                     )}
                   />
                 )}
               </Link>
             )}
           </TooltipTrigger>
-          <TooltipContent side="left" className="px-3 py-1.5 text-xs" sideOffset={10}>
+          <TooltipContent
+            side="right"
+            className="px-3 py-2 text-sm font-medium bg-gray-900 text-white border-gray-800"
+            sideOffset={12}
+          >
             <span>{item.label}</span>
           </TooltipContent>
         </Tooltip>
@@ -57,37 +67,44 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
   // Expanded sidebar (normal view)
   if (item.isPlaid) {
     return (
-      <div className={commonClasses}>
-        <div className="relative font-medium text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
+      <div className={cn(commonClasses, 'py-3 px-4')}>
+        <div className="flex items-center space-x-4 w-full">
           {item.icon && (
             <item.icon
               width={20}
               height={20}
-              className="transition-colors fill-gray-500 group-hover:text-gray-700"
+              className={cn(
+                'transition-colors flex-shrink-0',
+                isActive
+                  ? 'fill-white'
+                  : 'fill-primary-200 group-hover:fill-white'
+              )}
             />
           )}
-          <PlaidLink user={user} />
+          <div className="flex-1 min-w-0">
+            <PlaidLink user={user} />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <Link href={item.route} className={commonClasses}>
-      <div className="relative font-medium text-sm py-1.5 px-2 flex flex-row items-center space-x-2 rounded-md duration-100">
+    <Link href={item.route} className={cn(commonClasses, 'py-3 px-4')}>
+      <div className="flex items-center space-x-4 w-full">
         {item.icon && (
           <item.icon
             width={20}
             height={20}
             className={cn(
-              'transition-colors',
+              'transition-colors flex-shrink-0',
               isActive
-                ? 'fill-gray-700'
-                : 'group-hover:text-gray-700 fill-gray-500'
+                ? 'fill-white'
+                : 'fill-teal-200 group-hover:fill-white'
             )}
           />
         )}
-        <span>{item.label}</span>
+        <span className="font-medium text-base truncate">{item.label}</span>
       </div>
     </Link>
   );

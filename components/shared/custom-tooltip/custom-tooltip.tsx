@@ -1,5 +1,4 @@
 import { format } from 'date-fns';
-
 import { formatAmount } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { CustomTooltipProps } from './custom-tooltip.types';
@@ -7,13 +6,12 @@ import { CustomTooltipProps } from './custom-tooltip.types';
 const CustomTooltip = ({
   active,
   payload,
-  label
 }: CustomTooltipProps) => {
   // Check if tooltip should be active and has data
   if (!active || !payload || payload.length === 0) return null;
 
   // Get the date from either label or payload
-  const date = label || payload[0]?.payload?.date;
+  const date = payload[0]?.payload?.date;
   if (!date) return null;
 
   // Find income and expenses from payload
@@ -24,33 +22,32 @@ const CustomTooltip = ({
   const expenses = expensesData?.value || 0;
 
   return (
-    <div className='rounded-sm bg-white shadow-sm border overflow-hidden'>
-      <div className='text-sm p-2 px-3 bg-muted text-muted-foreground'>
+    <div className='rounded-md bg-white/95 backdrop-blur-sm shadow-lg border border-gray-200/50 overflow-hidden'>
+      <div className='text-sm p-3 px-4 bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 font-medium'>
         {format(new Date(date), 'MMM dd, yyyy')}
       </div>
-      <Separator />
-      <div className='p-2 px-3 space-y-1'>
+      <Separator className='bg-gray-200/50' />
+      <div className='p-3 px-4 space-y-3'>
         <div className='flex items-center justify-between gap-x-4'>
-          <div className='flex items-center gap-x-2'>
-            <div className='size-1.5 bg-blue-500 rounded-full' />
-            <p className='text-sm text-muted-foreground'>
+          <div className='flex items-center gap-x-3'>
+            <div className='size-2 bg-primary-500 rounded-full shadow-sm' />
+            <p className='text-sm text-gray-600 font-medium'>
               Income
             </p>
           </div>
-          <p className='text-sm text-right font-medium'>
+          <p className='text-sm text-right font-semibold text-gray-900'>
             {formatAmount(income)}
           </p>
         </div>
-      </div>
-      <div className='p-2 px-3 space-y-1'>
+
         <div className='flex items-center justify-between gap-x-4'>
-          <div className='flex items-center gap-x-2'>
-            <div className='size-1.5 bg-rose-500 rounded-full' />
-            <p className='text-sm text-muted-foreground'>
+          <div className='flex items-center gap-x-3'>
+            <div className='size-2 bg-error-500 rounded-full shadow-sm' />
+            <p className='text-sm text-gray-600 font-medium'>
               Expenses
             </p>
           </div>
-          <p className='text-sm text-right font-medium'>
+          <p className='text-sm text-right font-semibold text-gray-900'>
             {formatAmount(expenses * -1)}
           </p>
         </div>

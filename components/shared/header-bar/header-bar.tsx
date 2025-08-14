@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import ProfileDropdown from '../profileDropdown/profileDropdown';
 import { useSession } from '@/features/auth/use-session';
-import { UserCircle2, Command } from 'lucide-react';
+import { UserCircle2, Search, Bell } from 'lucide-react';
 import CommandPalette from '../command-palette/command-palette';
 
 const HeaderBar = () => {
@@ -25,42 +25,51 @@ const HeaderBar = () => {
 
   return (
     <>
-      <header className="sticky top-0 border-b border-gray-800 bg-gray-900/80 backdrop-blur-md shadow-md">
-        <div className="flex justify-between px-4 py-3">
-          {/* Command palette trigger */}
-          <button
-            onClick={() => setCommandPaletteOpen(true)}
-            className="group flex items-center gap-2 px-4 py-2 rounded-md border border-gray-300 bg-white text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors shadow-sm cursor-pointer"
-          >
-            <Command
-              size={16}
-              className="text-gray-500 group-hover:text-gray-700 transition-colors"
-            />
-            <span className="text-sm font-medium">Search…</span>
-            <div className="hidden sm:flex items-center gap-1 ml-auto text-xs text-gray-500">
-              <kbd className="px-1.5 py-0.5 bg-gray-50 border border-gray-300 rounded">
-     			 ⌘
-              </kbd>
-              <kbd className="px-1.5 py-0.5 bg-gray-50 border border-gray-300 rounded">
-     			 K
-              </kbd>
-            </div>
-          </button>
-
-          {/* Profile section */}
-          <div className="flex items-center">
-            {session?.user ? (
-              <ProfileDropdown
-                firstName={session.user.firstName}
-                lastName={session.user.lastName}
-                email={session.user.email}
-                profilePhotoUrl={session.user.profilePhotoUrl ?? ''}
-                className=""
+      <header className='sticky top-0 border-b border-secondary-200 bg-primary-0 px-6 py-4'>
+        <div className='flex items-center justify-between'>
+          {/* Search bar */}
+          <div className='flex-1 max-w-md'>
+            <button
+              onClick={() => setCommandPaletteOpen(true)}
+              className='group w-full flex items-center gap-3 px-4 py-2.5 rounded-xl border border-secondary-200 bg-primary-0 text-secondary-400 hover:bg-other-grey hover:border-primary-300 transition-all duration-200 shadow-sm cursor-pointer'
+            >
+              <Search
+                size={18}
+                className='text-primary-500 flex-shrink-0'
               />
+              <span className='text-sm font-medium text-secondary-400'>Search...</span>
+              <div className='hidden sm:flex items-center gap-1 ml-auto'>
+                <kbd className='px-2 py-1 bg-secondary-100 border border-secondary-200 rounded-md text-xs text-secondary-400 font-medium'>
+                  ⌘
+                </kbd>
+                <kbd className='px-2 py-1 bg-secondary-100 border border-secondary-200 rounded-md text-xs text-secondary-400 font-medium'>
+                  K
+                </kbd>
+              </div>
+            </button>
+          </div>
+
+          {/* Right side - Notifications and Profile */}
+          <div className='flex items-center gap-3 ml-6'>
+            {/* Notification Bell */}
+            <button className='p-2.5 rounded-full text-primary-500 bg-secondary-100 hover:bg-primary-100 transition-all duration-200 cursor-pointer'>
+              <Bell size={20} />
+            </button>
+
+            {/* Profile section */}
+            {session?.user ? (
+              <div className='flex items-center'>
+                <ProfileDropdown
+                  firstName={session.user.firstName}
+                  lastName={session.user.lastName}
+                  email={session.user.email}
+                  profilePhotoUrl={session.user.profilePhotoUrl ?? ''}
+                />
+              </div>
             ) : (
-              <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/60 transition-all duration-200 border border-transparent hover:border-gray-700/50">
+              <button className='flex items-center gap-2 px-4 py-2 rounded-xl text-secondary-400 hover:text-primary-600 hover:bg-other-grey transition-all duration-200 hover:border-secondary-200'>
                 <UserCircle2 size={20} />
-                <span className="text-sm font-medium">Sign In</span>
+                <span className='text-sm font-medium'>Sign In</span>
               </button>
             )}
           </div>

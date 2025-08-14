@@ -28,7 +28,7 @@ const NewTransactionSheet = () => {
       name
     });
   };
-  const categoryOptions = (categoryQuery.data?.data ?? []).map((category) => ({
+  const categoryOptions = (categoryQuery.data ?? []).map((category) => ({
     label: category.name,
     value: category.id
   }));
@@ -40,7 +40,7 @@ const NewTransactionSheet = () => {
       name
     });
   };
-  const accountOptions = (accountQuery.data?.data ?? []).map((account) => ({
+  const accountOptions = (accountQuery.data ?? []).map((account) => ({
     label: account.name,
     value: account.id
   }));

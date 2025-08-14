@@ -23,7 +23,7 @@ export const useSelectAccount = () : [() => JSX.Element, () =>
   const onCreateAccount = (name: string) => accountMutation.mutate({
     name
   });
-  const accountOptions = (accountQuery.data?.data ?? []).map((account) => ({
+  const accountOptions = (accountQuery.data ?? []).map((account) => ({
     label: account.name,
     value: account.id
   }));

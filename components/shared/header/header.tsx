@@ -15,23 +15,27 @@ const Header = () => {
     : 'Home';
 
   const subtitlesMap: Record<string, string> = {
-    home: 'Welcome to your dashboard',
-    banks: 'Manage your bank accounts efficiently',
-    'transaction-history': 'View your complete transaction history',
-    'payment-transfer': 'Transfer funds securely',
+    home: 'Track your financial performance at a glance',
+    banks: 'Manage your bank accounts and connections efficiently',
+    accounts: 'Overview of all your financial accounts in one place',
+    categories: 'Organize and categorize your spending patterns',
+    transactions: 'Complete history of your financial transactions',
+    'transaction-history': 'View and analyze your complete transaction history',
+    'transfer-funds': 'Send money securely between accounts and contacts',
+    'payment-transfer': 'Transfer funds securely to any destination',
+    sales: 'Track your revenue and sales performance',
+    'connect-bank': 'Connect your bank accounts for automatic sync',
+    settings: 'Customize your preferences and account settings',
   };
 
-  const subtitle = subtitlesMap[subPath?.toLowerCase() || 'home'] ?? '';
+  const subtitle = subtitlesMap[subPath?.toLowerCase() || 'home'] ?? 'Manage your financial data effectively';
 
   return (
-    <header>
-      <div className='flex justify-between items-start'>
-        <HeaderBox
-          pathLocation={pathLocation}
-		  subtitle={subtitle}
-        />
-
-      </div>
+    <header className="w-full">
+      <HeaderBox
+        pathLocation={pathLocation}
+        subtitle={subtitle}
+      />
     </header>
   );
 };

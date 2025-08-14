@@ -12,10 +12,10 @@ import { useConfirm } from '@/hooks/use-confirm/use-confirm';
 const EditAccountSheet = () => {
   const { isOpen, onClose, id } = useOpenAccount();
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    'Are you sure?',
-    'You are about to delete this account.'
-  );
+  const [ConfirmDialog, confirm] = useConfirm({
+    defaultTitle: 'Are you sure',
+    defaultMessage: 'You are about to delete this account.'
+  });
 
   const accountQuery = useGetAccount(id);
   const editMutation = useEditAccount(id);
@@ -47,7 +47,7 @@ const EditAccountSheet = () => {
   };
 
   const defaultValues = accountQuery.data ? {
-    name: accountQuery.data.data.name
+    name: accountQuery.data.name
   } : { name: ''};
 
   return (
