@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import ProfileDropdown from '../profileDropdown/profileDropdown';
 import { useSession } from '@/features/auth/hooks/use-session';
-import { UserCircle2, Search, Bell } from 'lucide-react';
+import { UserCircle2, Search } from 'lucide-react';
 import CommandPalette from '../command-palette/command-palette';
 
 const HeaderBar = () => {
@@ -52,9 +52,9 @@ const HeaderBar = () => {
           {/* Right side - Notifications and Profile */}
           <div className='flex items-center gap-3 ml-6'>
             {/* Notification Bell */}
-            <button className='p-2.5 rounded-full text-primary-500 bg-secondary-100 hover:bg-primary-100 transition-all duration-200 cursor-pointer'>
+            {/* <button className='p-2.5 rounded-full text-primary-500 bg-secondary-100 hover:bg-primary-100 transition-all duration-200 cursor-pointer'>
               <Bell size={20} />
-            </button>
+            </button> */}
 
             {/* Profile section */}
             {session?.user ? (
