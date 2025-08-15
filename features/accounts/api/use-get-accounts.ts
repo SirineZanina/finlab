@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
+import { useAuth } from '@/features/auth/hooks/use-auth';
 
 export const useGetAccounts = () => {
+	  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
   const query = useQuery({
     queryKey: ['accounts'],
     queryFn: async () => {
@@ -20,10 +23,11 @@ export const useGetAccounts = () => {
         throw error;
       }
     },
+    enabled: isAuthenticated && !authLoading, // Only run when authenticated
     // Add retry configuration to prevent infinite retries on 404
     retry: (failureCount, error) => {
       // Don't retry on 404 errors (no accounts found)
-      if (error.message.includes('404')) {
+      if (error.message.includes('401') || error.message.includes('404')) {
         return false;
       }
       // Retry other errors up to 3 times

@@ -1,7 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
+import { useAuth } from '@/features/auth/hooks/use-auth';
 
 export const useGetCategories = () => {
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
+
   const query = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
@@ -15,11 +18,14 @@ export const useGetCategories = () => {
 
         const { data } = await response.json();
         return data;
+
       } catch (error) {
         console.error('Query function error:', error);
         throw error;
       }
     },
+    enabled: isAuthenticated && !authLoading, // Only run when authenticated
+
     // Add retry configuration to prevent infinite retries on 404
     retry: (failureCount, error) => {
       // Don't retry on 404 errors (no categories found)

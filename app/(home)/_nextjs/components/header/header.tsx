@@ -5,35 +5,35 @@ import { MenuIcon } from '@/components/assets/icons/menuIcon';
 import { Button } from '@/components/ui/button';
 import ProfileDropdown from '@/components/shared/profileDropdown/profileDropdown';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
-import { useSession } from '@/features/auth/use-session';
+import { useSession } from '@/features/auth/hooks/use-session';
 
 const Header = () => {
   const session = useSession();
 
   return (
-    <header className="sticky top-0 backdrop-blur-md">
+    <header className='sticky top-0 backdrop-blur-lg bg-white/40 z-50'>
       <div className='flex justify-center items-center py-3 bg-black text-white text-xs gap-3'>
-        <p className="text-white/60 hidden md:block ">
+        <p className='text-white/60 hidden md:block'>
 			Manage your cashflow and boost your finances.
         </p>
-        <div className="inline-flex items-center gap-1">
+        <div className='inline-flex items-center gap-1'>
           <p>Get started for free</p>
-          <ArrowRightIcon className="h-4 w-4 inline-flex justify-center items-center"/>
+          <ArrowRightIcon className='h-4 w-4 inline-flex justify-center items-center'/>
         </div>
       </div>
-      <div className="py-5">
-        <div className="container">
-          <div className="flex items-center justify-between">
+      <div className='py-5'>
+        <div className='container'>
+          <div className='flex items-center justify-between'>
             <CompanyLogo />
-            <MenuIcon className="h-5 w-5 md:hidden" />
-            <nav className="text-sm hidden md:flex gap-6 text-secondary-400 items-center font-medium">
-              <Link href="/">Home</Link>
-              <Link href="#features">Features</Link>
-              <Link href="#testimonials">Testimonials</Link>
-              <Link href="#updates">Updates</Link>
-              <Link href="/help">Help</Link>
+            <MenuIcon className='h-5 w-5 md:hidden' />
+            <nav className='text-sm hidden md:flex gap-6 text-secondary-400 items-center font-medium'>
+              <Link href='/'>Home</Link>
+              <Link href='#features'>Features</Link>
+              <Link href='#testimonials'>Testimonials</Link>
+              <Link href='#updates'>Updates</Link>
+              <Link href='/help'>Help</Link>
               { session.user === null ? (
-				 <Link href="/sign-up">
+				 <Link href='/sign-up'>
                   <Button variant={'default'}>
 					Get Started
                   </Button>

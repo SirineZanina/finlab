@@ -63,12 +63,12 @@ async function seedPermissions() {
 async function seedTransactions() {
   console.log('Seeding transactions...');
   const user = await prisma.user.findUnique({
-    where: { email: 'testuser2@gmail.com' },
+    where: { email: 'testsyrine@gmail.com' },
     include: { business: true }
   });
 
   if (!user) {
-    throw new Error('User testuser2@gmail.com not found!');
+    throw new Error('User testsyrine@gmail.com not found!');
   }
 
   console.log(`Found user: ${user.firstName} ${user.lastName}`);

@@ -3,6 +3,7 @@
 import z from 'zod';
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
@@ -17,12 +18,12 @@ import { useAuthForm } from './authForm.hooks';
 import { authFormSchema } from '../../schema';
 
 import { signIn, signUp } from '@/lib/actions/user.actions';
-import { RoleType, User } from '@/types/client/user';
+import { RoleType } from '@/types/client/user';
 import { BusinessIndustries } from '@/types/client/business';
 
 const AuthForm = ({ type }: { type: string }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [user, setUser] = useState<User>();
+  const router = useRouter();
 
   const form = useAuthForm(type);
   const formSchema = authFormSchema(type);
@@ -54,8 +55,10 @@ const AuthForm = ({ type }: { type: string }) => {
           roleType: data.roleType!,
         };
 
-        const user = await signUp(userData);
-        setUser(user);
+        await signUp(userData);
+
+        // Redirect to sign-in page after successful sign-up
+        router.push('/sign-in');
       }
 
       if (type === 'sign-in') {
@@ -72,57 +75,48 @@ const AuthForm = ({ type }: { type: string }) => {
     <>
       {type === 'sign-up' && (
         <>
-		   <div className='grid lg:grid-cols-2 w-full gap-4'>
+          <div className='grid lg:grid-cols-2 w-full gap-4'>
             <CustomInput control={form.control} name="firstName" label="First Name" placeholder="Enter your first name" />
             <CustomInput control={form.control} name="lastName" label="Last Name" placeholder="Enter your last name" />
             <CustomInput control={form.control} name="businessName" label="Business Name" placeholder="Enter your business name" />
             <CustomSelect control={form.control} name="businessIndustry" label="Business Industry" placeholder="Select your business industry" options={businessIndustryOptions} />
             <CustomInput control={form.control} name="country" label="Country" placeholder="Example: USA" />
+            {/* <PhoneInput control={form.control} name="phoneNumber" label="Phone Number" placeholder="+11101" /> */}
             <CustomInput control={form.control} name="phoneNumber" label="Phone Number" placeholder="+11101" />
           </div>
           <CustomSelect control={form.control} name="roleType" label="Role" placeholder="Select your role" options={roleOptions} />
-	 	</>
-
+        </>
       )}
       <div className='flex flex-col gap-4'>
         <CustomInput control={form.control} name="email" label="Email" placeholder="Enter your email" type="email" />
         <CustomInput control={form.control} name="password" label="Password" placeholder="Enter your password" type="password" />
-	  </div>
+      </div>
     </>
   );
 
   return (
     <section>
-      <div className="grid grid-cols-2 h-screen  ">
+      <div className="grid grid-cols-2 h-screen">
         {/* Left Panel */}
         <div className="col-span-2 lg:col-span-1 p-10">
           <CompanyLogo />
           <div className="flex justify-center flex-col h-full">
             <div className="flex flex-col gap-4">
               <h1 className="text-3xl font-bold tracking-tight">
-                {user ? 'Link Account' : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
+                {type === 'sign-in' ? 'Sign In' : 'Sign Up'}
               </h1>
               <div className="flex items-center gap-1">
                 <p className="text-[14px] font-normal text-gray-600">
-                  {user
-                    ? 'Link your account to continue'
-                    : type === 'sign-in'
-                      ? 'Welcome back! Please sign in to continue'
-                      : 'Create a new account to get started'}
+                  {type === 'sign-in'
+                    ? 'Welcome back! Please sign in to continue'
+                    : 'Create a new account to get started'}
                 </p>
-                {!user && (
-                  <Link className="form-link" href={type === 'sign-in' ? '/sign-up' : '/sign-in'}>
-                    {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
-                  </Link>
-                )}
+                <Link className="form-link" href={type === 'sign-in' ? '/sign-up' : '/sign-in'}>
+                  {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
+                </Link>
               </div>
             </div>
-            {/* <div className="flex flex-col gap-4 mt-6">
-              <PlaidLink
-                user={user}
-                variant="primary"
-              />
-            </div> */}
+
             <div className="justify-center mt-8">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -134,7 +128,7 @@ const AuthForm = ({ type }: { type: string }) => {
                         {isLoading ? (
                           <>
                             <LoaderIcon className="size-4 animate-spin" />
-                            Loading...
+                            {type === 'sign-up' ? 'Creating Account...' : 'Signing In...'}
                           </>
                         ) : type === 'sign-in' ? 'Sign In' : 'Sign Up'}
                       </Button>

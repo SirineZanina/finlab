@@ -8,12 +8,9 @@ export const authFormSchema = (type: string) => z.object({
   businessName:type === 'sign-in' ? z.string().optional() : z.string().max(50),
   businessIndustry:type === 'sign-in' ? z.string().optional() : z.enum(Object.values(BusinessIndustry) as [BusinessIndustry, ...BusinessIndustry[]]),
   country:type === 'sign-in' ? z.string().optional() : z.string().max(50),
-  phoneNumber: type === 'sign-in'
-    ? z.string().optional()
-    : z.string()
-      .min(10, 'Phone number must be at least 10 digits')
-      .max(15, 'Phone number must be at most 15 digits')
-      .regex(/^\+?[0-9]{10,15}$/, 'Invalid phone number format'),
+  phoneNumber: z
+    .string()
+    .min(1, 'Phone number is required'),
   roleType: type === 'sign-in' ? z.string().optional() : z.enum(Object.values(RoleType) as [RoleType, ...RoleType[]]),
   // both sign-in and sign-up
   email: z.string().email(),

@@ -41,18 +41,18 @@ export const transactionsRouter = new Hono<{
         return c.json({ error: 'Unauthorized'}, 401);
       }
 
-	  const { from, to, accountId } = c.req.valid('query');
+      const { from, to, accountId } = c.req.valid('query');
 
-	  const defaultTo = new Date(); // in case we don't get a "to" date, we use today
-	  const defaultFrom = subDays(defaultTo, 30); // default to 30 days ago
+      const defaultTo = new Date();
+      const defaultFrom = subDays(defaultTo, 30);
 
-	  const startDate = from
-	  	? parse(from, 'yyyy-MM-dd', new Date())
+      const startDate = from
+        ? parse(from, 'yyyy-MM-dd', new Date())
         : defaultFrom;
 
-	  const endDate = to
-	   	? parse(to, 'yyyy-MM-dd', new Date())
-	   	: defaultTo;
+      const endDate = to
+        ? parse(to, 'yyyy-MM-dd', new Date())
+        : defaultTo;
 
       const data = await prisma.transaction.findMany({
         where: {
@@ -60,18 +60,17 @@ export const transactionsRouter = new Hono<{
             gte: startDate,
             lte: endDate
           },
-          ...(accountId && {
-            accountId: accountId,
-            account: {
-              id: accountId,
-              businessId: businessId
-            }
-          }),
+          // ALWAYS filter by business - this was missing!
+          account: {
+            businessId: businessId,
+            // Only add accountId filter if provided
+            ...(accountId && { id: accountId })
+          }
         },
         orderBy: { date: 'desc' },
         select: {
           id: true,
-		  date: true,
+          date: true,
           name: true,
           payee: true,
           amount: true,
@@ -91,12 +90,11 @@ export const transactionsRouter = new Hono<{
         }
       });
 
-	  const response: GetTransactionsResponse = {
+      const response: GetTransactionsResponse = {
         success: true,
         data: parseStringify(data),
-	  };
-	  return c.json<GetTransactionsResponse>(response, 200);
-
+      };
+      return c.json<GetTransactionsResponse>(response, 200);
     })
 
   // GET /transactions/:id
