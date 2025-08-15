@@ -139,17 +139,49 @@ export const exchangePublicToken = async ({
       })
     );
 
+    // Create categories from Plaid transactions and get category mapping
+    const categoryMap: Record<string, string> = {};
+    const uniqueCategories = new Set<string>();
+
+    transactions.forEach(tx => {
+      if (tx.personal_finance_category?.primary) {
+        uniqueCategories.add(tx.personal_finance_category.primary);
+      }
+    });
+
+    // Create categories in database
+    for (const categoryName of uniqueCategories) {
+      const existingCategory = await prisma.category.findFirst({
+        where: {
+          name: categoryName,
+          businessId: user.businessId
+        }
+      });
+
+      if (!existingCategory) {
+        const newCategory = await prisma.category.create({
+          data: {
+            name: categoryName,
+            businessId: user.businessId,
+          },
+        });
+        categoryMap[categoryName] = newCategory.id;
+      } else {
+        categoryMap[categoryName] = existingCategory.id;
+      }
+    }
+
     // Prepare all transactions for insertion
     const transactionsToInsert = transactions.map((tx) => ({
       accountId: plaidToDbIdMap[tx.account_id],
       name: tx.name,
-      amount: tx.amount,
-      category: tx.personal_finance_category?.primary || '',
-      pending: tx.pending,
+      amount: Math.round(tx.amount * 100), // Convert to cents (Int)
+      payee: tx.merchant_name || tx.name, // Add required payee field
+      date: new Date(tx.date), // Add required date field
       paymentChannel: tx.payment_channel || 'online',
-      type: tx.amount < 0 ? 'debit' : 'credit',
-      createdAt: new Date(tx.date).toISOString(),
+      pending: tx.pending,
       image: tx.logo_url,
+      categoryId: tx.personal_finance_category?.primary ? categoryMap[tx.personal_finance_category.primary] : null,
     }));
 
     // Insert all transactions

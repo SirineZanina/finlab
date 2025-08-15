@@ -1,21 +1,21 @@
 'use server';
 
-import { CreateTransactionProps } from '@/types/transaction';
 import { prisma } from '../prisma';
 import { AppError } from '../errors/appError';
+import { Transaction } from '@/types/client/entities';
 
-export const createTransaction = async (transaction: CreateTransactionProps) => {
+export const createTransaction = async (transaction: Transaction) => {
   try {
 
     const newTransaction = await prisma.transaction.create({
       data: {
         name: transaction.name,
         amount: Number(transaction.amount),
-        category: transaction.category,
+        payee: transaction.payee, // Add required payee field
+        date: transaction.date, // Add required date field
+        categoryId: transaction.category?.id, // Use categoryId instead of category
         paymentChannel: 'online',
-        type: transaction.type,
-        createdAt: transaction.createdAt,
-        accountId: transaction.accountId
+        accountId: transaction.account?.id
       },
     });
 

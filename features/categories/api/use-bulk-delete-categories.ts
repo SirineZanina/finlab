@@ -26,7 +26,10 @@ export const useBulkDeleteCategories = () => {
       queryClient.invalidateQueries({
         queryKey: ['categories']
       });
-      // TODO: Also invalidate summary
+
+      queryClient.invalidateQueries({
+        queryKey: ['summary']
+	  });
     }
   });
 

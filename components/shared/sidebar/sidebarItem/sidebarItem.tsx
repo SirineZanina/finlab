@@ -21,7 +21,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
         <Tooltip>
           <TooltipTrigger asChild>
             {item.isPlaid ? (
-              <div className={cn(commonClasses, 'py-3 px-3 justify-center')}>
+              <div className={cn(commonClasses, 'py-3 px-3 justify-center [&_*]:cursor-pointer cursor-pointer')}>
                 {item.icon && (
                   <item.icon
                     width={20}
@@ -67,7 +67,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
   // Expanded sidebar (normal view)
   if (item.isPlaid) {
     return (
-      <div className={cn(commonClasses, 'py-3 px-4')}>
+      <div className={cn(commonClasses, 'py-3 px-4 [&_*]:cursor-pointer cursor-pointer')}>
         <div className="flex items-center space-x-4 w-full">
           {item.icon && (
             <item.icon

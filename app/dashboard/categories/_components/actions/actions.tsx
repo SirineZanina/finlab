@@ -15,10 +15,10 @@ import { useConfirm } from '@/hooks/use-confirm/use-confirm';
 
 export const Actions = ({ id }: ActionsProps) => {
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    'Are you sure?',
-    'You are about to delete this category.'
-  );
+  const [ConfirmDialog, confirm] = useConfirm({
+    defaultTitle: 'Are you sure?',
+    defaultMessage: 'You are about to delete this category.',
+  });
 
   const deleteMutation = useDeleteCategory(id);
   const { onOpen } = useOpenCategory();

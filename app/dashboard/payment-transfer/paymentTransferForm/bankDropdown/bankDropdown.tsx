@@ -11,10 +11,10 @@ import {
   SelectLabel,
   SelectTrigger,
 } from '@/components/ui/select';
-import { formUrlQuery, formatAmount } from '@/lib/utils';
+import { formUrlQuery } from '@/lib/utils';
 import { BankDropdownProps } from './bankDropdown.types';
-import { Account } from '@/types/account';
 import { CreditCardIcon } from '@/components/assets/icons/creditCardIcon';
+import { Account } from '@/types/client/entities';
 
 export const BankDropdown = ({
   accounts = [],
@@ -93,9 +93,7 @@ export const BankDropdown = ({
             >
               <div className="flex flex-col ">
                 <p className="font-medium">{account.name}</p>
-                <p className="text-sm font-medium text-blue-600">
-                  {formatAmount(account.currentBalance)}
-                </p>
+
               </div>
             </SelectItem>
           ))}

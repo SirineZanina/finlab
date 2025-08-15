@@ -32,49 +32,49 @@ export const sidebarLinks = [
     label: 'Transactions',
     position: 'top',
   },
-  {
-    icon: DollarCircle,
-    route: '/dashboard/banks',
-    label: 'Banks',
-    position: 'top',
-  },
-  {
-    icon: Transaction,
-    route: '/dashboard/transaction-history',
-    label: 'Transaction History',
-    position: 'top',
-  },
-  {
-    icon:  MoneySend,
-    route: '/dashboard/payment-transfer',
-    label: 'Transfer Funds',
-    position: 'top',
-  },
-  {
-    icon: EnterpriseIcon,
-    route: '/dashboard/sales',
-    label: 'Sales',
-    position: 'top',
-    hasSubmenu: true,
-    submenu: {
-      items : [
-        {
-		  label: 'Sales Overview',
-		  route: '/dashboard/sales/overview'
-        },
-        {
-		  label: 'Sales Reports',
-		  route: '/dashboard/sales/reports'
-        }
-      ]
-    }
-  },
-  {
-    icon: SettingsIcon,
-    route: '/dashboard/settings',
-    label: 'Settings',
-    position: 'bottom',
-  },
+  //   {
+  //     icon: DollarCircle,
+  //     route: '/dashboard/banks',
+  //     label: 'Banks',
+  //     position: 'top',
+  //   },
+  //   {
+  //     icon: Transaction,
+  //     route: '/dashboard/transaction-history',
+  //     label: 'Transaction History',
+  //     position: 'top',
+  //   },
+  //   {
+  //     icon:  MoneySend,
+  //     route: '/dashboard/payment-transfer',
+  //     label: 'Transfer Funds',
+  //     position: 'top',
+  //   },
+  //   {
+  //     icon: EnterpriseIcon,
+  //     route: '/dashboard/sales',
+  //     label: 'Sales',
+  //     position: 'top',
+  //     hasSubmenu: true,
+  //     submenu: {
+  //       items : [
+  //         {
+  // 		  label: 'Sales Overview',
+  // 		  route: '/dashboard/sales/overview'
+  //         },
+  //         {
+  // 		  label: 'Sales Reports',
+  // 		  route: '/dashboard/sales/reports'
+  //         }
+  //       ]
+  //     }
+  //   },
+  //   {
+  //     icon: SettingsIcon,
+  //     route: '/dashboard/settings',
+  //     label: 'Settings',
+  //     position: 'top',
+  //   },
   {
     icon: ConnectBankIcon,
     route: '#',

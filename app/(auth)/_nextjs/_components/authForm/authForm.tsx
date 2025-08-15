@@ -12,7 +12,6 @@ import { LoaderIcon } from '@/components/assets/icons/loaderIcon';
 import { GoogleIcon } from '@/components/assets/icons/googleIcon';
 import AuthCardCta from './authCardCta';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
-import PlaidLink from '../plaidLink/plaidLink';
 
 import { useAuthForm } from './authForm.hooks';
 import { authFormSchema } from '../../schema';

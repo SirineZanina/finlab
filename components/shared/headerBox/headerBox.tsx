@@ -1,18 +1,23 @@
 import React from 'react';
 import { HeaderBoxProps } from './headerBox.types';
 import { Sparkles } from 'lucide-react';
+import Filters from '@/components/shared/filters/filters';
 
 const HeaderBox = ({ pathLocation, subtitle }: HeaderBoxProps) => {
   return (
     <div className='overflow-hidden rounded-2xl bg-gradient-to-br from-primary-600  to-primary-700
 	 p-5 shadow-xl mb-6'>
-      <div className='flex items-center gap-2 mb-3'>
-        <div className='p-2 bg-white/20 rounded-lg backdrop-blur-sm'>
-          <Sparkles size={20} className='text-white' />
-        </div>
-        <h1 className='text-2xl font-bold text-white leading-tight'>
-          {pathLocation === 'Home' ? 'Welcome to your Dashboard' : pathLocation}
-        </h1>
+      <div className='flex justify-between'>
+        <div className='flex items-center gap-2 mb-3'>
+		 <div className='p-2 bg-white/20 rounded-lg backdrop-blur-sm'>
+            <Sparkles size={20} className='text-white' />
+          </div>
+          <h1 className='text-2xl font-bold text-white leading-tight'>
+            {pathLocation === 'Home' ? 'Welcome to your Dashboard' : pathLocation}
+          </h1>
+	   </div>
+        <Filters />
+
       </div>
 
       {subtitle && (

@@ -1,13 +1,9 @@
 import Link from 'next/link';
 import BankCard from './bankCard/bankCard';
-import Category from './category/category';
 import { PlusIcon } from '@/components/assets/icons/plusIcon';
-import { countTransactionCategories } from '@/lib/utils';
-import { CategoryCount } from '@/types/category';
 import { BankSectionProps } from './bankSection.types';
 
-const BankSection = ({ user, accounts, transactions }: BankSectionProps) => {
-  const categories: CategoryCount[] = countTransactionCategories(transactions);
+const BankSection = ({ user, accounts }: BankSectionProps) => {
 
   return (
     <section>
@@ -44,15 +40,6 @@ const BankSection = ({ user, accounts, transactions }: BankSectionProps) => {
         </div>
       )}
 
-      <div className="mt-10 flex flex-1 flex-col gap-6">
-        <h2 className="header-2">Top categories</h2>
-
-        <div className='space-y-5'>
-          {categories.map((category) => (
-            <Category key={category.name} category={category} />
-          ))}
-        </div>
-      </div>
     </section>
   );
 };

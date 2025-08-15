@@ -23,7 +23,7 @@ export default async function RootLayout({
         <div className="flex md:hidden items-center justify-between p-6 sticky top-0
 		border-b border-gray-200">
           <CompanyLogo />
-          {loggedInUser && <MobileNavbar user={loggedInUser} />}
+          {loggedInUser && <MobileNavbar />}
         </div>
         <HeaderBar />
         {/* Page Content */}

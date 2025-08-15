@@ -1,19 +1,25 @@
 'use server';
 
-import { getBankByAccountIdProps, getBankProps, getBanksProps } from '@/types/bank';
 import { AppError } from '../errors/appError';
 import { prisma } from '../prisma';
-import { CreateBankAccountProps } from './../../types/account';
 
 export const createBankAccount = async ({
   userId,
-  businessId,
   plaidBankId,
   plaidId,
   accessToken,
   fundingSourceUrl,
   shareableId,
-}: CreateBankAccountProps & { businessId: string }) => {
+  businessId
+}: {
+  userId: string;
+  plaidBankId: string;
+  plaidId: string;
+  accessToken: string;
+  fundingSourceUrl: string;
+  shareableId: string;
+  businessId: string;
+}) => {
   try {
     const bankAccount = await prisma.bank.create({
       data: {
@@ -33,14 +39,14 @@ export const createBankAccount = async ({
   }
 };
 
-export const getBanks = async ({ userId }: getBanksProps) => {
+export const getBanks = async ({ userId }: {userId: string}) => {
   try {
 
     const banks = await prisma.bank.findMany({
-	  where: { userId },
-	  include: {
+      where: { userId },
+      include: {
         accounts: true,
-	  },
+      },
     });
 
     if (!banks || banks.length === 0) {
@@ -54,37 +60,37 @@ export const getBanks = async ({ userId }: getBanksProps) => {
   }
 };
 
-export const getBank = async ({ id }: getBankProps) => {
+export const getBank = async ({ id }: { id: string}) => {
   try {
 
     const bank = await prisma.bank.findUnique({
-	  where: { id },
-	  include: {
+      where: { id },
+      include: {
         accounts: true,
-	  },
+      },
     });
     if (!bank) {
-	  throw new AppError('BANK_NOT_FOUND', 'Bank not found', 404);
+      throw new AppError('BANK_NOT_FOUND', 'Bank not found', 404);
     }
 
     return bank;
   } catch (error) {
     console.error(error);
-	 throw new AppError('GET_BANK_FAILED', 'Failed to fetch banks', 500);
+    throw new AppError('GET_BANK_FAILED', 'Failed to fetch banks', 500);
   }
 };
 
-export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps) => {
+export const getBankByAccountId = async ({ accountId }: { accountId: string}) => {
   try {
 
     const bank = await prisma.bank.findFirst({
-	  where: { id: accountId },
-	  include: {
+      where: { id: accountId },
+      include: {
         accounts: true,
-	  },
+      },
     });
     if (!bank) {
-	  throw new AppError('BANK_NOT_FOUND', 'Bank not found for the given account ID', 404);
+      throw new AppError('BANK_NOT_FOUND', 'Bank not found for the given account ID', 404);
     }
 
     return bank;
@@ -97,14 +103,14 @@ export const getBankByAccountId = async ({ accountId }: getBankByAccountIdProps)
 export const getBankByShareableId = async ({ shareableId }: { shareableId: string }) => {
   try {
     const bank = await prisma.bank.findUnique({
-	  where: { shareableId },
-	  include: {
+      where: { shareableId },
+      include: {
         accounts: true,
-	  },
+      },
     });
 
     if (!bank) {
-	  throw new AppError('BANK_NOT_FOUND', 'Bank not found for the given shareable ID', 404);
+      throw new AppError('BANK_NOT_FOUND', 'Bank not found for the given shareable ID', 404);
     }
 
     return bank;

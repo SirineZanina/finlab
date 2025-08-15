@@ -1,4 +1,4 @@
-import { Account } from '@/types/account';
+import { Account } from '@/types/client/entities';
 
 export type BankCardProps = {
 	account: Account;

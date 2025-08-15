@@ -26,7 +26,9 @@ export const useBulkDeleteTransactions = () => {
       queryClient.invalidateQueries({
         queryKey: ['transactions']
       });
-      // TODO: Also invalidate summary
+      queryClient.invalidateQueries({
+        queryKey: ['summary']
+	  });
     }
   });
 

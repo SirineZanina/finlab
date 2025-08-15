@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import { MobileNavbarProps } from './mobileNavbar.types';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import HamburgerIcon from '@/components/assets/icons/hamburgerIcon';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
@@ -9,7 +8,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 
-const MobileNavbar = ({ user } : MobileNavbarProps) => {
+const MobileNavbar = () => {
   const pathname = usePathname();
   return (
     <section className=''>

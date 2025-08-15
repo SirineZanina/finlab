@@ -5,94 +5,12 @@ import { CountryCode } from 'plaid';
 import { plaidClient } from '../plaid';
 import { parseStringify } from '../utils';
 
-import { prisma } from '@/lib/prisma';
 import { AppError } from '../errors/appError';
-import { getInstitutionProps, getTransactionsProps, Transaction } from '@/types/transaction';
-
-// export const getAccounts = async (userId: string) => {
-//   try {
-
-//     const user = await prisma.user.findUnique({
-//       where: { id: userId },
-//       select: { businessId: true},
-//     });
-
-//     if (!user) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
-
-//     const accounts = await prisma.account.findMany({
-// 	  where: { businessId: user.businessId },
-//     });
-
-//     if (!accounts || accounts.length === 0) {
-// 	  throw new AppError('NO_ACCOUNTS_FOUND', 'No accounts found for this user', 404);
-//     }
-
-//     const totalBanks = accounts.length;
-//     const totalCurrentBalance = accounts.reduce(
-//       (total, account) => total + account.currentBalance,
-//       0
-//     );
-
-//     return {
-//       data: parseStringify(accounts),
-//       totalBanks,
-//       totalCurrentBalance,
-//     };
-//   } catch (error) {
-//     console.error('An error occurred while getting the accounts:', error);
-//     throw new AppError(
-//       'GET_ACCOUNTS_FAILED',
-//       'Failed to retrieve accounts',
-//       500
-//     );
-//   }
-// };
-
-// export const getAccount = async (accountId: string) => {
-//   try {
-
-//     if (!accountId) {
-// 	  throw new AppError('ACCOUNT_ID_REQUIRED', 'Account ID is required', 400);
-//     }
-
-//     const account = await prisma.account.findUnique({
-//       where: { id: accountId },
-//       include: {
-//         transactions: true,
-//         bank: true,
-//       },
-//     });
-
-//     if (!account) {
-//       throw new AppError('ACCOUNT_NOT_FOUND', 'Account not found', 404);
-//     }
-
-//     const institution = await getInstitution({
-//       institutionId: account.institutionId,
-//     });
-
-//     const allTransactions = [...account.transactions].sort(
-//       (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-//     );
-
-//     return {
-//       data: parseStringify(account),
-//       transactions: parseStringify(allTransactions),
-//       institution: parseStringify(institution),
-//     };
-//   } catch (error) {
-//     console.error('An error occurred while getting the account:', error);
-//     throw new AppError(
-//       'GET_ACCOUNT_FAILED',
-//       'Failed to retrieve account',
-//       500
-//     );
-//   }
-// };
+import { PlaidTransaction } from '@/types/client/entities';
 
 export const getInstitution = async ({
   institutionId,
-}: getInstitutionProps) => {
+}: { institutionId: string}) => {
   try {
     const institutionResponse = await plaidClient.institutionsGetById({
       institution_id: institutionId,
@@ -115,9 +33,9 @@ export const getInstitution = async ({
 
 export const getTransactions = async ({
   accessToken,
-}: getTransactionsProps) => {
+}: { accessToken: string}) => {
   let hasMore = true;
-  let transactions: Transaction[] = [];
+  let transactions: PlaidTransaction[] = [];
 
   try {
     while (hasMore) {
@@ -131,13 +49,19 @@ export const getTransactions = async ({
         id: transaction.transaction_id,
         name: transaction.name,
         paymentChannel: transaction.payment_channel,
-        type: transaction.payment_channel,
         plaidId: transaction.account_id,
         amount: transaction.amount,
         pending: transaction.pending,
         image: transaction.logo_url ?? undefined,
         category: transaction.personal_finance_category?.primary || '',
         createdAt: new Date(transaction.date),
+        account: {
+          id: transaction.account_id,
+          name: transaction.account_owner ?? '', // fallback to empty string if account_owner is undefined
+        },
+        notes: '', // provide a default/empty string since transaction.notes does not exist
+        payee: transaction.merchant_name ?? '', // or provide a default/empty string
+        date: transaction.date, // or new Date(transaction.date) if type is Date
       }));
 
       hasMore = data.has_more;
@@ -153,6 +77,23 @@ export const getTransactions = async ({
       'GET_TRANSACTIONS_FAILED',
       'Failed to retrieve transactions',
       500
+    );
+  }
+};
+
+export const getAccounts = async (userId: string) => {
+  try {
+    const response = await plaidClient.accountsGet({
+      access_token: userId,
+    });
+
+    return parseStringify(response.data.accounts);
+  } catch (error) {
+    console.error('An error occurred while getting accounts:', error);
+    throw new AppError(
+	  'GET_ACCOUNTS_FAILED',
+	  'Failed to retrieve accounts',
+	  500
     );
   }
 };

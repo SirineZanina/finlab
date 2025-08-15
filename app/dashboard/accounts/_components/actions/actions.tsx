@@ -15,10 +15,10 @@ import { useConfirm } from '@/hooks/use-confirm/use-confirm';
 
 export const Actions = ({ id }: ActionsProps) => {
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    'Are you sure?',
-    'You are about to delete this account.'
-  );
+  const [ConfirmDialog, confirm] = useConfirm({
+    defaultTitle: 'Are you sure?',
+    defaultMessage: 'You are about to delete this account.'
+  });
 
   const deleteMutation = useDeleteAccount(id);
   const { onOpen } = useOpenAccount();

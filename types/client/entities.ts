@@ -24,3 +24,15 @@ export type Transaction = {
 	date: string; // ISO date string
 }
 
+export type PlaidTransaction = {
+	id: string;
+	name: string;
+	account: Pick<Account, 'id' | 'name'>;
+	amount: number;
+	payee: string;
+	date: string; // ISO date string
+	pending?: boolean;
+	image?: string | null;
+	category?: string | null; // Category name or null if not categorized
+}
+

@@ -1,4 +1,4 @@
-import { Account } from '@/types/account';
+import { Account } from '@/types/client/entities';
 import { UseFormSetValue } from 'react-hook-form';
 
 export type BankDropdownProps = {

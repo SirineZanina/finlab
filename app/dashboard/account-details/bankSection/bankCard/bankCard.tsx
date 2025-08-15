@@ -1,12 +1,10 @@
 import MastercardIcon from '@/components/assets/icons/mastercardIcon';
 import { PaypassIcon } from '@/components/assets/icons/paypassIcon';
-import { formatAmount } from '@/lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import Copy from '../copy/copy';
 import { BankCardProps } from './bankCard.types';
 
-const BankCard = ({ account, username, showBalance } : BankCardProps) => {
+const BankCard = ({ account, username } : BankCardProps) => {
   return (
     <div className="flex flex-col">
       <Link href={`/dashboard/transaction-history?id=${account.id}`} className="bank-card">
@@ -15,9 +13,9 @@ const BankCard = ({ account, username, showBalance } : BankCardProps) => {
             <h1 className="text-base font-semibold text-white">
               {account.name}
             </h1>
-            <p className="font-ibm-plex-serif font-black text-white">
+            {/* <p className="font-ibm-plex-serif font-black text-white">
               {formatAmount(account.currentBalance)}
-            </p>
+            </p> */}
           </div>
 
           <article className="flex flex-col gap-2">
@@ -29,9 +27,9 @@ const BankCard = ({ account, username, showBalance } : BankCardProps) => {
               ●● / ●●
               </h2>
             </div>
-            <p className="text-sm font-semibold tracking-[1.1px] text-white">
+            {/* <p className="text-sm font-semibold tracking-[1.1px] text-white">
               ●●●● ●●●● ●●●● <span>{account?.mask}</span>
-            </p>
+            </p> */}
           </article>
         </div>
 
@@ -50,7 +48,7 @@ const BankCard = ({ account, username, showBalance } : BankCardProps) => {
         />
       </Link>
 
-      {showBalance && <Copy title={account?.shareableId} />}
+      {/* {showBalance && <Copy title={account?.shareableId} />} */}
     </div>
   );
 };

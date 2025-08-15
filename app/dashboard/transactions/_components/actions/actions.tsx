@@ -18,10 +18,10 @@ import { ActionsProps } from './actions.types';
 
 export const Actions = ({ id }: ActionsProps) => {
 
-  const [ConfirmDialog, confirm] = useConfirm(
-    'Are you sure?',
-    'You are about to delete this transaction.'
-  );
+  const [ConfirmDialog, confirm] = useConfirm ({
+    defaultTitle: 'Are you sure?',
+    defaultMessage: 'You are about to delete this transaction.'
+  });;
 
   const deleteMutation = useDeleteTransaction(id);
   const { onOpen } = useOpenTransaction();

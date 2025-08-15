@@ -1,5 +1,4 @@
 import React from 'react';
-import PaymentTransferForm from './paymentTransferForm/paymentTransferForm';
 import { getCurrentUser } from '@/app/(auth)/_nextjs/currentUser';
 // import { getAccounts } from '@/lib/actions/bank.actions';
 
