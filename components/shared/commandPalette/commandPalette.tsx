@@ -7,7 +7,7 @@ import {
   CommandList,
   CommandSeparator
 } from '@/components/ui/command';
-import { CommandPaletteProps } from './command-palette.types';
+import { CommandPaletteProps } from './commandPalette.types';
 
 const CommandPalette = ({ open, setOpen }: CommandPaletteProps) => {
   return (

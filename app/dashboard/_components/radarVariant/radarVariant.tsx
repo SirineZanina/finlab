@@ -5,7 +5,7 @@ import {
   RadarChart,
   ResponsiveContainer
 } from 'recharts';
-import { RadarVariantProps } from './radar-variant.types';
+import { RadarVariantProps } from './radarVariant.types';
 
 const RadarVariant = ({
   data

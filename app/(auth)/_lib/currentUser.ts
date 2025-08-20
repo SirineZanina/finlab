@@ -63,11 +63,20 @@ function getUserFromDb(id: string) {
 	  businessId: true,
 	  roleId: true,
 	  email: true,
-	  country: true,
 	  phoneNumber: true,
 	  profilePhotoUrl: true,
 	  dwollaCustomerUrl: true,
 	  dwollaCustomerId: true,
-    }
+	  address: {
+        select: {
+          id: true,
+          street: true,
+          city: true,
+          state: true,
+          postalCode: true,
+		  countryId: true
+        }
+	  }
+    },
   });
 }

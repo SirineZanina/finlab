@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { TrashIcon } from 'lucide-react';
 import { useConfirm } from '@/hooks/use-confirm/use-confirm';
-import { DataTableProps } from './data-table.types';
+import { DataTableProps } from './dataTable.types';
 
 export function DataTable<TData, TValue>({
   columns,

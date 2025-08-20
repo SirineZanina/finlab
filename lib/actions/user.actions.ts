@@ -111,41 +111,59 @@ export async function signUp(unsafeData: SignUpParams) {
 	  throw new AppError('BUSINESS_EXISTS', 'Business with this name already exists', 400);
     }
 
+    // 🔧 FIX 1: Create Address first (required for User)
+    const address = await prisma.address.create({
+      data: {
+        street: validatedData.street,
+        city: validatedData.city,
+        state: validatedData.state,
+        postalCode: validatedData.postalCode,
+        countryId: validatedData.countryId, // Use the countryId from form
+      },
+    });
+
     // Create business if it doesn't exist
     const business = await prisma.business.create({
       data: {
         name: validatedData.businessName,
         industry: validatedData.businessIndustry,
+        countryId: validatedData.countryId,
+        currencyId: validatedData.currencyId,
       },
     });
 
-    // Create dwolla customer
-    const dwollaCustomerUrl = await createDwollaCustomer({
-      firstName: validatedData.firstName,
-      lastName: validatedData.lastName,
-      businessName: validatedData.businessName,
-      businessIndustry: validatedData.businessIndustry,
-      country: validatedData.country,
-      phoneNumber: '5551234567',
-      roleType: validatedData.roleType,
-      email: validatedData.email,
-      type: 'personal',
-      address1: '123 Main St', // Replace with actual address if needed
-      city: 'Sample City', // Replace with actual city if needed
-      state: 'NY', // Replace with actual state if needed
-	  dateOfBirth: '1990-01-01', // Replace with actual date of
-      postalCode: '12345', // Replace with actual postal code if needed
-	  ssn: '1234', // Replace with actual last 4 digits of SSN
-      // Add any other required fields for NewDwollaCustomerParams here
-    });
-
-    if (!dwollaCustomerUrl) {
-	  throw new AppError('DWOLLA_ERROR', 'Unable to create Dwolla customer', 500);
+    if (!business) {
+	  throw new AppError('BUSINESS_CREATION_FAILED', 'Failed to create business', 500);
     }
 
-    const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
+    // TODO: dwolla
 
-    // Create user
+    // // Create dwolla customer
+    // const dwollaCustomerUrl = await createDwollaCustomer({
+    //   firstName: validatedData.firstName,
+    //   lastName: validatedData.lastName,
+    //   businessName: validatedData.businessName,
+    //   businessIndustry: validatedData.businessIndustry,
+    //   country: validatedData.,
+    //   phoneNumber: validatedData.phoneNumber, // 🔧 FIX 2: Use actual phone number
+    //   roleType: validatedData.roleType,
+    //   email: validatedData.email,
+    //   type: 'personal',
+    //   address1: validatedData.address1 || '123 Main St',
+    //   city: validatedData.city || 'Sample City',
+    //   state: validatedData.state || 'NY',
+    //   dateOfBirth: validatedData.dateOfBirth || '1990-01-01',
+    //   postalCode: validatedData.postalCode || '12345',
+    //   ssn: validatedData.ssn || '1234',
+    // });
+
+    // if (!dwollaCustomerUrl) {
+    //   throw new AppError('DWOLLA_ERROR', 'Unable to create Dwolla customer', 500);
+    // }
+
+    // const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
+
+    // 🔧 FIX 3: Create user with addressId (not country string)
     const user = await prisma.user.create({
       data: {
         firstName: validatedData.firstName,
@@ -153,16 +171,21 @@ export async function signUp(unsafeData: SignUpParams) {
         email: validatedData.email,
         password: hashedPassword,
         salt,
-        country: validatedData.country,
+        addressId: address.id, // 🔧 Use addressId instead of country
         phoneNumber: validatedData.phoneNumber,
         businessId: business.id,
         roleId: userRole.id,
-        dwollaCustomerId,
-        dwollaCustomerUrl,
+        // dwollaCustomerId,
+        // dwollaCustomerUrl,
       },
 	  include: {
         role: true,
         business: true,
+        address: { // 🔧 Include address in response
+          include: {
+            country: true
+          }
+        },
       },
     });
 
@@ -183,15 +206,21 @@ export async function signUp(unsafeData: SignUpParams) {
   }
 }
 
-// Define this type to avoid repeating inline assertions
+// 🔧 FIX 4: Updated type to match schema requirements
 type ValidatedSignUpData = z.infer<typeof signUpSchema> & {
   firstName: string;
   lastName: string;
   businessName: string;
   businessIndustry: BusinessIndustry;
-  country: string;
+  countryId: string;
+  currencyId: string;
   phoneNumber: string;
   roleType: RoleType;
+  street: string;
+  city: string;
+  state: string;
+  postalCode: string;
+  ssn: string;
 };
 
 // ================ LOG OUT ================

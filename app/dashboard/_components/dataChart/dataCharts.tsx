@@ -2,10 +2,10 @@
 
 import { useGetSummary } from '@/features/summary/api/use-get-summary';
 import Chart from '@/app/dashboard/_components/chart/chart';
-import SpendingPie from '@/app/dashboard/_components/spending-pie/spending-pie';
+import SpendingPie from '@/app/dashboard/_components/spendingPie/spendingPie';
 import { useGetCategories } from '@/features/categories/api/use-get-categories';
-import ChartLoading from '@/app/dashboard/_components/chart/chart-loading';
-import SpendingPieLoading from '@/app/dashboard/_components/spending-pie/spending-pie-loading';
+import ChartLoading from '@/app/dashboard/_components/chart/chartLoading';
+import SpendingPieLoading from '@/app/dashboard/_components/spendingPie/spendingPieLoading';
 
 const DataCharts = () => {
   const { data, isLoading } = useGetSummary();

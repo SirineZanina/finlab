@@ -6,10 +6,10 @@ import {
   ResponsiveContainer,
   Tooltip
 } from 'recharts';
-import CategoryTooltip from '@/app/dashboard/_components/category-tooltip/category-tooltip';
+import CategoryTooltip from '@/app/dashboard/_components/categoryTooltip/categoryTooltip';
 import { formatPercentage } from '@/lib/utils';
-import { COLORS } from './pie-variant.constants';
-import { PieVariantProps } from './pie-variant.types';
+import { COLORS } from './pieVariant.constants';
+import { PieVariantProps } from './pieVariant.types';
 
 const PieVariant = ({ data, totalCategories }: PieVariantProps) => {
   const total = data.reduce((sum, item) => sum + item.value, 0);

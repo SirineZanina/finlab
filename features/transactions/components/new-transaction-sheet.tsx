@@ -35,11 +35,7 @@ const NewTransactionSheet = () => {
 
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();
-  const onCreateAccount = (name: string) => {
-    accountMutation.mutate({
-      name
-    });
-  };
+
   const accountOptions = (accountQuery.data ?? []).map((account) => ({
     label: account.name,
     value: account.id
@@ -87,7 +83,6 @@ const NewTransactionSheet = () => {
               categoryOptions={categoryOptions}
               onCreateCategory={onCreateCategory}
               accountOptions={accountOptions}
-              onCreateAccount={onCreateAccount}
         	/>
           )
         }

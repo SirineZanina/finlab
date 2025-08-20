@@ -20,13 +20,6 @@ export const useSelectAccount = () : [() => JSX.Element, () =>
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();
 
-  const onCreateAccount = (name: string, bankId: string, currencyId: string) =>
-    accountMutation.mutate({
-      name,
-      bankId,
-      currencyId
-    });
-
   const accountOptions = (accountQuery.data ?? []).map((account) => ({
     label: account.name,
     value: account.id
@@ -77,7 +70,6 @@ export const useSelectAccount = () : [() => JSX.Element, () =>
         <Select
           placeholder='Select an account'
 		  options={accountOptions}
-		  onCreate={onCreateAccount}
           onChange={(value) => selectValue.current = value ?? ''}
 		  disabled={accountQuery.isLoading || accountMutation.isPending}
 		  >

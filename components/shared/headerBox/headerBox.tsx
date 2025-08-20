@@ -1,7 +1,7 @@
 import React from 'react';
 import { HeaderBoxProps } from './headerBox.types';
 import { Sparkles } from 'lucide-react';
-import Filters from '@/components/shared/filters/filters';
+import Filters from '@/components/shared/filters';
 
 const HeaderBox = ({ pathLocation, subtitle }: HeaderBoxProps) => {
   return (

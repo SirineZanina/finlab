@@ -15,17 +15,37 @@ datasource db {
 }
 
 model Country {
-    id   String @id @default(cuid())
-    code String @unique // US, TN, GB, etc.
-    name String // "United States", "Tunisia", "United Kingdom"
+    id      String @id @default(cuid())
+    code    String @unique // US, TN, GB, etc.
+    name    String // "United States", "Tunisia", "United Kingdom"
+    flagUrl String // URL to the country's flag image
 
     // Relationships
     businesses Business[]
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    Address   Address[]
 
     @@map("countries")
+}
+
+model Address {
+    id         String @id @default(cuid())
+    street     String
+    city       String
+    state      String
+    postalCode String
+    countryId  String
+
+    // Relationships
+    country Country @relation(fields: [countryId], references: [id])
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    User      User[]
+
+    @@map("addresses")
 }
 
 model Currency {
@@ -36,7 +56,7 @@ model Currency {
 
     // Relationships
     businesses Business[]
-    accounts   Account[]
+    Account    Account[]
 
     @@map("currencies")
 }
@@ -53,7 +73,6 @@ model Business {
 
     user     User[]
     accounts Account[]
-    category Category[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -75,27 +94,30 @@ enum BusinessIndustry {
 }
 
 model User {
-    id                String  @id @default(cuid())
-    firstName         String
-    lastName          String
-    email             String  @unique
-    password          String
-    salt              String
-    profilePhotoUrl   String?
-    country           String
-    phoneNumber       String
-    roleId            String
-    businessId        String
-    dwollaCustomerUrl String
-    dwollaCustomerId  String
+    id              String   @id @default(cuid())
+    firstName       String
+    lastName        String
+    email           String   @unique
+    password        String
+    salt            String
+    profilePhotoUrl String?
+    address         Address? @relation(fields: [addressId], references: [id]) // ✅ Made optional
+    addressId       String? // ✅ Made optional
+    phoneNumber     String
+    roleId          String
+    businessId      String
+
+    dwollaCustomerUrl String?
+    dwollaCustomerId  String?
 
     business Business @relation(fields: [businessId], references: [id])
-
-    role UserRole @relation(fields: [roleId], references: [id], name: "UserToRole")
+    role     UserRole @relation(fields: [roleId], references: [id], name: "UserToRole")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@index([businessId]) // ✅ Added index
+    @@index([email]) // ✅ Added index
     @@map("users")
 }
 
@@ -150,49 +172,46 @@ enum AccountSource {
 model Account {
     id String @id @default(cuid())
 
-    // common fields
     name       String
     currencyId String
-    currency   Currency @relation(fields: [currencyId], references: [id])
+    currency   Currency @relation(fields: [currencyId], references: [id]) // ✅ Added missing relation
 
-    source AccountSource @default(MANUAL)
-
-    isActive    Boolean @default(true)
-    shareableId String  @unique
+    source      AccountSource @default(MANUAL)
+    isActive    Boolean       @default(true)
+    shareableId String        @unique
 
     // for manual accounts
     accountType AccountType?
 
-    // fields for Plaid accounts
+    // fields for Plaid accounts - make them conditional based on source
     plaidId          String? @unique
-    officialName     String? // "Chase Business Checking", "Visa Business Card"
-    mask             String? // "1234", "5678" (for credit cards)
-    type             String? // "depository", "credit", etc.
-    subtype          String? // "checking", "savings", "visa", etc.
-    availableBalance Int?    @default(0) // In minor units (e.g., cents)
-    currentBalance   Int?    @default(0) // In minor units (e.g., cents
-    fundingSourceUrl String? // URL for funding source, used for Plaid accounts
+    officialName     String?
+    mask             String?
+    type             String?
+    subtype          String?
+    availableBalance Int     @default(0) // ✅ Removed nullable, kept default
+    currentBalance   Int     @default(0) // ✅ Removed nullable, kept default
+    fundingSourceUrl String?
 
     // Relationships
     businessId   String
     business     Business      @relation(fields: [businessId], references: [id])
     transactions Transaction[]
-    bank         Bank?         @relation(fields: [bankId], references: [id])
-    bankId       String?
+    bank         Bank          @relation(fields: [bankId], references: [id])
+    bankId       String
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     @@unique([name, businessId])
+    @@index([businessId])
+    @@index([source])
     @@map("accounts")
 }
 
 model Category {
-    id         String   @id @default(cuid())
-    name       String
-    plaidId    String?
-    business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
-    businessId String
+    id   String @id @default(cuid())
+    name String
 
     createdAt   DateTime      @default(now())
     updatedAt   DateTime      @updatedAt
@@ -236,9 +255,9 @@ enum BankSource {
 model Transaction {
     id             String    @id @default(cuid())
     name           String
-    amount         Int
+    amount         Int // Consider adding @check for positive/negative constraints
     payee          String
-    date           DateTime // A seperate date field for the user to manually add a transaction
+    date           DateTime
     paymentChannel String?
     pending        Boolean?
     image          String?
@@ -251,6 +270,9 @@ model Transaction {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@unique([name, createdAt, accountId], name: "transaction_unique")
+    // ✅ Improved unique constraint
+    @@unique([name, date, accountId, amount], name: "transaction_unique")
+    @@index([accountId, date]) // ✅ Added composite index
+    @@index([date]) // ✅ Added date index
     @@map("transactions")
 }

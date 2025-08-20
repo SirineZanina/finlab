@@ -5,6 +5,8 @@ import { accountsRouter } from './accounts';
 import { categoriesRouter } from './categories';
 import { transactionsRouter } from './transactions';
 import { summaryRouter } from './summary';
+import { currenciesRouter } from './currency';
+import { countriesRouter } from './country';
 
 // export const runtime = 'edge';
 
@@ -28,7 +30,9 @@ const routes = app
   .route('/accounts', accountsRouter)
   .route('/categories', categoriesRouter)
   .route('/transactions', transactionsRouter)
-  .route('/summary', summaryRouter);
+  .route('/summary', summaryRouter)
+  .route('/currencies', currenciesRouter)
+  .route('/countries', countriesRouter);
 
 export const GET = handle(app);
 export const POST = handle(app);

@@ -3,7 +3,8 @@ export type SignUpParams = {
 	lastName: string;
 	businessName: string;
 	businessIndustry: string;
-	country: string;
+	countryId: string;
+	currencyId: string;
 	phoneNumber: string;
 	roleType: string;
 	email: string;
@@ -20,16 +21,27 @@ export type LoginParams = {
 
 export type User = {
 	id: string;
-	email: string;
-	dwollaCustomerUrl: string;
-	dwollaCustomerId: string;
 	firstName: string;
 	lastName: string;
-	businessId: string;
-	country: string;
+	email: string;
+	address?: Address | null;
 	phoneNumber: string;
-  	roleId: string;
+
+	dwollaCustomerUrl?: string | null;
+	dwollaCustomerId?: string | null;
 	profilePhotoUrl?: string | null;
+
+	roleId: string;
+	businessId: string;
+}
+
+export type Address = {
+	id: string;
+	street: string;
+	city: string;
+	state: string;
+	postalCode: string;
+	countryId: string;
 }
 
 export type UserRole = {

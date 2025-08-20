@@ -10,7 +10,7 @@ import {
   PopoverContent,
   PopoverTrigger
 } from '@/components/ui/popover';
-import { DatePickerProps } from './date-picker.types';
+import { DatePickerProps } from './datePicker.types';
 
 const DatePicker = ({
   value,

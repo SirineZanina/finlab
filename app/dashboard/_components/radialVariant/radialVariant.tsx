@@ -5,8 +5,8 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { formatAmount } from '@/lib/utils';
-import { COLORS } from './radial-variant.contants';
-import { RadialVariantProps } from './radial-variant.types';
+import { COLORS } from './radialVariant.contants';
+import { RadialVariantProps } from './radialVariant.types';
 
 const RadialVariant = ({ data }: RadialVariantProps) => {
   return (

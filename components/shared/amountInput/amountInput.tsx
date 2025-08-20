@@ -8,7 +8,7 @@ import {
   TooltipTrigger,
   TooltipProvider
 } from '@/components/ui/tooltip';
-import { AmountInputProps } from './amount-input.types';
+import { AmountInputProps } from './amountInput.types';
 
 const AmountInput = ({
   value,

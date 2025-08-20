@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import CustomInput from '@/components/shared/customInput/customInput';
 import CustomSelect from '@/components/shared/customSelect/customSelect';
 import { LoaderIcon } from '@/components/assets/icons/loaderIcon';
@@ -19,6 +19,9 @@ import { authFormSchema } from '../../schema';
 import { signIn, signUp } from '@/lib/actions/user.actions';
 import { RoleType } from '@/types/client/user';
 import { BusinessIndustries } from '@/types/client/business';
+import { useGetCurrencies } from '@/features/currencies/api/use-get-currencies';
+import { useGetCountries } from '@/features/countries/api/use-get-countries';
+import { Select } from '@/components/shared/select/select';
 
 const AuthForm = ({ type }: { type: string }) => {
 
@@ -39,6 +42,20 @@ const AuthForm = ({ type }: { type: string }) => {
     label: industry.charAt(0).toUpperCase() + industry.slice(1).toLowerCase(),
   }));
 
+  const currencies = useGetCurrencies();
+
+  const currencyOptions = currencies.data?.map(currency => ({
+    value: currency.id,
+    label: currency.name,
+  })) || [];
+
+  const countries = useGetCountries();
+
+  const countryOptions = countries.data?.map(country => ({
+    value: country.id,
+    label: country.name,
+  })) || [];
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
 
     setIsLoading(true);
@@ -53,9 +70,17 @@ const AuthForm = ({ type }: { type: string }) => {
           password: data.password!,
           businessName: data.businessName!,
           businessIndustry: data.businessIndustry!,
-          country: data.country!,
+
+		  currencyId: data.currencyId!,
           phoneNumber: data.phoneNumber!,
           roleType: data.roleType!,
+
+		  street: data.street!,
+		  city: data.city!,
+		  state: data.state!,
+		  postalCode: data.postalCode!,
+		  countryId: data.countryId!,
+
         };
 
         await signUp(userData);
@@ -96,8 +121,47 @@ const AuthForm = ({ type }: { type: string }) => {
             <CustomInput control={form.control} name="lastName" label="Last Name" placeholder="Enter your last name" />
             <CustomInput control={form.control} name="businessName" label="Business Name" placeholder="Enter your business name" />
             <CustomSelect control={form.control} name="businessIndustry" label="Business Industry" placeholder="Select your business industry" options={businessIndustryOptions} />
-            <CustomInput control={form.control} name="country" label="Country" placeholder="Example: USA" />
             <CustomInput control={form.control} name="phoneNumber" label="Phone Number" placeholder="+11101" />
+            <CustomInput control={form.control} name="street" label="Street" placeholder="Street" />
+            <CustomInput control={form.control} name="city" label="City" placeholder="City" />
+			 <CustomInput control={form.control} name="state" label="State" placeholder="State" />
+            <CustomInput control={form.control} name="postalCode" label="Postal code" placeholder='postal code' />
+            <FormField
+              name='countryId'
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Account</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={countryOptions}
+                      placeholder='Select a country'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+			 <FormField
+              name='currencyId'
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Account</FormLabel>
+                  <FormControl>
+                    <Select
+                      value={field.value}
+                      onChange={field.onChange}
+                      options={currencyOptions}
+                      placeholder='Select a currency'
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           <CustomSelect control={form.control} name="roleType" label="Role" placeholder="Select your role" options={roleOptions} />
         </>

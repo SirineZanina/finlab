@@ -19,10 +19,10 @@ import {
   FormValues,
   TransactionFormProps
 } from './transaction-form.types';
-import DatePicker from '@/components/shared/date-picker/date-picker';
+import DatePicker from '@/components/shared/datePicker/datePicker';
 import { Select } from '@/components/shared/select/select';
 import { Textarea } from '@/components/ui/textarea';
-import AmountInput from '@/components/shared/amount-input/amount-input';
+import AmountInput from '@/components/shared/amountInput/amountInput';
 import { convertAmountToMiliunits } from '@/lib/utils';
 
 const TransactionForm = ({
@@ -33,7 +33,6 @@ const TransactionForm = ({
   disabled,
   accountOptions,
   categoryOptions,
-  onCreateAccount,
   onCreateCategory
 } : TransactionFormProps) => {
 
@@ -117,7 +116,6 @@ const TransactionForm = ({
 				  options={accountOptions}
 				  placeholder='Select an account'
 				  disabled={disabled}
-				  onCreate={onCreateAccount}
                 />
               </FormControl>
               <FormMessage />

@@ -51,11 +51,7 @@ const EditTransactionSheet = () => {
 
   const accountQuery = useGetAccounts();
   const accountMutation = useCreateAccount();
-  const onCreateAccount = (name: string) => {
-	  accountMutation.mutate({
-      name
-	  });
-  };
+
   const accountOptions = (accountQuery.data ?? []).map((account) => ({
 	  label: account.name,
 	  value: account.id
@@ -136,7 +132,6 @@ const EditTransactionSheet = () => {
               onSubmit={onSubmit}
               onDelete={onDelete}
 			  onCreateCategory={onCreateCategory}
-			  onCreateAccount={onCreateAccount}
 			  categoryOptions={categoryOptions}
 			  accountOptions={accountOptions}
               disabled={isPending}

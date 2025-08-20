@@ -1,6 +1,6 @@
 import { formatAmount } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-import { CategoryTooltipProps } from './category-tooltip.types';
+import { CategoryTooltipProps } from './categoryTooltip.types';
 
 const CategoryTooltip = ({
   active,

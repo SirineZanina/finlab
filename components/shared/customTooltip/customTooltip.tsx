@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { formatAmount } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-import { CustomTooltipProps } from './custom-tooltip.types';
+import { CustomTooltipProps } from './customTooltip.types';
 
 const CustomTooltip = ({
   active,
