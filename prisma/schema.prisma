@@ -46,7 +46,6 @@ model Business {
     name     String           @unique
     industry BusinessIndustry
 
-    // Currency settings
     currencyId String
     currency   Currency @relation(fields: [currencyId], references: [id])
     country    Country  @relation(fields: [countryId], references: [id])

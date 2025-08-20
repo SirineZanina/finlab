@@ -9,7 +9,7 @@ import { useBulkDeleteAccounts } from '@/features/accounts/api/use-bulk-delete-a
 // Hooks
 import { useNewAccount } from '@/features/accounts/hooks/use-new-account';
 // Components
-import { DataTable } from '@/components/shared/data-table/data-table';
+import { DataTable } from '@/components/shared/dataTable/dataTable';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 

@@ -1,6 +1,6 @@
 'use client';
 import CountUp from 'react-countup';
-import { AnimatedCounterProps } from './animated-counter.types';
+import { AnimatedCounterProps } from './animatedCounter.types';
 import { formatAmount } from '@/lib/utils';
 
 const AnimatedCounter = ({ amount } : AnimatedCounterProps) => {

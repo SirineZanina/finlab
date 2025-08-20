@@ -1,5 +1,5 @@
-import AccountFilter from '@/components/shared/account-filter/account-filter';
-import DateFilter from '@/components/shared/date-filter/date-filter';
+import AccountFilter from '@/components/shared/accountFilter/accountFilter';
+import DateFilter from '@/components/shared/dateFilter/date-filter';
 
 const Filters = () => {
   return (

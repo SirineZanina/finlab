@@ -8,7 +8,7 @@ import { useGetTransactions } from '@/features/transactions/api/use-get-transact
 
 import { useSelectAccount } from '@/features/accounts/hooks/use-select-account';
 // Components
-import { DataTable } from '@/components/shared/data-table/data-table';
+import { DataTable } from '@/components/shared/dataTable/dataTable';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import UploadButton from './_components/upload-button/upload-button';

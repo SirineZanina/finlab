@@ -1,10 +1,10 @@
 import React from 'react';
-import Header from '../../components/shared/header/header';
+import Header from '../../components/shared/header';
 import { getCurrentUser } from '../(auth)/_lib/currentUser';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
 import MobileNavbar from '../../components/shared/mobileNavbar/mobileNavbar';
 import Sidebar from '@/components/shared/sidebar/sidebar';
-import HeaderBar from '@/components/shared/header-bar/header-bar';
+import HeaderBar from '@/components/shared/headerBar';
 
 export default async function RootLayout({
   children,

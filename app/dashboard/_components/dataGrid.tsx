@@ -5,8 +5,8 @@ import { FaPiggyBank } from 'react-icons/fa';
 import { FaArrowTrendUp, FaArrowTrendDown } from 'react-icons/fa6';
 import { useGetSummary } from '@/features/summary/api/use-get-summary';
 import { formatDateRange } from '@/lib/utils';
-import DataCard from '@/app/dashboard/_components/data-card/data-card';
-import DataCardLoading from '@/app/dashboard/_components/data-card/data-card-loading';
+import DataCard from '@/app/dashboard/_components/dataCard/dataCard';
+import DataCardLoading from '@/app/dashboard/_components/dataCard/dataCardLoading';
 
 const DataGrid = () => {
 

@@ -8,8 +8,8 @@ import {
   CartesianGrid,
   YAxis
 } from 'recharts';
-import { BarVariantProps } from './bar-variant.types';
-import CustomTooltip from '@/components/shared/custom-tooltip/custom-tooltip';
+import { BarVariantProps } from './barVariant.types';
+import CustomTooltip from '@/components/shared/customTooltip/customTooltip';
 
 const BarVariant = ({
   data

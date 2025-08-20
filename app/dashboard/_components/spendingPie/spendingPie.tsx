@@ -14,10 +14,10 @@ import {
 } from '@/components/ui/card';
 import { FileSearch, PieChart, Radar, Target } from 'lucide-react';
 
-import { SpendingPieProps } from './spending-pie.types';
-import RadarVariant from '@/app/dashboard/_components/radar-variant/radar-variant';
-import PieVariant from '@/app/dashboard/_components/pie-variant/pie-variant';
-import RadialVariant from '@/app/dashboard/_components/radial-variant/radial-variant';
+import { SpendingPieProps } from './spendingPie.types';
+import RadarVariant from '@/app/dashboard/_components/radarVariant/radarVariant';
+import PieVariant from '@/app/dashboard/_components/pieVariant/pieVariant';
+import RadialVariant from '@/app/dashboard/_components/radialVariant/radialVariant';
 
 const SpendingPie = ({
   data = [],

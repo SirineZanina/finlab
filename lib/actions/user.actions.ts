@@ -22,14 +22,10 @@ export async function signIn(unsafeData: LoginParams) {
   try {
     const { success, data } = signInSchema.safeParse(unsafeData);
 
-    console.log('✅ Schema validation result:', success);
-
     if (!success) {
-      console.log('❌ Schema validation failed');
       throw new AppError('INVALID_CREDENTIALS', 'Invalid email or password', 400);
     }
 
-    console.log('🔍 Looking for user with email:', data.email);
     const user = await prisma.user.findFirst({
       where: { email: data.email },
       select: {
@@ -42,54 +38,30 @@ export async function signIn(unsafeData: LoginParams) {
       }
     });
 
-    console.log('👤 User found:', user ? 'YES' : 'NO');
     if (user == null) {
-      console.log('❌ User not found');
       throw new AppError('USER_NOT_FOUND', 'User not found', 404);
     }
 
-    console.log('🔐 Checking password...');
     const isCorrectPassword = await comparePasswords({
       hashedPassword: user.password,
       password: data.password,
       salt: user.salt
     });
 
-    console.log('🔐 Password check result:', isCorrectPassword);
-
     if (!isCorrectPassword) {
-      console.log('❌ Invalid password');
       throw new AppError('INVALID_CREDENTIALS', 'Invalid password', 400);
     }
 
-    console.log('🍪 Creating session...');
-    console.log('Session data:', {
-      id: user.id,
-      role: user.role.roleType,
-      businessId: user.businessId
-    });
-
-    const sessionResult = await createUserSession({
+    await createUserSession({
       id: user.id,
       role: user.role.roleType,
       businessId: user.businessId
     }, await cookies());
 
-    console.log('🍪 Session creation result:', sessionResult);
-    console.log('✅ Sign in successful - returning success');
-
     return { success: true };
 
   } catch (error) {
-    console.error('💥 Sign-in error:', error);
-    if (typeof error === 'object' && error !== null && 'constructor' in error) {
-      // @ts-ignore
-      console.error('Error type:', error.constructor.name);
-    }
-    if (typeof error === 'object' && error !== null && 'message' in error) {
-      // @ts-ignore
-      console.error('Error message:', error.message);
-    }
+    console.error('Error during sign in:', error);
 
     // Re-throw the error so it gets caught by the client
     throw error;
@@ -138,6 +110,7 @@ export async function signUp(unsafeData: SignUpParams) {
     if (existingBusiness) {
 	  throw new AppError('BUSINESS_EXISTS', 'Business with this name already exists', 400);
     }
+
     // Create business if it doesn't exist
     const business = await prisma.business.create({
       data: {

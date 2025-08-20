@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import HeaderBox from '../headerBox/headerBox';
+import HeaderBox from './headerBox/headerBox';
 import { usePathname } from 'next/navigation';
 
 const Header = () => {

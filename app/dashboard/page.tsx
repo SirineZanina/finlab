@@ -1,7 +1,7 @@
 'use client';
 
-import DataCharts from '@/app/dashboard/_components/data-chart/data-charts';
-import DataGrid from '@/app/dashboard/_components/data-grid';
+import DataCharts from '@/app/dashboard/_components/dataChart/dataCharts';
+import DataGrid from '@/app/dashboard/_components/dataGrid';
 
 const DashboardPage = () => {
 

@@ -21,7 +21,6 @@ import { RoleType } from '@/types/client/user';
 import { BusinessIndustries } from '@/types/client/business';
 
 const AuthForm = ({ type }: { type: string }) => {
-  console.log('🏗️ AuthForm component rendering with type:', type);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,9 +28,6 @@ const AuthForm = ({ type }: { type: string }) => {
 
   const form = useAuthForm(type);
   const formSchema = authFormSchema(type);
-
-  console.log('📋 Form initialized:', !!form);
-  console.log('📝 Schema created:', !!formSchema);
 
   const roleOptions = Object.values(RoleType).map(role => ({
     value: role,

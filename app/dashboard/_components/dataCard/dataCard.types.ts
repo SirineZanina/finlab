@@ -1,5 +1,5 @@
 import { VariantProps } from 'class-variance-authority';
-import { boxVariant, iconVariant } from './data-card.utils';
+import { boxVariant, iconVariant } from './dataCard.utils';
 import { IconType } from 'react-icons';
 
 type BoxVariant = VariantProps<typeof boxVariant>;

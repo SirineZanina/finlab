@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from './_nextjs/components/header/header';
-import Hero from './_nextjs/components/hero/hero';
-import LogoTicker from './_nextjs/components/logoTicker/logoTicker';
-import ProductShowcase from './_nextjs/components/productShowcase/productShowcase';
-import Pricing  from './_nextjs/components/pricing/pricing';
-import Testimonials from './_nextjs/components/testimonials/testimonials';
-import CallToAction from './_nextjs/components/callToAction/callToAction';
+import Header from './components/header';
+import Hero from './components/hero';
+import LogoTicker from './components/logoTicker';
+import ProductShowcase from './components/productShowcase';
+import Pricing  from './components/pricing/pricing';
+import Testimonials from './components/testimonials/testimonials';
+import CallToAction from './components/callToAction';
 
 const Home = () => {
   return (

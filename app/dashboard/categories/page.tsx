@@ -9,7 +9,7 @@ import { useBulkDeleteCategories } from '@/features/categories/api/use-bulk-dele
 // Hooks
 import { useNewCategory } from '@/features/categories/hooks/use-new-category';
 // Components
-import { DataTable } from '@/components/shared/data-table/data-table';
+import { DataTable } from '@/components/shared/dataTable/dataTable';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 

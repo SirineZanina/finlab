@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ProfileDropdown from '../profileDropdown/profileDropdown';
+import ProfileDropdown from './profileDropdown/profileDropdown';
 import { useSession } from '@/features/auth/hooks/use-session';
 import { UserCircle2, Search } from 'lucide-react';
-import CommandPalette from '../command-palette/command-palette';
+import CommandPalette from './commandPalette/commandPalette';
 
 const HeaderBar = () => {
   const session = useSession();

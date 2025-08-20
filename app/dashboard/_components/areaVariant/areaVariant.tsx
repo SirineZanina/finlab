@@ -2,29 +2,30 @@ import { format } from 'date-fns';
 import {
   Tooltip,
   XAxis,
-  LineChart,
-  Line,
+  YAxis,
+  AreaChart,
+  Area,
   ResponsiveContainer,
-  CartesianGrid,
-  YAxis
+  CartesianGrid
 } from 'recharts';
-import { LineVariantProps } from './line-variant.types';
-import CustomTooltip from '@/components/shared/custom-tooltip/custom-tooltip';
+import { AreaVariantProps } from './areaVariant.types';
+import CustomTooltip from '@/components/shared/customTooltip/customTooltip';
 
-const LineVarient = ({
-  data
-} : LineVariantProps) => {
+const AreaVariant = ({ data }: AreaVariantProps) => {
   return (
     <ResponsiveContainer width="100%" height={350}>
-      <LineChart data={data}>
+      <AreaChart
+        data={data}
+        margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+      >
         <defs>
           <linearGradient id='income' x1='0' y1='0' x2='0' y2='1'>
-            <stop offset='2%' stopColor='#31b099' stopOpacity={0.8} />
-            <stop offset='98%' stopColor='#31b099' stopOpacity={0.2} />
+            <stop offset='5%' stopColor='#31b099' stopOpacity={0.4} />
+            <stop offset='95%' stopColor='#31b099' stopOpacity={0.05} />
           </linearGradient>
           <linearGradient id='expenses' x1='0' y1='0' x2='0' y2='1'>
-            <stop offset='2%' stopColor='#c65468' stopOpacity={0.8} />
-            <stop offset='98%' stopColor='#c65468' stopOpacity={0.2} />
+            <stop offset='5%' stopColor='#c65468' stopOpacity={0.4} />
+            <stop offset='95%' stopColor='#c65468' stopOpacity={0.05} />
           </linearGradient>
         </defs>
 
@@ -63,26 +64,36 @@ const LineVarient = ({
           domain={[0, 'dataMax + 1000']}
         />
 
-        <Tooltip content={<CustomTooltip  />} />
+        <Tooltip
+          content={<CustomTooltip />}
+          cursor={false}
+        />
 
-        <Line
-          dot={false}
-	 	  dataKey='income'
+        <Area
+          type='monotone'
+          dataKey='income'
+          stackId='1'
+          strokeWidth={2.5}
           stroke='#31b099'
-		  strokeWidth={2}
-          className='drop-shadow-xs'
+          fill='url(#income)'
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
-        <Line
-          dot={false}
-	 	  dataKey='expenses'
-          stroke='#c65468'
-		  strokeWidth={2}
-          className='drop-shadow-xs'
-        />
-      </LineChart>
 
+        <Area
+          type='monotone'
+          dataKey='expenses'
+          stackId='2'
+          strokeWidth={2.5}
+          stroke='#c65468'
+          fill='url(#expenses)'
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </AreaChart>
     </ResponsiveContainer>
+
   );
 };
 
-export default LineVarient;
+export default AreaVariant;

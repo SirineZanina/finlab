@@ -5,10 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import AnimatedCounter from '@/app/dashboard/_components/animated-counter/animated-counter';
+import AnimatedCounter from '@/app/dashboard/_components/animatedCounter/animatedCounter';
 import { cn, formatPercentage } from '@/lib/utils';
-import { boxVariant, iconVariant } from './data-card.utils';
-import { DataCardProps } from './data-card.types';
+import { boxVariant, iconVariant } from './dataCard.utils';
+import { DataCardProps } from './dataCard.types';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 
 const DataCard = ({

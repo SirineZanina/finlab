@@ -14,9 +14,9 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { AreaChart, BarChart3, FileSearch, LineChart } from 'lucide-react';
-import AreaVariant from '@/app/dashboard/_components/area-variant/area-variant';
-import BarVariant from '@/app/dashboard/_components/bar-variant/bar-variant';
-import LineVariant from '@/app/dashboard/_components/line-variant/line-variant';
+import AreaVariant from '@/app/dashboard/_components/areaVariant/area-variant';
+import BarVariant from '@/app/dashboard/_components/barVariant/bar-variant';
+import LineVariant from '@/app/dashboard/_components/lineVariant/line-variant';
 
 const Chart = ({
   data = []
