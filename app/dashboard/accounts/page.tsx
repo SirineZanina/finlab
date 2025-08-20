@@ -29,8 +29,6 @@ const AccountsPage = () => {
     const ids = rows.map(row => row.original.id);
     const count = ids.length;
 
-    console.log('Rows',rows.map(row => row.original)); // Log the actual account data
-
     // Show appropriate loading toast
     const loadingMessage = count === 1 ? 'Deleting account...' : `Deleting ${count} accounts...`;
     toast.loading(loadingMessage, { id: 'delete-accounts' });

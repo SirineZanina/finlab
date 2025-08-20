@@ -32,7 +32,9 @@ const NewAccountSheet = () => {
           onSubmit={onSubmit}
 		  disabled={mutation.isPending}
           defaultValues={{
-            name: ''
+            name: '',
+            bankId: '',
+            currencyId: ''
 		  }}
         />
 	  </SheetContent>

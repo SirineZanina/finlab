@@ -47,8 +47,14 @@ const EditAccountSheet = () => {
   };
 
   const defaultValues = accountQuery.data ? {
-    name: accountQuery.data.name
-  } : { name: ''};
+    name: accountQuery.data.name,
+    bankId: accountQuery.data.bankId,
+    currencyId: accountQuery.data.currencyId,
+  } : {
+    name: '',
+    bankId: '',
+    currencyId: ''
+  };
 
   return (
     <>

@@ -32,7 +32,7 @@ export type TransferParams = {
 export interface AddFundingSourceParams {
   dwollaCustomerId: string;
   processorToken: string;
-  bankName: string;
+  accountName: string;
   accountType?: string; // 'checking', 'savings', etc.
   accountId?: string; // Plaid account ID for uniqueness
 }

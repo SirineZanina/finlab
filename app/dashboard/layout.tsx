@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from '../../components/shared/header/header';
-import { getCurrentUser } from '../(auth)/_nextjs/currentUser';
+import { getCurrentUser } from '../(auth)/_lib/currentUser';
 import CompanyLogo from '@/components/shared/companyLogo/companyLogo';
 import MobileNavbar from '../../components/shared/mobileNavbar/mobileNavbar';
 import Sidebar from '@/components/shared/sidebar/sidebar';

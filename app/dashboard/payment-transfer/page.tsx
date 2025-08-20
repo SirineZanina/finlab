@@ -1,5 +1,5 @@
 import React from 'react';
-import { getCurrentUser } from '@/app/(auth)/_nextjs/currentUser';
+import { getCurrentUser } from '@/app/(auth)/_lib/currentUser';
 // import { getAccounts } from '@/lib/actions/bank.actions';
 
 const PaymentTransfer = async () => {

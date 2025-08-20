@@ -8,7 +8,7 @@ import { prisma } from '@/lib/prisma';
 // Middleware
 import { withSession } from '@/lib/middleware';
 // Utils
-import { parseStringify } from '@/lib/utils';
+import { encryptId, parseStringify } from '@/lib/utils';
 // Schema types
 import { CreateAccountSchema, UpdateAccountSchema } from '@/types/schemas/account-schema';
 // Api types
@@ -44,6 +44,10 @@ export const accountsRouter = new Hono<{
 
       const accounts: Account[] = await prisma.account.findMany({
         where: { businessId },
+        include: {
+          bank: true,
+          currency: true
+        }
       });
 
       const response: GetAccountsResponse = {
@@ -90,6 +94,10 @@ export const accountsRouter = new Hono<{
         where: {
           id,
           businessId
+        },
+        include: {
+		  bank: true,
+		  currency: true
         }
       });
 
@@ -145,7 +153,10 @@ export const accountsRouter = new Hono<{
 
       const account = await prisma.account.create({
         data: {
-          ...body,
+          name: body.name,
+          currencyId: body.currencyId,
+          bankId: body.bankId,
+		  shareableId: encryptId(body.name),
           businessId,
         },
       });
@@ -243,7 +254,11 @@ export const accountsRouter = new Hono<{
             id: id,
             businessId: businessId
           },
-          data: body,
+          data: {
+            ...(body.name !== undefined && { name: body.name }),
+            ...(body.currencyId !== undefined && { currencyId: body.currencyId }),
+            ...(body.bankId !== undefined && { bankId: body.bankId }),
+          },
         });
 
         const response: UpdateAccountResponse = {

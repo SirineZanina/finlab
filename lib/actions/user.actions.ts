@@ -4,51 +4,96 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
 import { BusinessIndustry, RoleType } from '@prisma/client';
-import { signInSchema, signUpSchema } from '@/app/(auth)/_nextjs/schema';
-import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_core/passwordHasher';
-import { removeUserFromSession } from '@/app/(auth)/_core/session/session';
+import { signInSchema, signUpSchema } from '@/app/(auth)/_lib/schema';
+import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_lib/utils/passwordHasher';
+import { removeUserFromSession } from '@/app/(auth)/_lib/utils/session/session';
 import { AppError } from '../errors/appError';
 import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
 import { extractCustomerIdFromUrl } from '../utils';
 import { LoginParams, SignUpParams } from '@/types/client/user';
-import { createUserSession } from '@/app/(auth)/_core/session/createUserSession';
+import { createUserSession } from '@/app/(auth)/_lib/utils/session/createUserSession';
 
 // ================ SIGN IN ================
 
 export async function signIn(unsafeData: LoginParams) {
+  console.log('🚀 SignIn server action called');
+  console.log('📧 Email:', unsafeData.email);
 
-  const { success, data } = signInSchema.safeParse(unsafeData);
-  if (!success) throw new AppError('INVALID_CREDENTIALS', 'Invalid email or password', 400);
+  try {
+    const { success, data } = signInSchema.safeParse(unsafeData);
 
-  const user =  await prisma.user.findFirst({
-    where: { email: data.email },
-    select: {
-	  id: true,
-	  password: true,
-	  salt: true,
-	  email: true,
-	  role: true,
-	  businessId: true,
+    console.log('✅ Schema validation result:', success);
+
+    if (!success) {
+      console.log('❌ Schema validation failed');
+      throw new AppError('INVALID_CREDENTIALS', 'Invalid email or password', 400);
     }
-  });
 
-  if (user == null) throw new AppError('USER_NOT_FOUND', 'User not found', 404);
+    console.log('🔍 Looking for user with email:', data.email);
+    const user = await prisma.user.findFirst({
+      where: { email: data.email },
+      select: {
+        id: true,
+        password: true,
+        salt: true,
+        email: true,
+        role: true,
+        businessId: true,
+      }
+    });
 
-  const isCorrectPassword = await comparePasswords({
-    hashedPassword: user.password,
-    password: data.password,
-    salt: user.salt
-  });
+    console.log('👤 User found:', user ? 'YES' : 'NO');
+    if (user == null) {
+      console.log('❌ User not found');
+      throw new AppError('USER_NOT_FOUND', 'User not found', 404);
+    }
 
-  if (!isCorrectPassword) throw new AppError('INVALID_CREDENTIALS', 'Invalid password', 400);
+    console.log('🔐 Checking password...');
+    const isCorrectPassword = await comparePasswords({
+      hashedPassword: user.password,
+      password: data.password,
+      salt: user.salt
+    });
 
-  await createUserSession({
-    id: user.id,
-    role: user.role.roleType,
-    businessId: user.businessId
-  }, await cookies());
+    console.log('🔐 Password check result:', isCorrectPassword);
 
-  redirect('/dashboard');
+    if (!isCorrectPassword) {
+      console.log('❌ Invalid password');
+      throw new AppError('INVALID_CREDENTIALS', 'Invalid password', 400);
+    }
+
+    console.log('🍪 Creating session...');
+    console.log('Session data:', {
+      id: user.id,
+      role: user.role.roleType,
+      businessId: user.businessId
+    });
+
+    const sessionResult = await createUserSession({
+      id: user.id,
+      role: user.role.roleType,
+      businessId: user.businessId
+    }, await cookies());
+
+    console.log('🍪 Session creation result:', sessionResult);
+    console.log('✅ Sign in successful - returning success');
+
+    return { success: true };
+
+  } catch (error) {
+    console.error('💥 Sign-in error:', error);
+    if (typeof error === 'object' && error !== null && 'constructor' in error) {
+      // @ts-ignore
+      console.error('Error type:', error.constructor.name);
+    }
+    if (typeof error === 'object' && error !== null && 'message' in error) {
+      // @ts-ignore
+      console.error('Error message:', error.message);
+    }
+
+    // Re-throw the error so it gets caught by the client
+    throw error;
+  }
 }
 
 // ================ SIGN UP ================

@@ -5,10 +5,10 @@ import { plaidClient } from '../plaid';
 import { prisma } from '../prisma';
 import { revalidatePath } from 'next/cache';
 import { addMultipleAccountsFromPlaid } from './dwolla.actions';
-import { createBankAccount } from './account.actions';
 import { AppError } from '../errors/appError';
 import { ExchangePublicTokenProps, User } from '@/types/client/user';
 import { encryptId, parseStringify } from '../utils';
+import { getDefaultCurrency } from '@/prisma/seed';
 
 export const createLinkToken = async (user: User) => {
   const tokenParams: LinkTokenCreateRequest = {
@@ -52,12 +52,17 @@ export const exchangePublicToken = async ({
     const accessToken = response.data.access_token;
     const itemId = response.data.item_id;
 
+    console.log(`Access Token: ${accessToken}`);
+    console.log(`Item ID: ${itemId}`);
+
     // Get account information from Plaid using the access token
     const accountsResponse = await plaidClient.accountsGet({
       access_token: accessToken,
     });
 
     const accountsData = accountsResponse.data.accounts;
+
+    console.log('Accounts data from Plaid:', accountsData);
 
     // ===== NEW: Create funding sources for ALL accounts =====
     const plaidAccountsForDwolla = [];
@@ -73,13 +78,12 @@ export const exchangePublicToken = async ({
       const processorTokenResponse = await plaidClient.processorTokenCreate(request);
       const processorToken = processorTokenResponse.data.processor_token;
 
-      // Prepare account data for Dwolla
       plaidAccountsForDwolla.push({
         processorToken,
-        bankName: account.name, // e.g., "Chase Bank"
-        accountType: account.subtype || account.type, // e.g., "checking", "savings"
+        accountOfficialName: account.official_name || '',
+        accountName: account.name,
+        accountType: account.type,
         accountId: account.account_id,
-        accountName: account.official_name || account.name,
       });
     }
 
@@ -89,23 +93,64 @@ export const exchangePublicToken = async ({
       plaidAccountsForDwolla
     );
 
-    console.log(`Created ${fundingSourceUrls.length} funding sources:`, fundingSourceUrls);
+    const fundingSourceMap = new Map(
+      fundingSourceUrls.map(url => [url.accountId, url.fundingSourceUrl])
+    );
 
-    // Create bank record (using the first account for backward compatibility)
-    const primaryFundingSourceUrl = fundingSourceUrls[0];
-    if (!primaryFundingSourceUrl) {
-      throw new AppError('CREATE_FUNDING_SOURCE_FAILED', 'Failed to create any funding sources', 500);
+    const currencyCodes = [...new Set(accountsData.map(account =>
+      account.balances.iso_currency_code || 'USD'
+    ))];
+
+    const currencies = await prisma.currency.findMany({
+      where: { code: { in: currencyCodes } }
+    });
+
+    const defaultCurrency = await getDefaultCurrency();
+    const currencyMap = new Map(currencies.map(c => [c.code, c.id]));
+
+    const data = accountsData.map((account) => {
+      const currencyCode = account.balances.iso_currency_code || 'USD';
+      const currencyId = currencyMap.get(currencyCode) || defaultCurrency?.id;
+
+      if (!currencyId) {
+        throw new AppError('CURRENCY_ID_NOT_FOUND', `Currency ID not found for code: ${currencyCode}`, 500);
+      }
+
+      return {
+        businessId: user.businessId,
+        name: account.name,
+        officialName: account.official_name || '',
+        type: account.type,
+        subtype: account.subtype,
+        plaidId: account.account_id,
+        accessToken,
+        fundingSourceUrl: fundingSourceMap.get(account.account_id),
+        shareableId: encryptId(account.account_id),
+        bankId: itemId,
+        currencyId,
+      };
+    });
+
+    console.log('dwolla plaid accounts:', plaidAccountsForDwolla);
+
+    console.log('Accounts created:', data);
+
+    const result = await prisma.account.createMany({
+      data: data,
+      skipDuplicates: true,
+    });
+
+    if (!result) {
+	  throw new AppError('CREATE_ACCOUNT_FAILED', 'Failed to create accounts', 500);
     }
 
-    const bank = await createBankAccount({
-      userId: user.id,
-      businessId: user.businessId,
-      plaidBankId: itemId,
-      plaidId: accountsData[0].account_id,
-      accessToken,
-      fundingSourceUrl: primaryFundingSourceUrl,
-      shareableId: encryptId(accountsData[0].account_id),
+    const createdAccounts = await prisma.account.findMany({
+      where: {
+        plaidId: { in: accountsData.map(a => a.account_id) }
+      }
     });
+
+    console.log('Created accounts:', createdAccounts);
 
     // Fetch transactions for the last 30 days
     const startDate = new Date();
@@ -122,22 +167,6 @@ export const exchangePublicToken = async ({
 
     // Create account records for each account
     const plaidToDbIdMap: Record<string, string> = {};
-
-    await Promise.all(
-      accountsData.map(async (accountData) => {
-        const createdAccount = await prisma.account.create({
-          data: {
-            name: accountData.name,
-            businessId: user.businessId,
-            bankId: bank.id,
-            plaidId: accountData.account_id,
-          },
-        });
-
-        plaidToDbIdMap[accountData.account_id] = createdAccount.id;
-        return createdAccount;
-      })
-    );
 
     // Create categories from Plaid transactions and get category mapping
     const categoryMap: Record<string, string> = {};

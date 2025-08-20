@@ -1,11 +1,7 @@
 import { CreateAccountSchema } from '@/types/schemas/account-schema';
 import z from 'zod';
 
-export const formSchema = CreateAccountSchema.pick({
-  name: true
-});
-
-export type FormValues = z.infer<typeof formSchema>;
+export type FormValues = z.infer<typeof CreateAccountSchema>;
 
 export type AccountFormProps = {
 	id?: string;

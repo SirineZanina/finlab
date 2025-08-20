@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import BankCard from './bankCard/bankCard';
+import BankCard from '../../banks/bankList/bankCard/bankCard';
 import { PlusIcon } from '@/components/assets/icons/plusIcon';
 import { BankSectionProps } from './bankSection.types';
 

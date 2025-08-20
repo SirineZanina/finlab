@@ -1,5 +1,6 @@
 import { Permission, RoleType } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
+import { encryptId } from '@/lib/utils';
 
 async function main() {
   console.log('Start seeding ...');
@@ -7,6 +8,7 @@ async function main() {
   await seedRoles();
   await seedPermissions();
   await seedTransactions();
+  await seedCurrencies();
 
   console.log('Seeding finished.');
 }
@@ -60,15 +62,34 @@ async function seedPermissions() {
   console.log('Permissions seeded.');
 }
 
+export async function seedBanks() {
+  console.log('Seeding banks...');
+
+  const banks = [
+    { name: 'Bank of America', code: 'BOA'},
+    { name: 'Chase Bank', code: 'CHASE' },
+    { name: 'Wells Fargo', code: 'WELLS' },
+    { name: 'Citibank', code: 'CITI' },
+    { name: 'PNC Bank', code: 'PNC' },
+  ];
+
+  await prisma.bank.createMany({
+    data: banks,
+    skipDuplicates: true,
+  });
+
+  console.log(`✅ Successfully seeded ${banks.length} banks`);
+}
+
 async function seedTransactions() {
   console.log('Seeding transactions...');
   const user = await prisma.user.findUnique({
-    where: { email: 'testsyrine@gmail.com' },
+    where: { email: 'testfinlab112@gmail.com' },
     include: { business: true }
   });
 
   if (!user) {
-    throw new Error('User testsyrine@gmail.com not found!');
+    throw new Error('User testfinlab112@gmail.com not found!');
   }
 
   console.log(`Found user: ${user.firstName} ${user.lastName}`);
@@ -81,11 +102,28 @@ async function seedTransactions() {
     where: { businessId: businessId }
   });
 
+  const bank = await prisma.bank.findFirst({
+    where: { code: 'BOA' }
+  });
+
+  if (!bank) {
+    throw new Error('Bank BOA not found! Please seed banks first.');
+  }
+
+  const defaultCurrency = await getDefaultCurrency();
+
+  if (!defaultCurrency) {
+    throw new Error('Default currency USD not found! Please seed currencies first.');
+  }
+
   if (!account) {
     account = await prisma.account.create({
       data: {
         name: 'Main Account',
-        businessId: businessId
+        businessId: businessId,
+        currencyId: defaultCurrency.id,
+        bankId: bank.id,
+        shareableId: encryptId('Main Account')
       }
     });
     console.log('✅ Created new account: Main Account');
@@ -162,16 +200,6 @@ async function seedTransactions() {
     });
     console.log('✅ Created Utilities category');
   }
-
-  // Clear existing transactions for this business (optional)
-  const deletedTransactions = await prisma.transaction.deleteMany({
-    where: {
-      account: {
-        businessId: businessId
-      }
-    }
-  });
-  console.log(`Cleared ${deletedTransactions.count} existing transactions`);
 
   const seedTransactions = [
     // ===== PREVIOUS PERIOD (60-31 days ago) =====
@@ -302,8 +330,86 @@ async function seedTransactions() {
   console.log('   - Remaining Change: 16.67% ↑');
 }
 
-main()
+export async function seedCurrencies() {
+  console.log('Starting currency seeding...');
 
+  const CURRENCIES = [
+  // Major World Currencies
+    { code: 'USD', name: 'US Dollar', symbol: '$' },
+    { code: 'EUR', name: 'Euro', symbol: '€' },
+    { code: 'GBP', name: 'British Pound Sterling', symbol: '£' },
+    { code: 'JPY', name: 'Japanese Yen', symbol: '¥' },
+    { code: 'CHF', name: 'Swiss Franc', symbol: 'CHF' },
+    { code: 'CAD', name: 'Canadian Dollar', symbol: 'C$' },
+    { code: 'AUD', name: 'Australian Dollar', symbol: 'A$' },
+    { code: 'CNY', name: 'Chinese Yuan', symbol: '¥' },
+
+    // Middle East & Africa
+    { code: 'TND', name: 'Tunisian Dinar', symbol: 'د.ت' },
+    { code: 'MAD', name: 'Moroccan Dirham', symbol: 'MAD' },
+    { code: 'EGP', name: 'Egyptian Pound', symbol: 'E£' },
+    { code: 'SAR', name: 'Saudi Riyal', symbol: 'SR' },
+    { code: 'AED', name: 'UAE Dirham', symbol: 'AED' },
+    { code: 'ZAR', name: 'South African Rand', symbol: 'R' },
+
+    // Other Popular Currencies
+    { code: 'INR', name: 'Indian Rupee', symbol: '₹' },
+    { code: 'BRL', name: 'Brazilian Real', symbol: 'R$' },
+    { code: 'MXN', name: 'Mexican Peso', symbol: '$' },
+    { code: 'KRW', name: 'South Korean Won', symbol: '₩' },
+    { code: 'SGD', name: 'Singapore Dollar', symbol: 'S$' },
+    { code: 'NZD', name: 'New Zealand Dollar', symbol: 'NZ$' },
+    { code: 'SEK', name: 'Swedish Krona', symbol: 'kr' },
+    { code: 'NOK', name: 'Norwegian Krone', symbol: 'kr' },
+    { code: 'DKK', name: 'Danish Krone', symbol: 'kr' },
+    { code: 'PLN', name: 'Polish Zloty', symbol: 'zł' },
+    { code: 'CZK', name: 'Czech Koruna', symbol: 'Kč' },
+    { code: 'HUF', name: 'Hungarian Forint', symbol: 'Ft' },
+    { code: 'RUB', name: 'Russian Ruble', symbol: '₽' },
+    { code: 'TRY', name: 'Turkish Lira', symbol: '₺' },
+    { code: 'THB', name: 'Thai Baht', symbol: '฿' },
+    { code: 'MYR', name: 'Malaysian Ringgit', symbol: 'RM' },
+    { code: 'PHP', name: 'Philippine Peso', symbol: '₱' },
+    { code: 'IDR', name: 'Indonesian Rupiah', symbol: 'Rp' },
+    { code: 'VND', name: 'Vietnamese Dong', symbol: '₫' },
+  ];
+
+  try {
+    // Use createMany for better performance
+    const result = await prisma.currency.createMany({
+      data: CURRENCIES,
+      skipDuplicates: true, // Skip if currency already exists (based on unique constraint)
+    });
+
+    console.log(`✅ Successfully seeded ${result.count} currencies`);
+
+    // Optionally, get all currencies to verify
+    const allCurrencies = await prisma.currency.findMany({
+      orderBy: { code: 'asc' },
+    });
+
+    console.log(`Total currencies in database: ${allCurrencies.length}`);
+
+    return allCurrencies;
+  } catch (error) {
+    console.error('❌ Error seeding currencies:', error);
+    throw error;
+  }
+}
+
+// Helper function to get currency by code
+export async function getCurrencyByCode(code: string) {
+  return await prisma.currency.findUnique({
+    where: { code },
+  });
+}
+
+// Helper function to get default currency (USD)
+export async function getDefaultCurrency() {
+  return await getCurrencyByCode('USD');
+}
+
+main()
   .catch((e) => {
     console.error(e);
     process.exit(1);

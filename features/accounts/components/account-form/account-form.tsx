@@ -12,8 +12,9 @@ import {
   FormLabel,
   FormMessage
 } from '@/components/ui/form';
-import { AccountFormProps, formSchema, FormValues } from './account-form.types';
+import { AccountFormProps, FormValues } from './account-form.types';
 import { TrashIcon } from 'lucide-react';
+import { CreateAccountSchema } from '@/types/schemas/account-schema';
 
 const AccountForm = ({
   id,
@@ -23,7 +24,7 @@ const AccountForm = ({
   disabled
 } : AccountFormProps) => {
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(CreateAccountSchema),
     defaultValues: defaultValues
   });
 
@@ -56,6 +57,40 @@ const AccountForm = ({
               <FormMessage />
             </FormItem>
           )}
+        />
+        <FormField
+          name='bankId'
+          control={form.control}
+          render={({ field }) => (
+		  <FormItem>
+              <FormLabel>Bank</FormLabel>
+              <FormControl>
+			  <Input
+                  {...field}
+                  disabled={disabled}
+                  placeholder='e.g. Bank of America, Chase'
+			  />
+              </FormControl>
+              <FormMessage />
+		  </FormItem>
+          )}
+        />
+        <FormField
+		  name='currencyId'
+		  control={form.control}
+		  render={({ field }) => (
+					  <FormItem>
+              <FormLabel>Currency</FormLabel>
+              <FormControl>
+			  <Input
+                  {...field}
+                  disabled={disabled}
+                  placeholder='e.g. USD, EUR'
+			  />
+              </FormControl>
+              <FormMessage />
+					  </FormItem>
+		  )}
         />
         <Button className='w-full' disabled={disabled}>
           {id ? 'Save changes' : 'Create Account'}

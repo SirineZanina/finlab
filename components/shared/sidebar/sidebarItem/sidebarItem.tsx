@@ -1,10 +1,9 @@
 'use client';
 import Link from 'next/link';
-import React from 'react';
-import PlaidLink from '@/app/(auth)/_nextjs/_components/plaidLink/plaidLink';
-import { SidebarItemProps } from './sidebarItem.types';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import PlaidLink from '@/app/(auth)/_lib/components/plaidLink/plaidLink';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SidebarItemProps } from './sidebarItem.types';
 
 const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemProps) => {
   const commonClasses = cn(
@@ -53,8 +52,8 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
             )}
           </TooltipTrigger>
           <TooltipContent
-            side="right"
-            className="px-3 py-2 text-sm font-medium bg-gray-900 text-white border-gray-800"
+            side='right'
+            className='px-3 py-2 text-sm font-medium bg-gray-900 text-white border-gray-800'
             sideOffset={12}
           >
             <span>{item.label}</span>
@@ -68,7 +67,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
   if (item.isPlaid) {
     return (
       <div className={cn(commonClasses, 'py-3 px-4 [&_*]:cursor-pointer cursor-pointer')}>
-        <div className="flex items-center space-x-4 w-full">
+        <div className='flex items-center space-x-4 w-full'>
           {item.icon && (
             <item.icon
               width={20}
@@ -81,7 +80,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
               )}
             />
           )}
-          <div className="flex-1 min-w-0">
+          <div className='flex-1 min-w-0'>
             <PlaidLink user={user} />
           </div>
         </div>
@@ -91,7 +90,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
 
   return (
     <Link href={item.route} className={cn(commonClasses, 'py-3 px-4')}>
-      <div className="flex items-center space-x-4 w-full">
+      <div className='flex items-center space-x-4 w-full'>
         {item.icon && (
           <item.icon
             width={20}
@@ -104,7 +103,7 @@ const SidebarItem = ({ item, isActive, isSidebarExpanded, user }: SidebarItemPro
             )}
           />
         )}
-        <span className="font-medium text-base truncate">{item.label}</span>
+        <span className='font-medium text-base truncate'>{item.label}</span>
       </div>
     </Link>
   );

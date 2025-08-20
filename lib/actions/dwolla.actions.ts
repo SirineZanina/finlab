@@ -123,7 +123,7 @@ export const deactivateDwollaCustomer = async (customerUrl: string) => {
 export const addFundingSource = async ({
   dwollaCustomerId,
   processorToken,
-  bankName,
+  accountName,
   accountType = '',
   accountId = '',
 }: AddFundingSourceParams) => {
@@ -134,8 +134,8 @@ export const addFundingSource = async ({
 
     // Create a unique name that includes account type
     const uniqueFundingSourceName = accountType
-      ? `${bankName} ${accountType}`
-      : bankName;
+      ? `${accountName} ${accountType}`
+      : accountName;
 
     // More specific matching - check by name AND account details
     const existingFundingSource = fundingSources.body._embedded['funding-sources'].find(
@@ -176,94 +176,43 @@ export const addFundingSource = async ({
   }
 };
 
-// Helper function to add multiple accounts from Plaid
 export const addMultipleAccountsFromPlaid = async (
   dwollaCustomerId: string,
   plaidAccounts: Array<{
     processorToken: string;
-    bankName: string;
+    accountOfficialName: string;
+    accountName: string;
     accountType: string;
     accountId: string;
-    accountName?: string;
   }>
 ) => {
-  const fundingSourceUrls: string[] = [];
+  const results: Array<{
+    accountId: string;
+    fundingSourceUrl: string | null;
+  }> = [];
 
   for (const account of plaidAccounts) {
     try {
       const fundingSourceUrl = await addFundingSource({
         dwollaCustomerId,
         processorToken: account.processorToken,
-        bankName: account.bankName,
+        accountName: account.accountName,
         accountType: account.accountType,
         accountId: account.accountId,
       });
 
-      if (fundingSourceUrl) {
-        fundingSourceUrls.push(fundingSourceUrl);
-      }
+      results.push({
+        accountId: account.accountId,
+        fundingSourceUrl: fundingSourceUrl || null,
+      });
     } catch (err) {
-      console.error(`Failed to add funding source for ${account.bankName} ${account.accountType}:`, err);
-      // Continue with other accounts even if one fails
+      console.error(`Failed to add funding source for ${account.accountName} ${account.accountType}:`, err);
+      results.push({
+        accountId: account.accountId,
+        fundingSourceUrl: null,
+      });
     }
   }
 
-  return fundingSourceUrls;
-};
-
-// Function to get detailed funding sources with better info
-export const getDetailedFundingSources = async (customerId: string) => {
-  try {
-    const response = await dwollaClient.get(`customers/${customerId}/funding-sources`);
-    const fundingSources = response.body._embedded['funding-sources'];
-
-    return fundingSources.map((source: any) => ({
-      id: source.id,
-      name: source.name,
-      type: source.type, // 'bank', 'balance', etc.
-      status: source.status,
-      url: source._links.self.href,
-      bankName: source.bankName || 'Unknown',
-      // Add more fields as needed
-    }));
-  } catch (err) {
-    console.error('Get detailed funding sources failed: ', err);
-    throw new AppError('GET_FUNDING_SOURCES_FAILED', 'Failed to get funding sources', 500);
-  }
-};
-
-// Example usage in your application
-export const setupCustomerBankAccounts = async (
-  dwollaCustomerId: string,
-  plaidData: {
-    checkingProcessorToken?: string;
-    savingsProcessorToken?: string;
-    bankName: string;
-  }
-) => {
-  const fundingSources = [];
-
-  // Add checking account
-  if (plaidData.checkingProcessorToken) {
-    const checkingUrl = await addFundingSource({
-      dwollaCustomerId,
-      processorToken: plaidData.checkingProcessorToken,
-      bankName: plaidData.bankName,
-      accountType: 'Checking',
-    });
-    if (checkingUrl) fundingSources.push({ type: 'checking', url: checkingUrl });
-  }
-
-  // Add savings account
-  if (plaidData.savingsProcessorToken) {
-    const savingsUrl = await addFundingSource({
-      dwollaCustomerId,
-      processorToken: plaidData.savingsProcessorToken,
-      bankName: plaidData.bankName,
-      accountType: 'Savings',
-    });
-    if (savingsUrl) fundingSources.push({ type: 'savings', url: savingsUrl });
-  }
-
-  return fundingSources;
+  return results;
 };

@@ -14,15 +14,47 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
+model Country {
+    id   String @id @default(cuid())
+    code String @unique // US, TN, GB, etc.
+    name String // "United States", "Tunisia", "United Kingdom"
+
+    // Relationships
+    businesses Business[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("countries")
+}
+
+model Currency {
+    id     String @id @default(cuid())
+    code   String @unique // USD, EUR, GBP, TND
+    name   String // "US Dollar", "Euro"  
+    symbol String // "$", "€"
+
+    // Relationships
+    businesses Business[]
+    accounts   Account[]
+
+    @@map("currencies")
+}
+
 model Business {
     id       String           @id @default(cuid())
     name     String           @unique
     industry BusinessIndustry
-    user     User[]
 
+    // Currency settings
+    currencyId String
+    currency   Currency @relation(fields: [currencyId], references: [id])
+    country    Country  @relation(fields: [countryId], references: [id])
+    countryId  String
+
+    user     User[]
     accounts Account[]
     category Category[]
-    banks    Bank[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -111,19 +143,48 @@ enum Permission {
     MANAGE_BUDGETS
 }
 
+enum AccountSource {
+    PLAID
+    MANUAL
+}
+
 model Account {
-    id           String        @id @default(cuid())
-    name         String
+    id String @id @default(cuid())
+
+    // common fields
+    name       String
+    currencyId String
+    currency   Currency @relation(fields: [currencyId], references: [id])
+
+    source AccountSource @default(MANUAL)
+
+    isActive    Boolean @default(true)
+    shareableId String  @unique
+
+    // for manual accounts
+    accountType AccountType?
+
+    // fields for Plaid accounts
+    plaidId          String? @unique
+    officialName     String? // "Chase Business Checking", "Visa Business Card"
+    mask             String? // "1234", "5678" (for credit cards)
+    type             String? // "depository", "credit", etc.
+    subtype          String? // "checking", "savings", "visa", etc.
+    availableBalance Int?    @default(0) // In minor units (e.g., cents)
+    currentBalance   Int?    @default(0) // In minor units (e.g., cents
+    fundingSourceUrl String? // URL for funding source, used for Plaid accounts
+
+    // Relationships
     businessId   String
     business     Business      @relation(fields: [businessId], references: [id])
     transactions Transaction[]
     bank         Bank?         @relation(fields: [bankId], references: [id])
     bankId       String?
-    plaidId      String?       @unique
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
+    @@unique([name, businessId])
     @@map("accounts")
 }
 
@@ -131,7 +192,7 @@ model Category {
     id         String   @id @default(cuid())
     name       String
     plaidId    String?
-    business   Business @relation(fields: [businessId], references: [id])
+    business   Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
     businessId String
 
     createdAt   DateTime      @default(now())
@@ -141,37 +202,36 @@ model Category {
     @@map("categories")
 }
 
-// model PlaidAccount {
-//     id               String        @id @default(cuid())
-//     name             String
-//     availableBalance Float
-//     currentBalance   Float
-//     officialName     String
-//     mask             String
-//     institutionId    String
-//     type             String
-//     subtype          String
-//     shareableId      String        @unique
-//     businessId       String
-//     business         Business      @relation(fields: [businessId], references: [id])
-//     transactions     Transaction[]
-//     bank             Bank          @relation(fields: [bankId], references: [id])
-//     bankId           String
-//     plaidId          String        @unique
+model Bank {
+    id   String @id @default(cuid())
+    name String
+    code String @unique
 
-//     createdAt DateTime @default(now())
-//     updatedAt DateTime @updatedAt
+    source BankSource @default(MANUAL)
 
-//     @@unique([plaidId, businessId], name: "plaid_business_unique")
-//     @@map("plaid_accounts")
-// }
+    // Plaid specific fields
+    institutionId   String?
+    institutionType String? // "bank", "credit_union", etc.
+    institutionName String?
+    institutionLogo String?
+    plaidId         String? @unique // Plaid's unique identifier for the bank
+
+    accounts Account[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("banks")
+}
 
 enum AccountType {
-    DEPOSITORY
-    CREDIT
-    LOAN
-    INVESTMENT
-    OTHER
+    CREDIT_CARD
+    BANK_ACCOUNT
+}
+
+enum BankSource {
+    PLAID
+    MANUAL
 }
 
 model Transaction {
@@ -194,22 +254,4 @@ model Transaction {
 
     @@unique([name, createdAt, accountId], name: "transaction_unique")
     @@map("transactions")
-}
-
-model Bank {
-    id               String    @id @default(cuid())
-    userId           String
-    businessId       String
-    business         Business  @relation(fields: [businessId], references: [id])
-    plaidId          String
-    plaidBankId      String
-    accessToken      String
-    fundingSourceUrl String
-    shareableId      String    @unique
-    accounts         Account[]
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    @@map("banks")
 }

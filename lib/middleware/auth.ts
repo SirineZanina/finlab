@@ -1,7 +1,7 @@
 import { Context, Next } from 'hono';
 import { getCookie } from 'hono/cookie';
 import { HTTPException } from 'hono/http-exception';
-import { getUserFromSession } from '@/app/(auth)/_core/session/session';
+import { getUserFromSession } from '@/app/(auth)/_lib/utils/session/session';
 
 export const withSession = async (c: Context, next: Next) => {
   try {
