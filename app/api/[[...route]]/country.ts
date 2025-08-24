@@ -6,20 +6,8 @@ import { Hono } from 'hono';
 export const countriesRouter = new Hono<{
 	Variables: GetApiVariables
 }>()
-  .get('/', withSession, async (c) => {
+  .get('/', async (c) => {
     try {
-	  const businessId: string = c.get('businessId') as string;
-
-	  if (!businessId) {
-        const errorResponse: ApiErrorResponse = {
-		  success: false,
-		  error: {
-            code: 'UNAUTHORIZED',
-            message: 'Business ID is required'
-		  }
-        };
-        return c.json(errorResponse, 401);
-	  }
 	  // Fetch countries from the database or an external API
       const countries = await prisma.country.findMany({
         select: {

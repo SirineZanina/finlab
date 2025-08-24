@@ -15,17 +15,15 @@ datasource db {
 }
 
 model Country {
-    id      String @id @default(cuid())
-    code    String @unique // US, TN, GB, etc.
+    id      String  @id @default(cuid())
+    code    String  @unique // US, TN, GB, etc.
     name    String // "United States", "Tunisia", "United Kingdom"
-    flagUrl String // URL to the country's flag image
+    flagUrl String?
 
-    // Relationships
-    businesses Business[]
+    Address Address[]
 
-    createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
-    Address   Address[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     @@map("countries")
 }
@@ -43,7 +41,9 @@ model Address {
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
-    User      User[]
+
+    User     User[]
+    Business Business[]
 
     @@map("addresses")
 }
@@ -51,12 +51,11 @@ model Address {
 model Currency {
     id     String @id @default(cuid())
     code   String @unique // USD, EUR, GBP, TND
-    name   String // "US Dollar", "Euro"  
+    name   String // "US Dollar", "Euro"
     symbol String // "$", "€"
 
-    // Relationships
-    businesses Business[]
-    Account    Account[]
+    Account  Account[]
+    Business Business[]
 
     @@map("currencies")
 }
@@ -66,10 +65,11 @@ model Business {
     name     String           @unique
     industry BusinessIndustry
 
-    currencyId String
+    address   Address @relation(fields: [addressId], references: [id])
+    addressId String
+
     currency   Currency @relation(fields: [currencyId], references: [id])
-    country    Country  @relation(fields: [countryId], references: [id])
-    countryId  String
+    currencyId String
 
     user     User[]
     accounts Account[]
@@ -81,6 +81,7 @@ model Business {
 }
 
 enum BusinessIndustry {
+    INDIVIDUAL // For individual users
     FINANCE
     TECHNOLOGY
     HEALTHCARE
@@ -94,21 +95,23 @@ enum BusinessIndustry {
 }
 
 model User {
-    id              String   @id @default(cuid())
-    firstName       String
-    lastName        String
-    email           String   @unique
-    password        String
-    salt            String
-    profilePhotoUrl String?
-    address         Address? @relation(fields: [addressId], references: [id]) // ✅ Made optional
-    addressId       String? // ✅ Made optional
-    phoneNumber     String
-    roleId          String
-    businessId      String
+    id                String   @id @default(cuid())
+    firstName         String
+    lastName          String
+    email             String   @unique
+    password          String
+    salt              String
+    profilePhotoUrl   String?
+    address           Address  @relation(fields: [addressId], references: [id])
+    addressId         String
+    phoneNumber       String
+    dwollaCustomerUrl String
+    dwollaCustomerId  String
+    ssn               String // Social Security Number (CIN for Tunisia)
+    dateOfBirth       DateTime
 
-    dwollaCustomerUrl String?
-    dwollaCustomerId  String?
+    roleId     String
+    businessId String
 
     business Business @relation(fields: [businessId], references: [id])
     role     UserRole @relation(fields: [roleId], references: [id], name: "UserToRole")
@@ -116,8 +119,8 @@ model User {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([businessId]) // ✅ Added index
-    @@index([email]) // ✅ Added index
+    @@index([businessId])
+    @@index([email])
     @@map("users")
 }
 
@@ -170,27 +173,26 @@ enum AccountSource {
 }
 
 model Account {
-    id String @id @default(cuid())
-
+    id         String   @id @default(cuid())
     name       String
     currencyId String
-    currency   Currency @relation(fields: [currencyId], references: [id]) // ✅ Added missing relation
+    currency   Currency @relation(fields: [currencyId], references: [id])
 
     source      AccountSource @default(MANUAL)
     isActive    Boolean       @default(true)
     shareableId String        @unique
 
-    // for manual accounts
+    // For manual accounts
     accountType AccountType?
 
-    // fields for Plaid accounts - make them conditional based on source
+    // Fields for Plaid accounts
     plaidId          String? @unique
     officialName     String?
     mask             String?
     type             String?
     subtype          String?
-    availableBalance Int     @default(0) // ✅ Removed nullable, kept default
-    currentBalance   Int     @default(0) // ✅ Removed nullable, kept default
+    availableBalance Int     @default(0)
+    currentBalance   Int     @default(0)
     fundingSourceUrl String?
 
     // Relationships
@@ -213,8 +215,9 @@ model Category {
     id   String @id @default(cuid())
     name String
 
-    createdAt   DateTime      @default(now())
-    updatedAt   DateTime      @updatedAt
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
     Transaction Transaction[]
 
     @@map("categories")
@@ -232,7 +235,7 @@ model Bank {
     institutionType String? // "bank", "credit_union", etc.
     institutionName String?
     institutionLogo String?
-    plaidId         String? @unique // Plaid's unique identifier for the bank
+    plaidId         String? @unique
 
     accounts Account[]
 
@@ -253,26 +256,27 @@ enum BankSource {
 }
 
 model Transaction {
-    id             String    @id @default(cuid())
+    id             String   @id @default(cuid())
     name           String
-    amount         Int // Consider adding @check for positive/negative constraints
+    amount         Int
     payee          String
     date           DateTime
     paymentChannel String?
     pending        Boolean?
     image          String?
     notes          String?
-    account        Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-    accountId      String
-    category       Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-    categoryId     String?
+
+    account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+    accountId String
+
+    category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+    categoryId String?
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    // ✅ Improved unique constraint
     @@unique([name, date, accountId, amount], name: "transaction_unique")
-    @@index([accountId, date]) // ✅ Added composite index
-    @@index([date]) // ✅ Added date index
+    @@index([accountId, date])
+    @@index([date])
     @@map("transactions")
 }

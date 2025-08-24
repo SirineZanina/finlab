@@ -1,0 +1,161 @@
+'use client';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { onboardingSchema } from '@/features/onboarding/schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { useOnboardingStore } from '../../store';
+import { useEffect } from 'react';
+import { Select } from '@/components/shared/select/select';
+import { useGetCountries } from '@/features/countries/api/use-get-countries'; // Assuming you have this
+import CustomInput from '@/components/shared/customInput/customInput';
+import OnboardingStepHeader from '@/app/onboarding/_components/step-header/step-header';
+import { ArrowRight } from 'lucide-react';
+
+const onboardingContactDetailsSchema = onboardingSchema.pick({
+  address: true,
+  currencyId: true,
+});
+
+type OnboardingContactDetailsSchema = z.infer<typeof onboardingContactDetailsSchema>;
+
+export default function OnboardingContactDetails() {
+  const router = useRouter();
+
+  const countries = useGetCountries(); // You'll need this hook
+
+  const countryOptions = countries.data?.map(country => ({
+    value: country.id,
+    label: country.name,
+  })) || [];
+
+  const email = useOnboardingStore((state) => state.email);
+  const password = useOnboardingStore((state) => state.password);
+  const confirmPassword = useOnboardingStore((state) => state.confirmPassword);
+
+  const {
+    setContactDetails,
+    address,
+  } = useOnboardingStore();
+
+  const totalSteps = 7;
+
+  const form = useForm<OnboardingContactDetailsSchema>({
+    resolver: zodResolver(onboardingContactDetailsSchema),
+    defaultValues: {
+      address: address || {
+        street: '',
+        city: '',
+        state: '',
+        postalCode: '',
+        countryId: '',
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (!useOnboardingStore.persist.hasHydrated) return;
+    if (!email || !password || !confirmPassword) {
+      console.warn('Account info is incomplete, redirecting to account setup form.');
+      router.push('/onboarding/account-setup');
+    }
+  }, [email, password, confirmPassword, router]);
+
+  const onSubmit = (data: OnboardingContactDetailsSchema) => {
+    console.log('Form submitted with data:', data);
+    setContactDetails(data);
+    router.push('/onboarding/verification');
+  };
+
+  const handleBack = () => {
+    router.push('/onboarding/account-setup');
+  };
+
+  return (
+    <section className='flex flex-col gap-8'>
+      <OnboardingStepHeader
+        currentStep={4}
+        totalSteps={totalSteps}
+        title="Contact Details"
+        subtitle="Please provide your contact details to proceed with the onboarding process."
+        onBack={handleBack}
+      />
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
+
+          {/* Address Section */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-gray-900">Address Information</h3>
+
+            <CustomInput
+              control={form.control}
+              name="address.street"
+              label="Street Address"
+              placeholder="Enter your street address"
+              required
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CustomInput
+                control={form.control}
+                name="address.city"
+                label="City"
+                placeholder="Enter your city"
+                required
+              />
+
+              <CustomInput
+                control={form.control}
+                name="address.state"
+                label="State/Province"
+                placeholder="Enter your state or province"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <CustomInput
+                control={form.control}
+                name="address.postalCode"
+                label="Postal Code"
+                placeholder="Enter your postal code"
+                required
+              />
+
+              <FormField
+                name='address.countryId'
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Country</FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onChange={field.onChange}
+                        options={countryOptions}
+                        placeholder='Select your country'
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+
+          <Button
+            type='submit'
+            className="w-full flex items-center gap-2"
+            disabled={form.formState.isSubmitting}
+          >
+            {form.formState.isSubmitting ? 'Processing...' : 'Continue'}
+            <ArrowRight className="w-4 h-4" />
+          </Button>
+        </form>
+      </Form>
+    </section>
+  );
+}

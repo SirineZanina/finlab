@@ -7,8 +7,8 @@ async function main() {
 
   await seedRoles();
   await seedPermissions();
-  await seedTransactions();
   await seedCurrencies();
+  await seedCountries();
 
   console.log('Seeding finished.');
 }
@@ -81,254 +81,254 @@ export async function seedBanks() {
   console.log(`✅ Successfully seeded ${banks.length} banks`);
 }
 
-async function seedTransactions() {
-  console.log('Seeding transactions...');
-  const user = await prisma.user.findUnique({
-    where: { email: 'testfinlab112@gmail.com' },
-    include: { business: true }
-  });
+// async function seedTransactions() {
+//   console.log('Seeding transactions...');
+//   const user = await prisma.user.findUnique({
+//     where: { email: 'testfinlab112@gmail.com' },
+//     include: { business: true }
+//   });
 
-  if (!user) {
-    throw new Error('User testfinlab112@gmail.com not found!');
-  }
+//   if (!user) {
+//     throw new Error('User testfinlab112@gmail.com not found!');
+//   }
 
-  console.log(`Found user: ${user.firstName} ${user.lastName}`);
-  console.log(`Business: ${user.business.name}`);
+//   console.log(`Found user: ${user.firstName} ${user.lastName}`);
+//   console.log(`Business: ${user.business.name}`);
 
-  const businessId = user.businessId;
+//   const businessId = user.businessId;
 
-  // Get or create an account for this business
-  let account = await prisma.account.findFirst({
-    where: { businessId: businessId }
-  });
+//   // Get or create an account for this business
+//   let account = await prisma.account.findFirst({
+//     where: { businessId: businessId }
+//   });
 
-  const bank = await prisma.bank.findFirst({
-    where: { code: 'BOA' }
-  });
+//   const bank = await prisma.bank.findFirst({
+//     where: { code: 'BOA' }
+//   });
 
-  if (!bank) {
-    throw new Error('Bank BOA not found! Please seed banks first.');
-  }
+//   if (!bank) {
+//     throw new Error('Bank BOA not found! Please seed banks first.');
+//   }
 
-  const defaultCurrency = await getDefaultCurrency();
+//   const defaultCurrency = await getDefaultCurrency();
 
-  if (!defaultCurrency) {
-    throw new Error('Default currency USD not found! Please seed currencies first.');
-  }
+//   if (!defaultCurrency) {
+//     throw new Error('Default currency USD not found! Please seed currencies first.');
+//   }
 
-  if (!account) {
-    account = await prisma.account.create({
-      data: {
-        name: 'Main Account',
-        businessId: businessId,
-        currencyId: defaultCurrency.id,
-        bankId: bank.id,
-        shareableId: encryptId('Main Account')
-      }
-    });
-    console.log('✅ Created new account: Main Account');
-  } else {
-    console.log(`Using existing account: ${account.name}`);
-  }
+//   if (!account) {
+//     account = await prisma.account.create({
+//       data: {
+//         name: 'Main Account',
+//         businessId: businessId,
+//         currencyId: defaultCurrency.id,
+//         bankId: bank.id,
+//         shareableId: encryptId('Main Account')
+//       }
+//     });
+//     console.log('✅ Created new account: Main Account');
+//   } else {
+//     console.log(`Using existing account: ${account.name}`);
+//   }
 
-  // Get or create income category
-  let incomeCategory = await prisma.category.findFirst({
-    where: {
-      businessId: businessId,
-      name: { contains: 'Income', mode: 'insensitive' }
-    }
-  });
+//   // Get or create income category
+//   let incomeCategory = await prisma.category.findFirst({
+//     where: {
+//       businessId: businessId,
+//       name: { contains: 'Income', mode: 'insensitive' }
+//     }
+//   });
 
-  if (!incomeCategory) {
-    incomeCategory = await prisma.category.create({
-      data: {
-        name: 'Income',
-        businessId: businessId
-      }
-    });
-    console.log('✅ Created Income category');
-  }
+//   if (!incomeCategory) {
+//     incomeCategory = await prisma.category.create({
+//       data: {
+//         name: 'Income',
+//         businessId: businessId
+//       }
+//     });
+//     console.log('✅ Created Income category');
+//   }
 
-  // Get or create expense categories
-  let rentCategory = await prisma.category.findFirst({
-    where: {
-      businessId: businessId,
-      name: { contains: 'Rent', mode: 'insensitive' }
-    }
-  });
+//   // Get or create expense categories
+//   let rentCategory = await prisma.category.findFirst({
+//     where: {
+//       businessId: businessId,
+//       name: { contains: 'Rent', mode: 'insensitive' }
+//     }
+//   });
 
-  if (!rentCategory) {
-    rentCategory = await prisma.category.create({
-      data: {
-        name: 'Rent',
-        businessId: businessId
-      }
-    });
-    console.log('✅ Created Rent category');
-  }
+//   if (!rentCategory) {
+//     rentCategory = await prisma.category.create({
+//       data: {
+//         name: 'Rent',
+//         businessId: businessId
+//       }
+//     });
+//     console.log('✅ Created Rent category');
+//   }
 
-  let groceriesCategory = await prisma.category.findFirst({
-    where: {
-      businessId: businessId,
-      name: { contains: 'Groceries', mode: 'insensitive' }
-    }
-  });
+//   let groceriesCategory = await prisma.category.findFirst({
+//     where: {
+//       businessId: businessId,
+//       name: { contains: 'Groceries', mode: 'insensitive' }
+//     }
+//   });
 
-  if (!groceriesCategory) {
-    groceriesCategory = await prisma.category.create({
-      data: {
-        name: 'Groceries',
-        businessId: businessId
-      }
-    });
-    console.log('✅ Created Groceries category');
-  }
+//   if (!groceriesCategory) {
+//     groceriesCategory = await prisma.category.create({
+//       data: {
+//         name: 'Groceries',
+//         businessId: businessId
+//       }
+//     });
+//     console.log('✅ Created Groceries category');
+//   }
 
-  let utilitiesCategory = await prisma.category.findFirst({
-    where: {
-      businessId: businessId,
-      name: { contains: 'Utilities', mode: 'insensitive' }
-    }
-  });
+//   let utilitiesCategory = await prisma.category.findFirst({
+//     where: {
+//       businessId: businessId,
+//       name: { contains: 'Utilities', mode: 'insensitive' }
+//     }
+//   });
 
-  if (!utilitiesCategory) {
-    utilitiesCategory = await prisma.category.create({
-      data: {
-        name: 'Utilities',
-        businessId: businessId
-      }
-    });
-    console.log('✅ Created Utilities category');
-  }
+//   if (!utilitiesCategory) {
+//     utilitiesCategory = await prisma.category.create({
+//       data: {
+//         name: 'Utilities',
+//         businessId: businessId
+//       }
+//     });
+//     console.log('✅ Created Utilities category');
+//   }
 
-  const seedTransactions = [
-    // ===== PREVIOUS PERIOD (60-31 days ago) =====
-    // Previous Period Income: $1,000 total
-    {
-      name: 'Previous Salary Payment',
-      amount: 500000, // $500.00 in milliunits
-      payee: 'Company ABC',
-      date: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
-      accountId: account.id,
-      categoryId: incomeCategory.id,
-    },
-    {
-      name: 'Previous Freelance Project',
-      amount: 300000, // $300.00 in milliunits
-      payee: 'Client XYZ',
-      date: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000), // 40 days ago
-      accountId: account.id,
-      categoryId: incomeCategory.id,
-    },
-    {
-      name: 'Previous Bonus',
-      amount: 200000, // $200.00 in milliunits
-      payee: 'Company ABC',
-      date: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000), // 35 days ago
-      accountId: account.id,
-      categoryId: incomeCategory.id,
-    },
+//   const seedTransactions = [
+//     // ===== PREVIOUS PERIOD (60-31 days ago) =====
+//     // Previous Period Income: $1,000 total
+//     {
+//       name: 'Previous Salary Payment',
+//       amount: 500000, // $500.00 in milliunits
+//       payee: 'Company ABC',
+//       date: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000), // 45 days ago
+//       accountId: account.id,
+//       categoryId: incomeCategory.id,
+//     },
+//     {
+//       name: 'Previous Freelance Project',
+//       amount: 300000, // $300.00 in milliunits
+//       payee: 'Client XYZ',
+//       date: new Date(Date.now() - 40 * 24 * 60 * 60 * 1000), // 40 days ago
+//       accountId: account.id,
+//       categoryId: incomeCategory.id,
+//     },
+//     {
+//       name: 'Previous Bonus',
+//       amount: 200000, // $200.00 in milliunits
+//       payee: 'Company ABC',
+//       date: new Date(Date.now() - 35 * 24 * 60 * 60 * 1000), // 35 days ago
+//       accountId: account.id,
+//       categoryId: incomeCategory.id,
+//     },
 
-    // Previous Period Expenses: $400 total
-    {
-      name: 'Previous Month Rent',
-      amount: -200000, // -$200.00 in milliunits
-      payee: 'Landlord Properties',
-      date: new Date(Date.now() - 42 * 24 * 60 * 60 * 1000), // 42 days ago
-      accountId: account.id,
-      categoryId: rentCategory.id,
-    },
-    {
-      name: 'Previous Grocery Shopping',
-      amount: -100000, // -$100.00 in milliunits
-      payee: 'SuperMarket',
-      date: new Date(Date.now() - 38 * 24 * 60 * 60 * 1000), // 38 days ago
-      accountId: account.id,
-      categoryId: groceriesCategory.id,
-    },
-    {
-      name: 'Previous Utilities Bill',
-      amount: -100000, // -$100.00 in milliunits
-      payee: 'City Utilities',
-      date: new Date(Date.now() - 33 * 24 * 60 * 60 * 1000), // 33 days ago
-      accountId: account.id,
-      categoryId: utilitiesCategory.id,
-    },
-    // Previous Remaining: $1,000 - $400 = $600
+//     // Previous Period Expenses: $400 total
+//     {
+//       name: 'Previous Month Rent',
+//       amount: -200000, // -$200.00 in milliunits
+//       payee: 'Landlord Properties',
+//       date: new Date(Date.now() - 42 * 24 * 60 * 60 * 1000), // 42 days ago
+//       accountId: account.id,
+//       categoryId: rentCategory.id,
+//     },
+//     {
+//       name: 'Previous Grocery Shopping',
+//       amount: -100000, // -$100.00 in milliunits
+//       payee: 'SuperMarket',
+//       date: new Date(Date.now() - 38 * 24 * 60 * 60 * 1000), // 38 days ago
+//       accountId: account.id,
+//       categoryId: groceriesCategory.id,
+//     },
+//     {
+//       name: 'Previous Utilities Bill',
+//       amount: -100000, // -$100.00 in milliunits
+//       payee: 'City Utilities',
+//       date: new Date(Date.now() - 33 * 24 * 60 * 60 * 1000), // 33 days ago
+//       accountId: account.id,
+//       categoryId: utilitiesCategory.id,
+//     },
+//     // Previous Remaining: $1,000 - $400 = $600
 
-    // ===== CURRENT PERIOD (last 30 days) =====
-    // Current Period Income: $1,500 total
-    {
-      name: 'Current Salary Payment',
-      amount: 800000, // $800.00 in milliunits
-      payee: 'Company ABC',
-      date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000), // 25 days ago
-      accountId: account.id,
-      categoryId: incomeCategory.id,
-    },
-    {
-      name: 'Current Freelance Project',
-      amount: 400000, // $400.00 in milliunits
-      payee: 'Client XYZ',
-      date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
-      accountId: account.id,
-      categoryId: incomeCategory.id,
-    },
-    {
-      name: 'Current Performance Bonus',
-      amount: 300000, // $300.00 in milliunits
-      payee: 'Company ABC',
-      date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
-      accountId: account.id,
-      categoryId: incomeCategory.id,
-    },
+//     // ===== CURRENT PERIOD (last 30 days) =====
+//     // Current Period Income: $1,500 total
+//     {
+//       name: 'Current Salary Payment',
+//       amount: 800000, // $800.00 in milliunits
+//       payee: 'Company ABC',
+//       date: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000), // 25 days ago
+//       accountId: account.id,
+//       categoryId: incomeCategory.id,
+//     },
+//     {
+//       name: 'Current Freelance Project',
+//       amount: 400000, // $400.00 in milliunits
+//       payee: 'Client XYZ',
+//       date: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
+//       accountId: account.id,
+//       categoryId: incomeCategory.id,
+//     },
+//     {
+//       name: 'Current Performance Bonus',
+//       amount: 300000, // $300.00 in milliunits
+//       payee: 'Company ABC',
+//       date: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000), // 15 days ago
+//       accountId: account.id,
+//       categoryId: incomeCategory.id,
+//     },
 
-    // Current Period Expenses: $800 total
-    {
-      name: 'Current Month Rent',
-      amount: -400000, // -$400.00 in milliunits
-      payee: 'Landlord Properties',
-      date: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000), // 22 days ago
-      accountId: account.id,
-      categoryId: rentCategory.id,
-    },
-    {
-      name: 'Current Grocery Shopping',
-      amount: -200000, // -$200.00 in milliunits
-      payee: 'SuperMarket',
-      date: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
-      accountId: account.id,
-      categoryId: groceriesCategory.id,
-    },
-    {
-      name: 'Current Utilities Bill',
-      amount: -200000, // -$200.00 in milliunits
-      payee: 'City Utilities',
-      date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 days ago
-      accountId: account.id,
-      categoryId: utilitiesCategory.id,
-    }
-    // Current Remaining: $1,500 - $800 = $700
-  ];
+//     // Current Period Expenses: $800 total
+//     {
+//       name: 'Current Month Rent',
+//       amount: -400000, // -$400.00 in milliunits
+//       payee: 'Landlord Properties',
+//       date: new Date(Date.now() - 22 * 24 * 60 * 60 * 1000), // 22 days ago
+//       accountId: account.id,
+//       categoryId: rentCategory.id,
+//     },
+//     {
+//       name: 'Current Grocery Shopping',
+//       amount: -200000, // -$200.00 in milliunits
+//       payee: 'SuperMarket',
+//       date: new Date(Date.now() - 18 * 24 * 60 * 60 * 1000), // 18 days ago
+//       accountId: account.id,
+//       categoryId: groceriesCategory.id,
+//     },
+//     {
+//       name: 'Current Utilities Bill',
+//       amount: -200000, // -$200.00 in milliunits
+//       payee: 'City Utilities',
+//       date: new Date(Date.now() - 12 * 24 * 60 * 60 * 1000), // 12 days ago
+//       accountId: account.id,
+//       categoryId: utilitiesCategory.id,
+//     }
+//     // Current Remaining: $1,500 - $800 = $700
+//   ];
 
-  console.log('🌱 Seeding transactions...');
+//   console.log('🌱 Seeding transactions...');
 
-  // Create transactions
-  for (const transaction of seedTransactions) {
-    await prisma.transaction.create({
-      data: transaction
-    });
-  }
+//   // Create transactions
+//   for (const transaction of seedTransactions) {
+//     await prisma.transaction.create({
+//       data: transaction
+//     });
+//   }
 
-  console.log(`✅ Created ${seedTransactions.length} transactions for ${user.email}`);
-  console.log('📊 Expected API Results:');
-  console.log('   Previous Period: $1,000 income, $400 expenses, $600 remaining');
-  console.log('   Current Period:  $1,500 income, $800 expenses, $700 remaining');
-  console.log('   Expected Changes:');
-  console.log('   - Income Change:    50.00% ↑');
-  console.log('   - Expenses Change: 100.00% ↑');
-  console.log('   - Remaining Change: 16.67% ↑');
-}
+//   console.log(`✅ Created ${seedTransactions.length} transactions for ${user.email}`);
+//   console.log('📊 Expected API Results:');
+//   console.log('   Previous Period: $1,000 income, $400 expenses, $600 remaining');
+//   console.log('   Current Period:  $1,500 income, $800 expenses, $700 remaining');
+//   console.log('   Expected Changes:');
+//   console.log('   - Income Change:    50.00% ↑');
+//   console.log('   - Expenses Change: 100.00% ↑');
+//   console.log('   - Remaining Change: 16.67% ↑');
+// }
 
 export async function seedCurrencies() {
   console.log('Starting currency seeding...');
@@ -395,6 +395,94 @@ export async function seedCurrencies() {
     console.error('❌ Error seeding currencies:', error);
     throw error;
   }
+}
+
+export async function seedCountries() {
+  console.log('Seeding countries...');
+
+  const countries = [
+    { name: 'United States', code: 'US' },
+    { name: 'Canada', code: 'CA' },
+    { name: 'United Kingdom', code: 'GB' },
+    { name: 'Australia', code: 'AU' },
+    { name: 'Germany', code: 'DE' },
+    { name: 'France', code: 'FR' },
+    { name: 'Italy', code: 'IT' },
+    { name: 'Spain', code: 'ES' },
+    { name: 'Netherlands', code: 'NL' },
+    { name: 'Sweden', code: 'SE' },
+    { name: 'Norway', code: 'NO' },
+    { name: 'Denmark', code: 'DK' },
+    { name: 'Finland', code: 'FI' },
+    { name: 'Switzerland', code: 'CH' },
+    { name: 'Belgium', code: 'BE' },
+    { name: 'Austria', code: 'AT' },
+    { name: 'Ireland', code: 'IE' },
+    { name: 'New Zealand', code: 'NZ' },
+    { name: 'Japan', code: 'JP' },
+    { name: 'China', code: 'CN' },
+    { name: 'India', code: 'IN' },
+    { name: 'Brazil', code: 'BR' },
+    { name: 'Mexico', code: 'MX' },
+    { name: 'South Africa', code: 'ZA' },
+    { name: 'Nigeria', code: 'NG' },
+    { name: 'Egypt', code: 'EG' },
+    { name: 'Turkey', code: 'TR' },
+    { name: 'Saudi Arabia', code: 'SA' },
+    { name: 'United Arab Emirates', code: 'AE' },
+    { name: 'Argentina', code: 'AR' },
+    { name: 'Chile', code: 'CL' },
+    { name: 'Colombia', code: 'CO' },
+    { name: 'Peru', code: 'PE' },
+    { name: 'Venezuela', code: 'VE' },
+    { name: 'Russia', code: 'RU' },
+    { name: 'Poland', code: 'PL' },
+    { name: 'Czech Republic', code: 'CZ' },
+    { name: 'Hungary', code: 'HU' },
+    { name: 'Greece', code: 'GR' },
+    { name: 'Portugal', code: 'PT' },
+    { name: 'Romania', code: 'RO' },
+    { name: 'Bulgaria', code: 'BG' },
+    { name: 'Croatia', code: 'HR' },
+    { name: 'Slovakia', code: 'SK' },
+    { name: 'Slovenia', code: 'SI' },
+    { name: 'Estonia', code: 'EE' },
+    { name: 'Latvia', code: 'LV' },
+    { name: 'Lithuania', code: 'LT' },
+    { name: 'Iceland', code: 'IS' },
+    { name: 'Luxembourg', code: 'LU' },
+    { name: 'Malta', code: 'MT' },
+    { name: 'Cyprus', code: 'CY' },
+    { name: 'Jordan', code: 'JO' },
+    { name: 'Lebanon', code: 'LB' },
+    { name: 'Kuwait', code: 'KW' },
+    { name: 'Qatar', code: 'QA' },
+    { name: 'Oman', code: 'OM' },
+    { name: 'Bahrain', code: 'BH' },
+    { name: 'Morocco', code: 'MA' },
+    { name: 'Tunisia', code: 'TN' },
+    { name: 'Algeria', code: 'DZ' },
+    { name: 'Kenya', code: 'KE' },
+  ];
+
+  try {
+    await prisma.country.createMany({
+	  data: countries,
+	  skipDuplicates: true,
+    });
+
+    console.log('✅ Successfully seeded countries');
+
+    const allCountries = await prisma.country.findMany({
+	  orderBy: { name: 'asc' },
+    });
+    console.log(`Total countries in database: ${allCountries.length}`);
+    return allCountries;
+  } catch (error) {
+    console.error('❌ Error seeding countries:', error);
+    throw error;
+  }
+
 }
 
 // Helper function to get currency by code

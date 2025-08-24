@@ -1,10 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
-import { useAuth } from '@/features/auth/hooks/use-auth';
 
 export const useGetCountries = () => {
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-
   const query = useQuery({
     queryKey: ['countries'],
     queryFn: async () => {
@@ -24,8 +21,6 @@ export const useGetCountries = () => {
         throw error;
 	  }
     },
-    enabled: isAuthenticated && !authLoading, // Only run when authenticated
-
     // Add retry configuration to prevent infinite retries on 404
     retry: (failureCount, error) => {
 	  // Don't retry on 404 errors (no countries found)

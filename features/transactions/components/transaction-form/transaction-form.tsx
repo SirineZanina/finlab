@@ -19,11 +19,11 @@ import {
   FormValues,
   TransactionFormProps
 } from './transaction-form.types';
-import DatePicker from '@/components/shared/datePicker/datePicker';
 import { Select } from '@/components/shared/select/select';
 import { Textarea } from '@/components/ui/textarea';
 import AmountInput from '@/components/shared/amountInput/amountInput';
 import { convertAmountToMiliunits } from '@/lib/utils';
+import CalendarDatePicker from '@/components/shared/calendar-date-picker/calendar-date-picker';
 
 const TransactionForm = ({
   id,
@@ -93,10 +93,11 @@ const TransactionForm = ({
             <FormItem>
               <FormLabel>Date</FormLabel>
               <FormControl>
-                <DatePicker
-                  value={field.value}
-                  onChange={field.onChange}
-                  disabled={disabled}
+                <CalendarDatePicker
+				  value={field.value}
+				  onChange={field.onChange}
+				  disabled={disabled}
+				  closeOnSelect
                 />
               </FormControl>
               <FormMessage />
