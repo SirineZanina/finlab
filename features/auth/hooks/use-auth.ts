@@ -1,14 +1,17 @@
+import { useContext } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { SessionContext } from '@/providers/session-provider';
 
-// Client-side hook that checks auth status
 export const useAuth = () => {
+  const sessionContext = useContext(SessionContext);
+
+  // Always call useQuery unconditionally to comply with React Hooks rules
   const query = useQuery({
     queryKey: ['auth', 'session'],
     queryFn: async () => {
       try {
-        // Since we're on the client, we need to make a request to check session
         const response = await fetch('/api/auth/session', {
-          credentials: 'include', // Important: include cookies
+          credentials: 'include',
         });
 
         if (!response.ok) {
@@ -23,14 +26,27 @@ export const useAuth = () => {
       }
     },
     retry: (failureCount, error) => {
-      // Don't retry on auth failures
       return failureCount < 1;
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    gcTime: 5 * 60 * 1000, // 5 minutes
-    refetchOnWindowFocus: true, // Recheck when window regains focus
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    // Only run if we don't have session context
+    enabled: !sessionContext || sessionContext.loading,
   });
 
+  // If we have session data from the server context, use it
+  if (sessionContext && !sessionContext.loading) {
+    return {
+      user: sessionContext.user,
+      isAuthenticated: !!sessionContext.user,
+      isLoading: false,
+      isError: false,
+      refetch: () => {}, // No-op since we're using server data
+    };
+  }
+
+  // Fallback to API call only if no session context (shouldn't happen in your setup)
   return {
     user: query.data,
     isAuthenticated: !!query.data,

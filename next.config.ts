@@ -15,7 +15,10 @@ const nextConfig: NextConfig = {
         as: '*.js',
       },
     },
-  }
+  },
+  images: {
+    domains: ['flagcdn.com'],
+  },
 };
 
 export default nextConfig;

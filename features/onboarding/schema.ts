@@ -1,4 +1,3 @@
-
 // onboardingSchema.ts
 import { z } from 'zod';
 
@@ -12,9 +11,15 @@ export const onboardingSchema = z.object({
   dateOfBirth: z.date(), // Transform to YYYY-MM-DD format
 
   // Step 3 : account setup
-  email: z.string().email(),
-  password: z.string().min(8).max(20),
-  confirmPassword: z.string().min(8).max(20),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters long')
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, 'Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+  confirmPassword: z.string().min(8, 'Password must be at least 8 characters long'),
 
   // Step 4: Contact Details
   address: z.object({
@@ -29,9 +34,7 @@ export const onboardingSchema = z.object({
   ssn: z.string().min(9).max(11).regex(/^\d{9,11}$/, { // Fixed regex to allow 9-11 digits
     message: 'SSN must be 9-11 digits',
   }),
-  phoneNumber: z.string().min(10).max(15).regex(/^\d{10,15}$/, {
-    message: 'Phone number must be between 10 and 15 digits',
-  }),
+  phoneNumber: z.string().min(1).max(20), // Adjusted max length for international numbers
 
   // Step 6 Business fields - required since every user needs a business
   businessName: z.string().min(1).max(50), // Removed optional

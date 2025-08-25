@@ -4,7 +4,7 @@ import { useOnboardingStore } from '../../store';
 import { useRouter } from 'next/navigation';
 import IndividualCard from './individual-card/individual-card';
 import BusinessCard from './business-card/business-card';
-import OnboardingStepHeader from '@/app/onboarding/_components/step-header/step-header';
+import OnboardingStepHeader from '@/app/(auth)/onboarding/_components/step-header/step-header';
 
 type AccountType = 'individual' | 'business'
 

@@ -1,6 +1,5 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { onboardingSchema } from '@/features/onboarding/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -8,15 +7,15 @@ import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { useOnboardingStore } from '../../store';
 import { useEffect } from 'react';
-import { Select } from '@/components/shared/select/select';
 import { useGetCountries } from '@/features/countries/api/use-get-countries'; // Assuming you have this
 import CustomInput from '@/components/shared/customInput/customInput';
-import OnboardingStepHeader from '@/app/onboarding/_components/step-header/step-header';
+import OnboardingStepHeader from '@/app/(auth)/onboarding/_components/step-header/step-header';
 import { ArrowRight } from 'lucide-react';
+import CustomSelect from '@/components/shared/customSelect/customSelect';
+import CustomButton from '@/components/shared/customButton/customButton';
 
 const onboardingContactDetailsSchema = onboardingSchema.pick({
   address: true,
-  currencyId: true,
 });
 
 type OnboardingContactDetailsSchema = z.infer<typeof onboardingContactDetailsSchema>;
@@ -54,6 +53,9 @@ export default function OnboardingContactDetails() {
       },
     },
   });
+
+  // Check form validation status
+  const isFormValid = form.formState.isValid;
 
   useEffect(() => {
     if (!useOnboardingStore.persist.hasHydrated) return;
@@ -124,36 +126,31 @@ export default function OnboardingContactDetails() {
                 placeholder="Enter your postal code"
                 required
               />
-
-              <FormField
-                name='address.countryId'
+              <CustomSelect
                 control={form.control}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Country</FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onChange={field.onChange}
-                        options={countryOptions}
-                        placeholder='Select your country'
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                name="address.countryId"
+                label="Country"
+                placeholder="Select your country"
+                options={countryOptions}
+                required
               />
             </div>
           </div>
 
-          <Button
-            type='submit'
-            className="w-full flex items-center gap-2"
-            disabled={form.formState.isSubmitting}
+          <CustomButton
+			 variant="default"
+			 type="submit"
+			 className="flex items-center gap-2"
+            disabled={form.formState.isSubmitting || !isFormValid}
+
+            onClick={() => {
+              console.log(form.formState.isValid);
+              console.log(form.getValues());
+            }}
+			 rightIcon={<ArrowRight className="w-4 h-4" />}
           >
-            {form.formState.isSubmitting ? 'Processing...' : 'Continue'}
-            <ArrowRight className="w-4 h-4" />
-          </Button>
+			 {form.formState.isSubmitting ? 'Processing...' : 'Continue'}
+          </CustomButton>
         </form>
       </Form>
     </section>

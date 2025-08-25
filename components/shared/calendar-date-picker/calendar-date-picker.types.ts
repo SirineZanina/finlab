@@ -8,4 +8,6 @@ export type CalendarDatePickerProps = {
   closeOnSelect?: boolean;
   dateFormat?: string;
   minDate?: Date;
+  error?: boolean;
+  errorMessage?: string;
 }

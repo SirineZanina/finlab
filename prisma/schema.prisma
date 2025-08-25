@@ -15,10 +15,12 @@ datasource db {
 }
 
 model Country {
-    id      String  @id @default(cuid())
-    code    String  @unique // US, TN, GB, etc.
-    name    String // "United States", "Tunisia", "United Kingdom"
-    flagUrl String?
+    id          String @id @default(cuid())
+    code        String @unique // US, TN, GB, etc.
+    name        String // "United States", "Tunisia", "United Kingdom"
+    flagUrl     String
+    dialCode    String
+    phoneFormat String // "+1 (###) ###-####"
 
     Address Address[]
 

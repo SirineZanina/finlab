@@ -24,7 +24,6 @@ export type OnboardingData = {
     postalCode: string;
     countryId: string;
   } | null;
-  currencyId: string;
 
   // Step 5: Verification
   ssn: string;
@@ -33,6 +32,7 @@ export type OnboardingData = {
   // Step 6: Business fields - required for all users since every user needs a business
   businessName: string;
   industry: string;
+    currencyId: string;
 
   // Step 7: Terms
   terms: boolean;
@@ -42,10 +42,10 @@ type OnboardingState = OnboardingData & {
   // Actions
   setAccountType: (type: 'individual' | 'business') => void;
   setPersonalInfo: (data: Pick<OnboardingData, 'firstName' | 'lastName' | 'dateOfBirth'>) => void;
-  setAccountInfo: (data: Pick<OnboardingData, 'email' | 'password' | 'confirmPassword'>) => void; // New action
-  setContactDetails: (data: Pick<OnboardingData, 'address' | 'currencyId'>) => void;
+  setAccountInfo: (data: Pick<OnboardingData, 'email' | 'password' | 'confirmPassword'>) => void;
+  setContactDetails: (data: Pick<OnboardingData, 'address'>) => void;
   setVerification: (data: Pick<OnboardingData, 'ssn' | 'phoneNumber'>) => void;
-  setBusinessInfo: (data: Pick<OnboardingData, 'businessName' | 'industry'>) => void;
+  setBusinessInfo: (data: Pick<OnboardingData, 'businessName' | 'industry' | 'currencyId'>) => void;
   setTerms: (terms: boolean) => void;
 
   // Utilities
@@ -57,11 +57,17 @@ const initialState: OnboardingData = {
   accountType: null,
   firstName: '',
   lastName: '',
-  dateOfBirth: null, // Changed to null initially
+  dateOfBirth: null,
   email: '',
   password: '',
   confirmPassword: '',
-  address: null,
+  address:{
+    street: '',
+    city: '',
+    state: '',
+    postalCode: '',
+    countryId: '',
+  },
   ssn: '',
   phoneNumber: '',
   businessName: '',
@@ -75,7 +81,6 @@ export const useOnboardingStore = create<OnboardingState>()(
     (set, get) => ({
       ...initialState,
 
-      // Specific setters for type safety
       setAccountType: (type) => {
         set({ accountType: type });
 
@@ -89,26 +94,28 @@ export const useOnboardingStore = create<OnboardingState>()(
       },
 
       setPersonalInfo: (data) => {
-        set(data);
+        // Ensure dateOfBirth is properly handled
+        const processedData = {
+          ...data,
+          dateOfBirth: data.dateOfBirth instanceof Date ? data.dateOfBirth :
+            data.dateOfBirth ? new Date(data.dateOfBirth) : null
+        };
+
+        set(processedData);
 
         // Auto-update business name for individual users
         const state = get();
-        if (state.accountType === 'individual' && data.firstName && data.lastName) {
-          set({ businessName: `${data.firstName} ${data.lastName}` });
+        if (state.accountType === 'individual' && processedData.firstName && processedData.lastName) {
+          set({ businessName: `${processedData.firstName} ${processedData.lastName}` });
         }
       },
 
-      setAccountInfo: (data) => set(data), // New action for account setup
-
+      setAccountInfo: (data) => set(data),
       setContactDetails: (data) => set(data),
-
       setVerification: (data) => set(data),
-
       setBusinessInfo: (data) => set(data),
-
       setTerms: (terms) => set({ terms }),
 
-      // Utility functions
       reset: () => set(initialState),
 
       canProceedFromStep: (step: number) => {
@@ -142,11 +149,14 @@ export const useOnboardingStore = create<OnboardingState>()(
 
           try {
             const parsed = JSON.parse(item);
-            // Convert dateOfBirth string back to Date object
-            if (parsed.state?.dateOfBirth) {
-              parsed.state.dateOfBirth = new Date(parsed.state.dateOfBirth);
+
+            // Convert dateOfBirth string back to Date object after parsing
+            if (parsed.state?.dateOfBirth && typeof parsed.state.dateOfBirth === 'string') {
+              const date = new Date(parsed.state.dateOfBirth);
+              parsed.state.dateOfBirth = isNaN(date.getTime()) ? null : date;
             }
-            return JSON.stringify(parsed); // getItem must return a string
+
+            return item; // Return the original JSON string, Zustand will parse it
           } catch (error) {
             console.error('Error parsing from localStorage:', error);
             return null;
@@ -155,9 +165,9 @@ export const useOnboardingStore = create<OnboardingState>()(
 
         setItem: (key, value) => {
           try {
-            const parsed = JSON.parse(value); // value is already a JSON string
+            const parsed = JSON.parse(value);
 
-            // Convert Date object to string before storing
+            // Convert Date object to ISO string before storing
             if (parsed.state?.dateOfBirth instanceof Date) {
               parsed.state.dateOfBirth = parsed.state.dateOfBirth.toISOString();
             }
@@ -171,7 +181,8 @@ export const useOnboardingStore = create<OnboardingState>()(
 
         removeItem: (key) => localStorage.removeItem(key),
       })),
-	  partialize: (state) => ({
+
+      partialize: (state) => ({
         // Persist all fields except passwords for security
         accountType: state.accountType,
         firstName: state.firstName,
@@ -185,7 +196,15 @@ export const useOnboardingStore = create<OnboardingState>()(
         industry: state.industry,
         currencyId: state.currencyId,
         terms: state.terms,
-	  }),
+      }),
+
+      // Add onRehydrateStorage as a backup to ensure dates are properly converted
+      onRehydrateStorage: () => (state) => {
+        if (state && state.dateOfBirth && typeof state.dateOfBirth === 'string') {
+          const date = new Date(state.dateOfBirth);
+          state.dateOfBirth = isNaN(date.getTime()) ? null : date;
+        }
+      },
     }
   )
 );

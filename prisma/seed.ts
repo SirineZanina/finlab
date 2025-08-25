@@ -401,88 +401,77 @@ export async function seedCountries() {
   console.log('Seeding countries...');
 
   const countries = [
-    { name: 'United States', code: 'US' },
-    { name: 'Canada', code: 'CA' },
-    { name: 'United Kingdom', code: 'GB' },
-    { name: 'Australia', code: 'AU' },
-    { name: 'Germany', code: 'DE' },
-    { name: 'France', code: 'FR' },
-    { name: 'Italy', code: 'IT' },
-    { name: 'Spain', code: 'ES' },
-    { name: 'Netherlands', code: 'NL' },
-    { name: 'Sweden', code: 'SE' },
-    { name: 'Norway', code: 'NO' },
-    { name: 'Denmark', code: 'DK' },
-    { name: 'Finland', code: 'FI' },
-    { name: 'Switzerland', code: 'CH' },
-    { name: 'Belgium', code: 'BE' },
-    { name: 'Austria', code: 'AT' },
-    { name: 'Ireland', code: 'IE' },
-    { name: 'New Zealand', code: 'NZ' },
-    { name: 'Japan', code: 'JP' },
-    { name: 'China', code: 'CN' },
-    { name: 'India', code: 'IN' },
-    { name: 'Brazil', code: 'BR' },
-    { name: 'Mexico', code: 'MX' },
-    { name: 'South Africa', code: 'ZA' },
-    { name: 'Nigeria', code: 'NG' },
-    { name: 'Egypt', code: 'EG' },
-    { name: 'Turkey', code: 'TR' },
-    { name: 'Saudi Arabia', code: 'SA' },
-    { name: 'United Arab Emirates', code: 'AE' },
-    { name: 'Argentina', code: 'AR' },
-    { name: 'Chile', code: 'CL' },
-    { name: 'Colombia', code: 'CO' },
-    { name: 'Peru', code: 'PE' },
-    { name: 'Venezuela', code: 'VE' },
-    { name: 'Russia', code: 'RU' },
-    { name: 'Poland', code: 'PL' },
-    { name: 'Czech Republic', code: 'CZ' },
-    { name: 'Hungary', code: 'HU' },
-    { name: 'Greece', code: 'GR' },
-    { name: 'Portugal', code: 'PT' },
-    { name: 'Romania', code: 'RO' },
-    { name: 'Bulgaria', code: 'BG' },
-    { name: 'Croatia', code: 'HR' },
-    { name: 'Slovakia', code: 'SK' },
-    { name: 'Slovenia', code: 'SI' },
-    { name: 'Estonia', code: 'EE' },
-    { name: 'Latvia', code: 'LV' },
-    { name: 'Lithuania', code: 'LT' },
-    { name: 'Iceland', code: 'IS' },
-    { name: 'Luxembourg', code: 'LU' },
-    { name: 'Malta', code: 'MT' },
-    { name: 'Cyprus', code: 'CY' },
-    { name: 'Jordan', code: 'JO' },
-    { name: 'Lebanon', code: 'LB' },
-    { name: 'Kuwait', code: 'KW' },
-    { name: 'Qatar', code: 'QA' },
-    { name: 'Oman', code: 'OM' },
-    { name: 'Bahrain', code: 'BH' },
-    { name: 'Morocco', code: 'MA' },
-    { name: 'Tunisia', code: 'TN' },
-    { name: 'Algeria', code: 'DZ' },
-    { name: 'Kenya', code: 'KE' },
+    { name: 'United States', code: 'US', dialCode: '+1', phoneFormat: '### ### ####' },
+    { name: 'Canada', code: 'CA', dialCode: '+1', phoneFormat: '### ### ####' },
+    { name: 'United Kingdom', code: 'GB', dialCode: '+44', phoneFormat: '#### ######' },
+    { name: 'Germany', code: 'DE', dialCode: '+49', phoneFormat: '#### ########' },
+    { name: 'France', code: 'FR', dialCode: '+33', phoneFormat: '# ## ## ## ##' },
+    { name: 'Italy', code: 'IT', dialCode: '+39', phoneFormat: '### #######' },
+    { name: 'Spain', code: 'ES', dialCode: '+34', phoneFormat: '### ### ###' },
+    { name: 'Netherlands', code: 'NL', dialCode: '+31', phoneFormat: '## ### ####' },
+    { name: 'Sweden', code: 'SE', dialCode: '+46', phoneFormat: '## ### ####' },
+    { name: 'Norway', code: 'NO', dialCode: '+47', phoneFormat: '### ## ###' },
+    { name: 'Denmark', code: 'DK', dialCode: '+45', phoneFormat: '## ## ## ##' },
+    { name: 'Finland', code: 'FI', dialCode: '+358', phoneFormat: '## ### ####' },
+    { name: 'Switzerland', code: 'CH', dialCode: '+41', phoneFormat: '## ### ####' },
+    { name: 'Belgium', code: 'BE', dialCode: '+32', phoneFormat: '### ## ## ##' },
+    { name: 'Austria', code: 'AT', dialCode: '+43', phoneFormat: '### ### ####' },
+    { name: 'Ireland', code: 'IE', dialCode: '+353', phoneFormat: '## ### ####' },
+    { name: 'Australia', code: 'AU', dialCode: '+61', phoneFormat: '# #### ####' },
+    { name: 'New Zealand', code: 'NZ', dialCode: '+64', phoneFormat: '# ### ####' },
+    { name: 'Japan', code: 'JP', dialCode: '+81', phoneFormat: '## #### ####' },
+    { name: 'China', code: 'CN', dialCode: '+86', phoneFormat: '1## #### ####' },
+    { name: 'India', code: 'IN', dialCode: '+91', phoneFormat: '##### #####' },
+    { name: 'South Korea', code: 'KR', dialCode: '+82', phoneFormat: '## #### ####' },
+    { name: 'Brazil', code: 'BR', dialCode: '+55', phoneFormat: '## ##### ####' },
+    { name: 'Mexico', code: 'MX', dialCode: '+52', phoneFormat: '## #### ####' },
+    { name: 'Argentina', code: 'AR', dialCode: '+54', phoneFormat: '9## ### ####' },
+    { name: 'Chile', code: 'CL', dialCode: '+56', phoneFormat: '9 #### ####' },
+    { name: 'Colombia', code: 'CO', dialCode: '+57', phoneFormat: '### ### ####' },
+    { name: 'Peru', code: 'PE', dialCode: '+51', phoneFormat: '9## ### ###' },
+    { name: 'South Africa', code: 'ZA', dialCode: '+27', phoneFormat: '## ### ####' },
+    { name: 'Nigeria', code: 'NG', dialCode: '+234', phoneFormat: '### ### ####' },
+    { name: 'Egypt', code: 'EG', dialCode: '+20', phoneFormat: '## ### ####' },
+    { name: 'Kenya', code: 'KE', dialCode: '+254', phoneFormat: '### ### ###' },
+    { name: 'Morocco', code: 'MA', dialCode: '+212', phoneFormat: '### ######' },
+    { name: 'Tunisia', code: 'TN', dialCode: '+216', phoneFormat: '## ### ###' },
+    { name: 'Turkey', code: 'TR', dialCode: '+90', phoneFormat: '### ### ####' },
+    { name: 'Saudi Arabia', code: 'SA', dialCode: '+966', phoneFormat: '5# ### ####' },
+    { name: 'United Arab Emirates', code: 'AE', dialCode: '+971', phoneFormat: '5# ### ####' },
+    { name: 'Israel', code: 'IL', dialCode: '+972', phoneFormat: '5# ### ####' },
+    { name: 'Russia', code: 'RU', dialCode: '+7', phoneFormat: '### ### ## ##' },
   ];
+
+  // Add flag URLs to countries
+  const countriesWithFlags = countries.map(country => ({
+    ...country,
+    flagUrl: `https://flagcdn.com/w320/${country.code.toLowerCase()}.png`
+  }));
 
   try {
     await prisma.country.createMany({
-	  data: countries,
-	  skipDuplicates: true,
+      data: countriesWithFlags,
+      skipDuplicates: true,
     });
 
-    console.log('✅ Successfully seeded countries');
+    console.log('✅ Successfully seeded countries with flags');
 
     const allCountries = await prisma.country.findMany({
-	  orderBy: { name: 'asc' },
+      orderBy: { name: 'asc' },
     });
     console.log(`Total countries in database: ${allCountries.length}`);
+
+    // Log a few examples to verify flags are working
+    console.log('Sample countries with flags:');
+    allCountries.slice(0, 3).forEach(country => {
+      console.log(`  ${country.name} (${country.code}): ${country.flagUrl}`);
+    });
+
     return allCountries;
   } catch (error) {
     console.error('❌ Error seeding countries:', error);
     throw error;
   }
-
 }
 
 // Helper function to get currency by code

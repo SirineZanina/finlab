@@ -36,3 +36,11 @@ export type PlaidTransaction = {
 	category?: string | null; // Category name or null if not categorized
 }
 
+export type Country = {
+  id: string;
+  code: string; // US, TN, GB, etc.
+  name: string; // "United States", "Tunisia", "United Kingdom"
+  flagUrl: string;
+  dialCode: string;
+  phoneFormat: string; // "+1 (###) ###-####"
+}
