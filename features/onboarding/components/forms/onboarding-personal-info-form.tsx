@@ -34,8 +34,7 @@ export default function OnboardingPersonalInfoForm() {
     dateOfBirth
   } = useOnboardingStore();
 
-  const totalSteps = 7;
-
+  const totalSteps = 8;
   const form = useForm<OnboardingPersonalInfoSchema>({
     resolver: zodResolver(onboardingPersonalInfoSchema),
     defaultValues: {

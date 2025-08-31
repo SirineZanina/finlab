@@ -1,4 +1,4 @@
-import { User } from './user';
+import { User } from './entities';
 
 export type SessionData = {
   user: User | null;

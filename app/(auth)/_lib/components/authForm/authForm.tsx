@@ -17,11 +17,10 @@ import { useAuthForm } from './authForm.hooks';
 import { authFormSchema } from '../../schema';
 
 import { signIn, signUp } from '@/lib/actions/user.actions';
-import { RoleType } from '@/types/client/user';
-import { BusinessIndustries } from '@/types/client/business';
 import { useGetCurrencies } from '@/features/currencies/api/use-get-currencies';
 import { useGetCountries } from '@/features/countries/api/use-get-countries';
 import { Select } from '@/components/shared/select/select';
+import { BusinessIndustries, RoleType } from '@/types/client/entities';
 
 const AuthForm = ({ type }: { type: string }) => {
 
@@ -37,7 +36,7 @@ const AuthForm = ({ type }: { type: string }) => {
     label: role.charAt(0).toUpperCase() + role.slice(1).toLowerCase(),
   }));
 
-  const businessIndustryOptions = BusinessIndustries.map(industry => ({
+  const businessIndustryOptions = Object.values(BusinessIndustries).map(industry => ({
     value: industry,
     label: industry.charAt(0).toUpperCase() + industry.slice(1).toLowerCase(),
   }));

@@ -31,8 +31,7 @@ export default function OnboardingVerificationForm() {
     phoneNumber,
   } = useOnboardingStore();
 
-  const totalSteps = 7;
-
+  const totalSteps = 8;
   const form = useForm<OnboardingVerificationSchema>({
     resolver: zodResolver(onboardingVerificationSchema),
     mode: 'onChange',
@@ -56,7 +55,7 @@ export default function OnboardingVerificationForm() {
   const onSubmit = (data: OnboardingVerificationSchema) => {
     console.log('Form submitted with data:', data);
     setVerification(data);
-    //router.push('/onboarding/verification');
+    router.push('/onboarding/verify-otp');
   };
 
   const handleBack = () => {

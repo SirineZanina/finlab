@@ -38,8 +38,7 @@ export default function OnboardingAccountSetupForm() {
     confirmPassword
   } = useOnboardingStore();
 
-  const totalSteps = 7;
-
+  const totalSteps = 8;
   const form = useForm<OnboardingAccountSetupSchema>({
     resolver: zodResolver(onboardingAccountSetupSchema),
     mode: 'onChange', // Enable real-time validation
@@ -140,18 +139,6 @@ export default function OnboardingAccountSetupForm() {
         </form>
       </Form>
 
-      {/* Debug info - remove in production */}
-      {/* {process.env.NODE_ENV === 'development' && (
-        <div className="mt-4 p-4 bg-gray-100 rounded-md text-sm">
-          <h4 className="font-semibold mb-2">Debug - Current Form State:</h4>
-          <div className="space-y-1">
-            <p>Password: {watchedPassword || 'empty'}</p>
-            <p>Confirm Password: {watchedConfirmPassword || 'empty'}</p>
-            <p>Passwords match: {passwordsMatch ? 'Yes' : 'No'}</p>
-            <p>Form valid: {isFormValid ? 'Yes' : 'No'}</p>
-          </div>
-        </div>
-      )} */}
     </section>
   );
 }

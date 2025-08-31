@@ -7,6 +7,7 @@ import { transactionsRouter } from './transactions';
 import { summaryRouter } from './summary';
 import { currenciesRouter } from './currency';
 import { countriesRouter } from './country';
+import { authRouter } from './auth';
 
 // export const runtime = 'edge';
 
@@ -32,7 +33,8 @@ const routes = app
   .route('/transactions', transactionsRouter)
   .route('/summary', summaryRouter)
   .route('/currencies', currenciesRouter)
-  .route('/countries', countriesRouter);
+  .route('/countries', countriesRouter)
+  .route('/auth', authRouter); // Add auth routes
 
 export const GET = handle(app);
 export const POST = handle(app);

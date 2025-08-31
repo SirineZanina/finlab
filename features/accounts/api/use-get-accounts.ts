@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
-import { useAuth } from '@/features/auth/hooks/use-auth';
+import { useAuth } from '@/features/auth/api/use-auth';
 
 export const useGetAccounts = () => {
 	  const { isAuthenticated, isLoading: authLoading } = useAuth();

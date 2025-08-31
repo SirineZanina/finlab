@@ -36,12 +36,18 @@ export const onboardingSchema = z.object({
   }),
   phoneNumber: z.string().min(1).max(20), // Adjusted max length for international numbers
 
-  // Step 6 Business fields - required since every user needs a business
+  // Step 6: OTP Verification
+  OTPcode: z.string().min(6).max(6).regex(/^\d{6}$/, {
+    message: 'OTP code must be 6 digits',
+  }),
+  isPhoneVerified: z.boolean(),
+
+  // Step 7 Business fields - required since every user needs a business
   businessName: z.string().min(1).max(50), // Removed optional
   industry: z.string().min(1).max(50), // Removed optional
   currencyId: z.string().min(1).max(50), // Added missing field
 
-  // Step 7: Terms and Conditions
+  // Step 8: Terms and Conditions
   terms: z.boolean().refine((data) => data, {
     message: 'You must accept the terms and conditions',
   }),

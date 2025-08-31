@@ -176,7 +176,7 @@ const PhoneInput = ({
 
             <SelectContent className="w-80 p-0" align="start" side="top" sideOffset={4}>
               {/* Search Header */}
-              <div className="p-3 border-b border-gray-200 bg-gray-50">
+              <div className="p-3 border-b border-gray-200 bg-gray-50 rounded-t-md">
                 <div className="flex items-center gap-2">
                   <Search className="w-4 h-4 text-gray-400" />
                   <Input
