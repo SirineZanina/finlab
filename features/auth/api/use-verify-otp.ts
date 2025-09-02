@@ -1,39 +1,37 @@
-import { client } from '@/lib/hono';
-import { AuthResponse, VerifyOTPBody } from '@/types/api/auth';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+// import { client } from '@/lib/hono';
+// import { VerifyOTPBody } from '@/types/api/auth';
+// import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useVerifyOTP = () => {
-  const queryClient = useQueryClient();
+// import { InferResponseType } from 'hono';
+// import { toast } from 'sonner';
 
-  return useMutation({
-    mutationFn: async (data: VerifyOTPBody): Promise<AuthResponse> => {
-      try {
-        const response = await client.api.auth['verify-otp'].$post({
-          json: data
-        });
+// type ResponseType = InferResponseType<typeof client.api.auth['verify-otp']['$post']>;
 
-        const result: AuthResponse = await response.json();
+// export const useVerifyOTP = () => {
+//   const queryClient = useQueryClient();
 
-        if (!response.ok) {
-          throw new Error(result.error?.message || 'Failed to verify OTP');
-        }
+//   const mutation = useMutation<
+//   ResponseType,
+//   Error,
+//   VerifyOTPBody
+//   >({
+//     mutationFn: async (json) => {
+// 	  const response = await client.api.auth['verify-otp'].$post({ json });
+// 	  return await response.json();
+//     },
+//     onSuccess: () => {
+// 	 	toast.success('OTP verified successfully');
+// 	 // Invalidate any queries that might be affected by the OTP verification
+// 	 	queryClient.invalidateQueries({ queryKey: 	['user']
+// 	 	});
+// 	 queryClient.invalidateQueries({ queryKey: ['auth']
+// 	 });
+//     }
+//     ,
+//     onError: () => {
+//       toast.error('Failed to verify OTP. Please try again.');
+//     }
+//   });
+//   return mutation;
 
-        return result;
-      } catch (error) {
-        console.error('Verify OTP error:', error);
-        throw error;
-      }
-    },
-    onSuccess: (data) => {
-      // Invalidate and refetch session-related queries after successful verification
-      queryClient.invalidateQueries({ queryKey: ['auth'] });
-
-      // If we got a token, you might want to store it or update auth state
-      if (data.token) {
-        // Handle token storage here if needed
-        // localStorage.setItem('token', data.token); // Not recommended for artifacts
-        console.log('OTP verified successfully, token received');
-      }
-    },
-  });
-};
+// };

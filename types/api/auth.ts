@@ -25,6 +25,15 @@ export interface AuthResponse {
   attemptsLeft?: number; // for OTP verification
 }
 
+export interface UserRolesResponse {
+  success: boolean;
+  data: { id: string; roleType: string }[];
+  error?: {
+	code: string;
+	message: string;
+	details?: string;
+  };
+}
 export interface TwilioResponse {
   success: boolean;
   sid?: string;

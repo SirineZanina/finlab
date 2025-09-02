@@ -227,3 +227,28 @@ export function formatPercentage(
 
 }
 
+export function formatState(state: string): string {
+  const cleanState = state.trim().toUpperCase();
+
+  // If already 2 letters, return as is
+  if (cleanState.length === 2) {
+    return cleanState;
+  }
+
+  // Split by spaces, hyphens, or other separators
+  const words = cleanState
+    .split(/[\s\-']+/)
+    .filter(word => word.length > 0)
+    .filter(word => !['OF', 'THE', 'AND', 'DE', 'DA', 'DU', 'LA', 'LE', 'DES', 'LES'].includes(word));
+
+  if (words.length >= 2) {
+    // Take first letter of first two words
+    return words[0].charAt(0) + words[1].charAt(0);
+  } else if (words.length === 1) {
+    // Single word: take first two characters
+    return words[0].substring(0, 2);
+  }
+
+  // Fallback: first two characters of original cleaned input
+  return cleanState.substring(0, 2);
+}

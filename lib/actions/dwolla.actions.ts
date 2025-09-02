@@ -61,7 +61,7 @@ export const createDwollaCustomer = async (
       firstName: newCustomer.firstName,
       lastName: newCustomer.lastName,
       email: newCustomer.email,
-      type: 'personal',
+      type: newCustomer.type,
       address1: newCustomer.address1,
       city: newCustomer.city,
       state: newCustomer.state,

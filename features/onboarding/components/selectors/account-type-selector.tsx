@@ -12,7 +12,7 @@ const AccountTypeSelector = () => {
   const router = useRouter();
   const { accountType, setAccountType } = useOnboardingStore();
 
-  const totalSteps = 8;
+  const totalSteps = 7;
   // Only handle selection, no navigation
   const handleSelection = (type: AccountType) => {
     setAccountType(type);

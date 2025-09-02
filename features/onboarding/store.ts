@@ -29,16 +29,13 @@ export type OnboardingData = {
   ssn: string;
   phoneNumber: string;
 
-  // Step 7: OTP Verification
-  OTPcode: string;
-  isPhoneVerified: boolean;
-
-  // Step 7: Business fields - required for all users since every user needs a business
+  // Step 6: Business fields - required for all users since every user needs a business
   businessName: string;
   industry: string;
-    currencyId: string;
+  currencyId: string;
+  roleId: string;
 
-  // Step 8: Terms
+  // Step 7: Terms
   terms: boolean;
 }
 
@@ -49,8 +46,7 @@ type OnboardingState = OnboardingData & {
   setAccountInfo: (data: Pick<OnboardingData, 'email' | 'password' | 'confirmPassword'>) => void;
   setContactDetails: (data: Pick<OnboardingData, 'address'>) => void;
   setVerification: (data: Pick<OnboardingData, 'ssn' | 'phoneNumber'>) => void;
-  setOTPVerification: (data: Pick<OnboardingData, 'OTPcode'>) => void;
-  setBusinessInfo: (data: Pick<OnboardingData, 'businessName' | 'industry' | 'currencyId'>) => void;
+  setBusinessInfo: (data: Pick<OnboardingData, 'businessName' | 'industry' | 'roleId' | 'currencyId'>) => void;
   setTerms: (terms: boolean) => void;
 
   // Utilities
@@ -75,11 +71,10 @@ const initialState: OnboardingData = {
   },
   ssn: '',
   phoneNumber: '',
-  OTPcode: '',
-  isPhoneVerified: false,
   businessName: '',
   industry: '',
   currencyId: '',
+  roleId: '',
   terms: false,
 };
 
@@ -93,7 +88,7 @@ export const useOnboardingStore = create<OnboardingState>()(
         if (type === 'individual') {
           const state = get();
           if (state.firstName && state.lastName) {
-            set({ businessName: `${state.firstName} ${state.lastName}` });
+            set({ businessName: `${state.firstName} ${state.lastName}'s Business` });
           }
         }
       },
@@ -109,7 +104,7 @@ export const useOnboardingStore = create<OnboardingState>()(
         // Auto-update business name for individual users
         const state = get();
         if (state.accountType === 'individual' && processedData.firstName && processedData.lastName) {
-          set({ businessName: `${processedData.firstName} ${processedData.lastName}` });
+          set({ businessName: `${processedData.firstName} ${processedData.lastName}'s Business` });
         }
       },
 
@@ -117,21 +112,7 @@ export const useOnboardingStore = create<OnboardingState>()(
 
       setContactDetails: (data) => set(data),
 
-      setVerification: (data) => {
-        set(data);
-        // Reset phone verification if phone number changes
-        const currentState = get();
-        if (data.phoneNumber && data.phoneNumber !== currentState.phoneNumber) {
-          set({ isPhoneVerified: false, OTPcode: '' });
-        }
-      },
-
-      setOTPVerification: (data) => {
-        set({
-          ...data,
-          isPhoneVerified: true, // Mark phone as verified when OTP is set
-        });
-      },
+      setVerification: (data) => set(data),
 
       setBusinessInfo: (data) => set(data),
 
@@ -153,10 +134,8 @@ export const useOnboardingStore = create<OnboardingState>()(
         case 5:
           return !!(state.ssn.length >= 9 && state.phoneNumber);
         case 6:
-          return !!(state.OTPcode && state.isPhoneVerified);
+          return !!(state.businessName && state.industry && state.currencyId && state.roleId);
         case 7:
-          return !!(state.businessName && state.industry && state.currencyId);
-        case 8:
           return state.terms;
         default:
           return false;
@@ -207,11 +186,10 @@ export const useOnboardingStore = create<OnboardingState>()(
         address: state.address,
         ssn: state.ssn,
         phoneNumber: state.phoneNumber,
-        OTPcode: state.OTPcode,
-        isPhoneVerified: state.isPhoneVerified,
         businessName: state.businessName,
         industry: state.industry,
         currencyId: state.currencyId,
+        roleId: state.roleId,
         terms: state.terms,
       }),
       // Add onRehydrateStorage as a backup to ensure dates are properly converted

@@ -1,16 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
 
-export const useGetCurrencies = () => {
+export const useGetRoles = () => {
   const query = useQuery({
-    queryKey: ['currencies'],
+    queryKey: ['auth', 'roles'],
     queryFn: async () => {
 	  try {
         // type safe RPC
-        const response = await client.api.currencies.$get();
+        const response = await client.api.auth.roles.$get();
 
         if (!response.ok) {
-		  throw new Error(`Failed to fetch currencies: ${response.status}`);
+		  throw new Error(`Failed to fetch roles: ${response.status}`);
         }
 
         const { data } = await response.json();
@@ -23,7 +23,7 @@ export const useGetCurrencies = () => {
     },
     // Add retry configuration to prevent infinite retries on 404
     retry: (failureCount, error) => {
-	  // Don't retry on 404 errors (no currencies found)
+	  // Don't retry on 404 errors (no roles found)
 	  if (error.message.includes('404')) {
         return false;
 	  }

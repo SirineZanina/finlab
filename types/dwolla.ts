@@ -11,7 +11,7 @@ export type NewDwollaCustomerParams = {
 	businessName: string;
 	businessIndustry: string;
 	address1: string;
-	type: 'personal'; // only personal customers
+	type: string; // only personal customers
   	city: string;
     state: string;
     postalCode: string;

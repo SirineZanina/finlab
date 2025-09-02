@@ -6,9 +6,9 @@ import { prisma } from '../prisma';
 import { revalidatePath } from 'next/cache';
 import { addMultipleAccountsFromPlaid } from './dwolla.actions';
 import { AppError } from '../errors/appError';
-import { ExchangePublicTokenProps, User } from '@/types/client/user';
 import { encryptId, parseStringify } from '../utils';
 import { getDefaultCurrency } from '@/prisma/seed';
+import { ExchangePublicTokenProps, User } from '@/types/client/entities';
 
 export const createLinkToken = async (user: User) => {
   const tokenParams: LinkTokenCreateRequest = {
@@ -183,7 +183,6 @@ export const exchangePublicToken = async ({
       const existingCategory = await prisma.category.findFirst({
         where: {
           name: categoryName,
-          businessId: user.businessId
         }
       });
 
@@ -191,7 +190,6 @@ export const exchangePublicToken = async ({
         const newCategory = await prisma.category.create({
           data: {
             name: categoryName,
-            businessId: user.businessId,
           },
         });
         categoryMap[categoryName] = newCategory.id;

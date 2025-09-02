@@ -38,7 +38,7 @@ export default function OnboardingAccountSetupForm() {
     confirmPassword
   } = useOnboardingStore();
 
-  const totalSteps = 8;
+  const totalSteps = 7;
   const form = useForm<OnboardingAccountSetupSchema>({
     resolver: zodResolver(onboardingAccountSetupSchema),
     mode: 'onChange', // Enable real-time validation

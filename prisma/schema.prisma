@@ -83,15 +83,15 @@ model Business {
 }
 
 enum BusinessIndustry {
-    INDIVIDUAL // For individual users
-    FINANCE
     TECHNOLOGY
+    FINANCE
     HEALTHCARE
-    EDUCATION
     RETAIL
     MANUFACTURING
-    REAL_ESTATE
+    EDUCATION
     HOSPITALITY
+    CONSTRUCTION
+    REAL_ESTATE
     TRANSPORTATION
     OTHER
 }

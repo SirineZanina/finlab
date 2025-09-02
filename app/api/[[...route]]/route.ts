@@ -5,8 +5,8 @@ import { accountsRouter } from './accounts';
 import { categoriesRouter } from './categories';
 import { transactionsRouter } from './transactions';
 import { summaryRouter } from './summary';
-import { currenciesRouter } from './currency';
-import { countriesRouter } from './country';
+import { currenciesRouter } from './currencies';
+import { countriesRouter } from './countries';
 import { authRouter } from './auth';
 
 // export const runtime = 'edge';

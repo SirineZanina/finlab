@@ -1,6 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
-import { useSession } from '../hooks/use-session';
 
 export const useGetSession = () => {
   return useQuery({

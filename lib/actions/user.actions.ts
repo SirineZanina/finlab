@@ -1,17 +1,42 @@
 'use server';
-import z from 'zod';
 import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { cookies } from 'next/headers';
-import { BusinessIndustry, RoleType } from '@prisma/client';
-import { signInSchema, signUpSchema } from '@/app/(auth)/_lib/schema';
+import { BusinessIndustry  } from '@prisma/client';
+import { signInSchema } from '@/app/(auth)/_lib/schema';
 import { comparePasswords, generateSalt, hashPassword } from '@/app/(auth)/_lib/utils/passwordHasher';
 import { removeUserFromSession } from '@/app/(auth)/_lib/utils/session/session';
 import { AppError } from '../errors/appError';
 import { createDwollaCustomer, deactivateDwollaCustomer } from './dwolla.actions';
-import { extractCustomerIdFromUrl } from '../utils';
-import { LoginParams, SignUpParams } from '@/types/client/user';
+import { extractCustomerIdFromUrl, formatState } from '../utils';
 import { createUserSession } from '@/app/(auth)/_lib/utils/session/createUserSession';
+import { LoginParams } from '@/types/client/entities';
+import { onboardingSchema, OnboardingSchema } from '@/features/onboarding/schema';
+
+// Helper function to map industry strings to BusinessIndustry enum
+function mapToBusinessIndustry(industry: string): BusinessIndustry {
+  const industryMap: Record<string, BusinessIndustry> = {
+    'Technology': BusinessIndustry.TECHNOLOGY,
+    'Finance': BusinessIndustry.FINANCE,
+    'Healthcare': BusinessIndustry.HEALTHCARE,
+    'Retail': BusinessIndustry.RETAIL,
+    'Manufacturing': BusinessIndustry.MANUFACTURING,
+    'Education': BusinessIndustry.EDUCATION,
+    'Hospitality': BusinessIndustry.HOSPITALITY,
+    'Construction': BusinessIndustry.CONSTRUCTION,
+    'Real Estate': BusinessIndustry.REAL_ESTATE,
+    'Transportation': BusinessIndustry.TRANSPORTATION,
+    'Other': BusinessIndustry.OTHER,
+  };
+
+  const mappedIndustry = industryMap[industry];
+  if (!mappedIndustry) {
+    const validIndustries = Object.keys(industryMap).join(', ');
+    throw new AppError('INVALID_INDUSTRY', `Invalid industry: ${industry}. Valid options: ${validIndustries}`, 400);
+  }
+
+  return mappedIndustry;
+}
 
 // ================ SIGN IN ================
 
@@ -69,31 +94,42 @@ export async function signIn(unsafeData: LoginParams) {
 }
 
 // ================ SIGN UP ================
-
-export async function signUp(unsafeData: SignUpParams) {
-  const { success, data } = signUpSchema.safeParse(unsafeData);
-
+export async function completeOnboarding(unsafeData: OnboardingSchema) {
   let dwollaCustomerUrl;
-  try {
-    if (!success) throw new Error('Unable to create your account');
 
+  try {
     // Validate the data
-    const validatedData = data as ValidatedSignUpData;
+    const { success, data, error } = onboardingSchema.safeParse(unsafeData);
+
+    if (!success) {
+      console.error('Validation errors:', error.errors);
+      throw new AppError('VALIDATION_ERROR', 'Invalid onboarding data', 400);
+    }
 
     // Check if user with this email already exists
     const existingUser = await prisma.user.findFirst({
-      where: { email: validatedData.email },
+      where: { email: data.email },
     });
 
-    if (existingUser) throw new AppError('USER_EXISTS', 'User with this email already exists', 400);
+    if (existingUser) {
+      throw new AppError('USER_EXISTS', 'User with this email already exists', 400);
+    }
+
+    // Check if business already exists
+    const existingBusiness = await prisma.business.findFirst({
+      where: { name: data.businessName },
+    });
+
+    if (existingBusiness) {
+      throw new AppError('BUSINESS_EXISTS', 'Business with this name already exists', 400);
+    }
 
     // Get the user role from the database
     const userRole = await prisma.userRole.findUnique({
-      where: { roleType: data.roleType as RoleType },
+      where: { id: data.roleId },
     });
 
-    // If the role does not exist, throw an error
-    if (!Object.values(RoleType).includes(userRole?.roleType as RoleType) || userRole == null) {
+    if (!userRole) {
       throw new AppError('INVALID_ROLE', 'Invalid user role', 400);
     }
 
@@ -101,87 +137,99 @@ export async function signUp(unsafeData: SignUpParams) {
     const salt = generateSalt();
     const hashedPassword = await hashPassword(data.password, salt);
 
-    // Create business
-    // Check if business already exists
-    const existingBusiness = await prisma.business.findFirst({
-		 where: { name: validatedData.businessName },
-    });
-
-    if (existingBusiness) {
-	  throw new AppError('BUSINESS_EXISTS', 'Business with this name already exists', 400);
+    // Ensure address is not null
+    if (!data.address) {
+      throw new AppError('ADDRESS_REQUIRED', 'Address information is required', 400);
     }
-
-    // 🔧 FIX 1: Create Address first (required for User)
+    // Create address
     const address = await prisma.address.create({
       data: {
-        street: validatedData.street,
-        city: validatedData.city,
-        state: validatedData.state,
-        postalCode: validatedData.postalCode,
-        countryId: validatedData.countryId, // Use the countryId from form
+        street: data.address.street,
+        city: data.address.city,
+        state: data.address.state,
+        postalCode: data.address.postalCode,
+        countryId: data.address.countryId,
       },
     });
 
-    // Create business if it doesn't exist
+    // Create business with properly mapped industry
     const business = await prisma.business.create({
       data: {
-        name: validatedData.businessName,
-        industry: validatedData.businessIndustry,
-        countryId: validatedData.countryId,
-        currencyId: validatedData.currencyId,
+        name: data.businessName,
+        industry: mapToBusinessIndustry(data.industry), // Use the mapping function
+        currencyId: data.currencyId,
+        addressId: address.id,
       },
     });
 
-    if (!business) {
-	  throw new AppError('BUSINESS_CREATION_FAILED', 'Failed to create business', 500);
+    if (!data.accountType) {
+	  throw new AppError('ACCOUNT_TYPE_REQUIRED', 'Account type is required', 400);
     }
 
-    // TODO: dwolla
+    const country = await prisma.country.findUnique({
+	  where: { id: data.address.countryId },
+    });
+    if (!country) {
+	  throw new AppError('INVALID_COUNTRY', 'Invalid country', 400);
+    }
 
-    // // Create dwolla customer
-    // const dwollaCustomerUrl = await createDwollaCustomer({
-    //   firstName: validatedData.firstName,
-    //   lastName: validatedData.lastName,
-    //   businessName: validatedData.businessName,
-    //   businessIndustry: validatedData.businessIndustry,
-    //   country: validatedData.,
-    //   phoneNumber: validatedData.phoneNumber, // 🔧 FIX 2: Use actual phone number
-    //   roleType: validatedData.roleType,
-    //   email: validatedData.email,
-    //   type: 'personal',
-    //   address1: validatedData.address1 || '123 Main St',
-    //   city: validatedData.city || 'Sample City',
-    //   state: validatedData.state || 'NY',
-    //   dateOfBirth: validatedData.dateOfBirth || '1990-01-01',
-    //   postalCode: validatedData.postalCode || '12345',
-    //   ssn: validatedData.ssn || '1234',
-    // });
+    const dwollaCustomerUrl = await createDwollaCustomer({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      businessName: data.businessName,
+      businessIndustry: data.industry,
+      phoneNumber: data.phoneNumber,
+      roleType: userRole.roleType,
+      email: data.email,
+      type: 'personal',
+      address1: data.address.street,
+      city: data.address.city,
+      state: formatState(data.address.state),
+      country: country.name,
+      dateOfBirth: (data.dateOfBirth).toISOString(),
+      postalCode: data.address.postalCode,
+      ssn: data.ssn,
+    });
 
-    // if (!dwollaCustomerUrl) {
-    //   throw new AppError('DWOLLA_ERROR', 'Unable to create Dwolla customer', 500);
-    // }
+    if (!dwollaCustomerUrl) {
+	  throw new AppError('DWOLLA_CUSTOMER_CREATION_FAILED', 'Failed to create Dwolla customer', 500);
+    }
 
-    // const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
+    const dwollaCustomerId = extractCustomerIdFromUrl(dwollaCustomerUrl);
+    if (!dwollaCustomerId) {
+	  throw new AppError('DWOLLA_CUSTOMER_ID_EXTRACTION_FAILED', 'Failed to extract Dwolla customer ID', 500);
+    }
+    console.log('Dwolla Customer ID:', dwollaCustomerId);
+    console.log('Dwolla Customer URL:', dwollaCustomerUrl);
 
-    // 🔧 FIX 3: Create user with addressId (not country string)
+    const existingDwollaUser = await prisma.user.findFirst({
+	  where: { dwollaCustomerId: dwollaCustomerId },
+    });
+    if (existingDwollaUser) {
+	  throw new AppError('DWOLLA_USER_EXISTS', 'User with this Dwolla customer ID already exists', 400);
+    }
+
+    // Create user
     const user = await prisma.user.create({
       data: {
-        firstName: validatedData.firstName,
-        lastName: validatedData.lastName,
-        email: validatedData.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
         password: hashedPassword,
         salt,
-        addressId: address.id, // 🔧 Use addressId instead of country
-        phoneNumber: validatedData.phoneNumber,
+        addressId: address.id,
+        phoneNumber: data.phoneNumber,
         businessId: business.id,
         roleId: userRole.id,
-        // dwollaCustomerId,
-        // dwollaCustomerUrl,
+        ssn: data.ssn,
+        dateOfBirth: data.dateOfBirth,
+        dwollaCustomerId: dwollaCustomerId,
+        dwollaCustomerUrl: dwollaCustomerUrl,
       },
-	  include: {
+      include: {
         role: true,
         business: true,
-        address: { // 🔧 Include address in response
+        address: {
           include: {
             country: true
           }
@@ -189,39 +237,23 @@ export async function signUp(unsafeData: SignUpParams) {
       },
     });
 
-    // Create session + set cookie
+    // Create session
     await createUserSession(
       { id: user.id, role: user.role.roleType, businessId: user.businessId },
       await cookies()
     );
 
-    return user;
+    return { success: true, user };
 
   } catch (error) {
+    // Cleanup Dwolla customer if created
     if (dwollaCustomerUrl) {
       await deactivateDwollaCustomer(dwollaCustomerUrl);
     }
-    console.error('Error creating user:', error);
+    console.error('Error completing onboarding:', error);
     throw error;
   }
 }
-
-// 🔧 FIX 4: Updated type to match schema requirements
-type ValidatedSignUpData = z.infer<typeof signUpSchema> & {
-  firstName: string;
-  lastName: string;
-  businessName: string;
-  businessIndustry: BusinessIndustry;
-  countryId: string;
-  currencyId: string;
-  phoneNumber: string;
-  roleType: RoleType;
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  ssn: string;
-};
 
 // ================ LOG OUT ================
 

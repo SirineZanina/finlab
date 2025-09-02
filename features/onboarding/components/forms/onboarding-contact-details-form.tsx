@@ -39,7 +39,7 @@ export default function OnboardingContactDetails() {
     address,
   } = useOnboardingStore();
 
-  const totalSteps = 8;
+  const totalSteps = 7;
   const form = useForm<OnboardingContactDetailsSchema>({
     resolver: zodResolver(onboardingContactDetailsSchema),
     defaultValues: {

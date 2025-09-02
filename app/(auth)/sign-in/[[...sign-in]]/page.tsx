@@ -1,11 +1,9 @@
 import React from 'react';
-import AuthForm from '../../_lib/components/authForm/authForm';
+import SignInForm from '../../_lib/components/signInForm/signInForm';
 
 const SignIn = () => {
   return (
-    <section>
-      <AuthForm type="sign-in" />
-    </section>
+    <SignInForm />
   );
 };
 

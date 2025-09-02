@@ -6,22 +6,16 @@ import { Hono } from 'hono';
 export const currenciesRouter = new Hono<{
 	Variables: GetApiVariables
 }>()
-  .get('/', withSession, async (c) => {
+  .get('/', async (c) => {
     try {
-      const businessId: string = c.get('businessId') as string;
 
-      if (!businessId) {
-        const errorResponse: ApiErrorResponse = {
-          success: false,
-          error: {
-            code: 'UNAUTHORIZED',
-            message: 'Business ID is required'
-          }
-        };
-        return c.json(errorResponse, 401);
-      }
-	  // Fetch currencies from the database or an external API
 	  const currencies = await prisma.currency.findMany({
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          symbol: true,
+        },
         orderBy: { name: 'asc' }
 	  });
 
